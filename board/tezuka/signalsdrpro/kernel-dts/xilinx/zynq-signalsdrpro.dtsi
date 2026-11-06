@@ -163,7 +163,27 @@
 		#size-cells = <0x1>;
 		ranges;
 
-		
+		/* GNSS module (u-blox MAX footprint, U12) serial: axi_uart16550
+		 * "miniserial" in the bitstream (maia-hdl common/uart16550.tcl,
+		 * enabled for signalsdrpro in tezuka/system_bd.tcl), on PL pins
+		 * U7 (module TXD) and U9 (module RXD). Shows up as /dev/ttyS0,
+		 * which /etc/init.d/S50gpsd hands to gpsd. Only valid with a
+		 * bitstream that has the UART: without it the 8250 probe faults
+		 * on the empty AXI address. Interrupt 59 = PS IRQ_F2P[15]. */
+		axi_uart16550_0: serial@42C00000 {
+			compatible = "xlnx,xps-uart16550-2.00.a", "ns16550a";
+			current-speed = <9600>;
+			device_type = "serial";
+			status = "okay";
+			reg = <0x42C00000 0x10000>;
+			reg-offset = <0x1000>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <100000000>;
+			interrupt-parent = <&intc>;
+			interrupts = <0 59 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
 		rx_dma: dma@7c400000 {
 			compatible = "adi,axi-dmac-1.00.a";
 			reg = <0x7c400000 0x10000>;
