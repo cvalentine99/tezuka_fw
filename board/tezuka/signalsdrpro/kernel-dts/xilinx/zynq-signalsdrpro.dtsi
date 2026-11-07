@@ -29,6 +29,18 @@
 		stdout-path = "/amba@0/uart@E0001000";
 	};
 
+	/* GNSS module 1PPS (schematic net GPS_1PPS_RAW, PL pin T5): the
+	 * bitstream routes it straight into PS EMIO GPIO 14, Linux GPIO
+	 * 54 + 14 = 68 on the Zynq GPIO controller, which can raise an
+	 * interrupt per edge. pps-gpio exposes it as /dev/pps0 for gpsd and
+	 * chrony. Harmless without the pad wired (the line just never
+	 * toggles), unlike the serial node below. */
+	pps_gps: pps-gps {
+		compatible = "pps-gpio";
+		gpios = <&gpio0 68 GPIO_ACTIVE_HIGH>;
+		assert-rising-edge;
+	};
+
 
 	clocks {
 		ad9364_clkin: clock@0 {
