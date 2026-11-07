@@ -93,10 +93,13 @@ The on-device backend is `api_controller.sh` (polling script, 2 s interval, `boa
 | `state/operator/name` | Operator name (u-boot env `operator_name`) |
 | `state/operator/callsign` | Operator callsign (u-boot env `call`) |
 | `state/operator/locator` | Operator Maidenhead locator (u-boot env `locator`) |
-| `state/system/clkref/source` | Reference source: `10mhz`/`pps`/`none` (real, from `vctcxo_lock` reg `0x0C` `dac_ref_sel` bits `[1:0]` — this IP has no auto-classification bit, unlike the old `axi_vcxo_ctrl`) on boards with that IP (currently libre only, detected live from `/sys/firmware/devicetree/base/amba_pl@0/vcxoctrl@*`); else falls back to u-boot env `refclk_source` (`internal`/`external`) |
+| `state/system/clkref/source` | Reference source: `10mhz`/`pps`/`gps`/`none` (real, from `vctcxo_lock` reg `0x0C` `dac_ref_sel` bits `[1:0]` — this IP has no auto-classification bit, unlike the old `axi_vcxo_ctrl`) on boards with that IP (libre and signalsdrpro, detected live from `/sys/firmware/devicetree/base/*/vcxoctrl@*`; `gps` = the onboard GNSS receiver 1PPS, signalsdrpro only); else falls back to u-boot env `refclk_source` (`internal`/`external`) |
 | `state/system/clkref/lock` | Reference lock (0/1) — real (`vctcxo_lock` reg `0x10` bit `[0]`) where the IP exists; else derived from `refclk_source` |
-| `state/system/clkref/frequency` | Nominal reference frequency in Hz implied by the selected mode (`10000000` for `10mhz`, `1` for `pps`) — not a measured value; this IP has no frequency register. `n/a` where the IP doesn't exist |
+| `state/system/clkref/frequency` | Nominal reference frequency in Hz implied by the selected mode (`10000000` for `10mhz`, `1` for `pps` and `gps`) — not a measured value; this IP has no frequency register. `n/a` where the IP doesn't exist |
 | `state/system/clkref/correction` | Live 16-bit VCTCXO DAC setpoint (reg `0x08`); `n/a` where the IP doesn't exist |
+| `state/system/clkref/hw`, `mode`, `present`, `cp`, `state`, `count` | Boards whose `/etc/refclk.conf` sets `REFCLK_HW=adf4001` (plutoskyr2): the FPGA ADF4001 controller, read over EMIO. `hw` = `adf4001`, `mode` = `auto`/`external`/`internal` (u-boot env, see `S22refclk`), `present` = a 10 MHz is on the input, `cp` = charge pump active, `state` = `absent`/`acquire`/`locked`/`recheck`, `count` = R divider edges per window (1024 = 10 MHz). On these boards `source` is `10mhz`/`none` from `present` |
+| `state/system/clkref/adf/mode`, `adf/present`, `adf/lock`, `adf/cp`, `adf/state`, `adf/count` | signalsdrpro (both the `vctcxo_lock` DAC loop and an ADF4001): the DAC loop owns the main topics above, the ADF4001 PLL on the external 10 MHz input J13 reports here with the same meanings |
+| `state/system/clkref/tune` | signalsdrpro: which of the two the tune mux currently follows, `dac` (the `vctcxo_lock` loop, GNSS PPS) or `adf4001` (the PLL took over because a 10 MHz is present), read back from EMIO |
 | `state/classifier/result` | One JSON message per classifier cycle: `{label, confidence, freq_offset, bandwidth_bins, frame_bins, template_id, snr_db, prom_db, margin, hz_per_bin, state, bg_age_s, online}` on a match, `{label:"unknown", best, best_snr_db, best_prom_db, margin, state, bg_age_s, online}` otherwise; `state` is `learning`, `idle` or `ok`. Retained; the daemon's last will sets `online:false` |
 | `state/classifier/background` | JSON `{frequency, bins, hz_per_bin, hot, masked}` after each background learn (start, retune, or `cmd/classifier/background`) |
 | `state/classifier/template_shape` | JSON `{id, label, bins, hz_per_bin, data[]}`: the matched template resampled onto the live grid, zero-mean / unit-norm; republished when the match or the grid changes |
@@ -118,7 +121,8 @@ The on-device backend is `api_controller.sh` (polling script, 2 s interval, `boa
 | `cmd/operator/callsign` | Set operator callsign (device reboot required) |
 | `cmd/operator/locator` | Set operator Maidenhead locator |
 | `cmd/classifier/background` | `learn` relearns the classifier's receiver background (do it on a quiet moment) |
-| `cmd/system/clkref/source` | Select reference clock mode (`10mhz`/`pps`/`none`) — writes `vctcxo_lock` reg `0x0C` `dac_ref_sel`; no-op on boards without that IP (no auto-detect, must be selected explicitly) |
+| `cmd/system/clkref/source` | Select reference clock mode (`10mhz`/`pps`/`gps`/`none`) — writes `vctcxo_lock` reg `0x0C` `dac_ref_sel`; no-op on boards without that IP (no auto-detect, must be selected explicitly) |
+| `cmd/system/clkref/mode` | `auto`/`external`/`internal` on ADF4001 boards: runs `S22refclk set`, which stores `refclk_auto`/`refclk_source` in the u-boot environment and forces the PLL loop open or closed through EMIO |
 
 All payloads are plain text strings (numbers as decimal, flags as `0`/`1`). Messages are published with the retain flag (`-r`) so late-connecting clients get the last value immediately.
 

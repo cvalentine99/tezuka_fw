@@ -2613,7 +2613,8 @@ function GpsPage({ d }) {
 // ---- Clock reference -------------------------------------------------------
 const CLKREF_SOURCE_LABELS = {
   '10mhz': '10 MHz reference (CLKIN)',
-  pps: 'PPS (1 Hz)',
+  pps: 'PPS input (1 Hz)',
+  gps: 'GNSS 1PPS (onboard receiver)',
   none: 'No reference detected',
   internal: 'Internal TCXO',
   external: 'External reference',
@@ -2713,11 +2714,12 @@ function ClockRef({ d }) {
             <Field label="Source" hint={hasCorr ? "Software-selected — the loop has no auto-detect for what's plugged in" : undefined}>
               {hasCorr ? (
                 <Select
-                  value={['10mhz', 'pps', 'none'].includes(source) ? source : '10mhz'}
+                  value={['10mhz', 'pps', 'gps', 'none'].includes(source) ? source : '10mhz'}
                   onChange={(v) => d.publish('system/clkref/source', v)}
                   options={[
                     { v: '10mhz', l: CLKREF_SOURCE_LABELS['10mhz'] },
                     { v: 'pps',   l: CLKREF_SOURCE_LABELS['pps'] },
+                    { v: 'gps',   l: CLKREF_SOURCE_LABELS['gps'] },
                     { v: 'none',  l: CLKREF_SOURCE_LABELS['none'] },
                   ]} />
               ) : (
@@ -2737,6 +2739,28 @@ function ClockRef({ d }) {
             </div>
           )}
         </Card>
+
+        {d.clkrefAdfState && (
+          <Card title="External 10 MHz (ADF4001 PLL)" sub="Takes over the oscillator whenever a reference is present on the 10 MHz input; the DAC loop above runs otherwise" className="span-12">
+            <div style={{ display: "flex", alignItems: "center", gap: "2em", flexWrap: "wrap" }}>
+              <Field label="PLL state">
+                {(() => { const [l, t] = CLKREF_STATE_LABELS[d.clkrefAdfState] || ['Unknown', 'neutral']; return <Pill tone={t} dot>{l}</Pill>; })()}
+              </Field>
+              <Field label="10 MHz present">
+                <Pill tone={d.clkrefAdfPresent === '1' ? "ok" : "neutral"} dot>{d.clkrefAdfPresent === '1' ? "Detected" : "None"}</Pill>
+              </Field>
+              <Field label="Oscillator tuned by">
+                <span className="mono">{d.clkrefTune === 'dac' ? 'DAC loop (PPS / GNSS)' : d.clkrefTune === 'adf4001' ? 'ADF4001 PLL (10 MHz)' : '—'}</span>
+              </Field>
+              <Field label="Mode" hint="Automatic follows the detector; external forces the PLL loop closed, internal keeps it open">
+                <Select value={['auto', 'external', 'internal'].includes(d.clkrefAdfMode) ? d.clkrefAdfMode : 'auto'} onChange={(v) => d.publish('system/clkref/mode', v)} options={CLKREF_MODE_OPTIONS} />
+              </Field>
+              <Field label="R divider count" hint="Edges per 102.4 us window, 1024 = 10.000 MHz">
+                <span className="mono">{d.clkrefAdfCount == null ? '—' : d.clkrefAdfCount}</span>
+              </Field>
+            </div>
+          </Card>
+        )}
 
         {hasCorr && (
           <Card title="DAC correction" sub="Live VCTCXO DAC setpoint over time (60-point history, 1 sample/poll)" className="span-12">

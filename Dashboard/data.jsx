@@ -170,6 +170,12 @@ function applyMqtt(prev, path, raw) {
     case 'system/clkref/state':          return { ...prev, clkrefState: raw };
     case 'system/clkref/count':          { const v = parseInt(raw, 10); return { ...prev, clkrefCount: isFinite(v) ? v : null }; }
     case 'system/clkref/source':         return { ...prev, clkrefSource: raw };
+    case 'system/clkref/tune':           return { ...prev, clkrefTune: raw };
+    case 'system/clkref/adf/mode':       return { ...prev, clkrefAdfMode: raw };
+    case 'system/clkref/adf/present':    return { ...prev, clkrefAdfPresent: raw };
+    case 'system/clkref/adf/lock':       return { ...prev, clkrefAdfLock: raw };
+    case 'system/clkref/adf/state':      return { ...prev, clkrefAdfState: raw };
+    case 'system/clkref/adf/count':      { const v = parseInt(raw, 10); return { ...prev, clkrefAdfCount: isFinite(v) ? v : null }; }
     case 'system/clkref/lock':           return { ...prev, clkrefLock: raw };
     case 'system/clkref/frequency':      return { ...prev, clkrefFrequency: raw };
     case 'system/clkref/correction': {
