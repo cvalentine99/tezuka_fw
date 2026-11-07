@@ -1,0 +1,150 @@
+#!/bin/sh
+#
+# SignalSDRPro: reference clock selection, the PlutoSky R2 script
+# (board/tezuka/plutoskyr2/overlay) on the same EMIO line map.
+#
+# The 40 MHz VC-TCXO is tuned by an ADF4001 PLL referenced to the 10 MHz
+# input J13 whenever the FPGA finds a reference there: with no reference the
+# charge pump is three-stated and the tune mux hands the oscillator to the
+# DAC8531, disciplined to the GNSS 1PPS by the vctcxo_lock IP (see
+# api_controller.sh, system/clkref). The LED next to J13 shows the PLL lock
+# (the FPGA probes the input once a second, for well under a millisecond).
+#
+#   refclk_auto unset/on (default): automatic, done in the FPGA
+#   refclk_auto=off                : fixed, from refclk_source
+#       refclk_source=external     : loop always closed
+#       refclk_source=internal     : loop always open
+#
+# "S22refclk set auto|external|internal" stores the choice with fw_setenv and
+# applies it; "S22refclk status" shows what the FPGA sees. The EMIO line map
+# comes from /etc/refclk.conf. Bitstreams without the logic loop the lines
+# back and ignore them. Uses the libgpiod v1 tools (no GPIO sysfs).
+#
+# Modified by Christos Nikolaou (SV1EIA) 2026.
+# Christos Nikolaou can be reached by email at : sv1eia@gmail.com
+
+CONF=/etc/refclk.conf
+[ -r "$CONF" ] && . "$CONF"
+: "${REFCLK_CHIP_LABEL:=zynq_gpio}"
+: "${REFCLK_EMIO_BASE:=54}"
+: "${REFCLK_O_FORCE_EXT:=32}"
+: "${REFCLK_O_FORCE_INT:=34}"
+: "${REFCLK_I_PRESENT:=33}"
+: "${REFCLK_I_CP:=35}"
+: "${REFCLK_I_COUNT:=36}"
+: "${REFCLK_I_LOCK:=52}"
+: "${REFCLK_I_STATE:=53}"
+: "${REFCLK_COUNT_EXPECTED:=1024}"
+
+zynq_gpio_chip() {
+	gpiodetect 2>/dev/null | sed -n "s/^\(gpiochip[0-9]*\) \[$REFCLK_CHIP_LABEL\].*/\1/p" | head -n 1
+}
+
+# gpio_out <emio> <0|1>: the zynq driver keeps the level after release
+gpio_out() {
+	gpioset "$CHIP" $((REFCLK_EMIO_BASE + $1))=$2
+}
+
+# gpio_in <emio> [count]: prints the values, lowest emio first
+gpio_in() {
+	n=${2:-1}
+	offsets=""
+	i=0
+	while [ $i -lt $n ]; do
+		offsets="$offsets $((REFCLK_EMIO_BASE + $1 + i))"
+		i=$((i + 1))
+	done
+	gpioget "$CHIP" $offsets
+}
+
+mode_from_env() {
+	REFCLK_AUTO=$(fw_printenv -n refclk_auto 2>/dev/null | tr -cd '[a-zA-Z0-9]')
+	REFCLK_SOURCE=$(fw_printenv -n refclk_source 2>/dev/null | tr -cd '[a-zA-Z0-9]')
+	case "$REFCLK_AUTO" in
+	off|no|0)
+		if [ "$REFCLK_SOURCE" = "external" ]; then echo external; else echo internal; fi
+		;;
+	*)
+		echo auto
+		;;
+	esac
+}
+
+start() {
+	MODE=$(mode_from_env)
+	case "$MODE" in
+	external) EXT=1; INT=0 ;;
+	internal) EXT=0; INT=1 ;;
+	*)        EXT=0; INT=0 ;;
+	esac
+	gpio_out $REFCLK_O_FORCE_INT $INT
+	gpio_out $REFCLK_O_FORCE_EXT $EXT
+	echo "$MODE"
+	logger -t refclk "mode=$MODE"
+}
+
+set_mode() {
+	case "$1" in
+	auto)
+		fw_setenv refclk_auto 2>/dev/null
+		;;
+	external|internal)
+		fw_setenv refclk_auto off 2>/dev/null
+		fw_setenv refclk_source "$1" 2>/dev/null
+		;;
+	*)
+		echo "Usage: $0 set {auto|external|internal}"
+		exit 1
+		;;
+	esac
+	printf "Selecting reference clock: "
+	start
+}
+
+status() {
+	count=0
+	weight=1
+	for b in $(gpio_in $REFCLK_I_COUNT 16); do
+		count=$((count + b * weight))
+		weight=$((weight * 2))
+	done
+	set -- $(gpio_in $REFCLK_I_STATE 2)
+	case "$1$2" in
+	00) state=absent ;;
+	10) state=acquire ;;
+	01) state=locked ;;
+	11) state=recheck ;;
+	*)  state=unknown ;;
+	esac
+	mux=""
+	if [ -n "$REFCLK_I_MUX" ]; then
+		case "$(gpio_in $REFCLK_I_MUX)" in
+		1) mux=" tune=dac" ;;
+		0) mux=" tune=adf4001" ;;
+		esac
+	fi
+	echo "mode=$(mode_from_env) state=$state 10MHz_present=$(gpio_in $REFCLK_I_PRESENT) locked=$(gpio_in $REFCLK_I_LOCK) cp_active=$(gpio_in $REFCLK_I_CP) count=$count ($REFCLK_COUNT_EXPECTED = 10 MHz)$mux"
+}
+
+CHIP=$(zynq_gpio_chip)
+[ -n "$CHIP" ] || { echo "S22refclk: no $REFCLK_CHIP_LABEL"; exit 1; }
+
+case "$1" in
+  start|restart|reload)
+	printf "Selecting reference clock: "
+	start
+	;;
+  stop)
+	;;
+  status)
+	status
+	;;
+  set)
+	set_mode "$2"
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|status|set auto|external|internal}"
+	exit 1
+esac
+
+exit 0

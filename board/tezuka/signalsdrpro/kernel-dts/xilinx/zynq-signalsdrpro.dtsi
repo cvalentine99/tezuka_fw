@@ -196,6 +196,20 @@
 			interrupts = <0 59 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
+		/* 40 MHz VC-TCXO discipline loop (maia-hdl
+		 * common/libre-vctcxo-lock, boards/signalsdrpro/vcxo_ctrl.tcl):
+		 * measures the oscillator against the GNSS 1PPS, the PPS input
+		 * J11 or the 10 MHz input J13 and steers it through the DAC8531.
+		 * api_controller.sh finds it by this node name and publishes
+		 * system/clkref from its registers; the ADF4001 PLL on the same
+		 * board is controlled over EMIO (see /etc/refclk.conf). */
+		vcxoctrl@43c00000 {
+			compatible = "tezuka,antsdr";
+			reg = <0x43c00000 0x1000>;
+			status = "okay";
+			tezuka,mode = "pps", "10mhz";
+		};
+
 		rx_dma: dma@7c400000 {
 			compatible = "adi,axi-dmac-1.00.a";
 			reg = <0x7c400000 0x10000>;

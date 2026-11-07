@@ -45,7 +45,7 @@ XO_BASE=${XO_BASE:-40000000}
 # assumed — boards without this node/status=okay just get VCXO_BASE="" and
 # fall back to the old refclk_source-only reporting in dump_data().
 VCXO_BASE=""
-for _vn in /sys/firmware/devicetree/base/amba_pl@0/vcxoctrl@*; do
+for _vn in /sys/firmware/devicetree/base/*/vcxoctrl@*; do
   [ -e "$_vn" ] || continue
   _vst=$(tr -d '\0' < "$_vn/status" 2>/dev/null)
   if [ "$_vst" = "okay" ] || [ "$_vst" = "ok" ]; then
@@ -413,8 +413,9 @@ dump_data () {
     if [[ "$_v0c" =~ ^(0x)?[0-9a-fA-F]+$ ]]; then
       case $(( _v0c & 0x3 )) in
         0) publish "system/clkref/source" "10mhz"; publish "system/clkref/frequency" "10000000" ;;
-        1|2) publish "system/clkref/source" "pps";  publish "system/clkref/frequency" "1" ;;
-        *) publish "system/clkref/source" "none";   publish "system/clkref/frequency" "n/a" ;;
+        1) publish "system/clkref/source" "pps";   publish "system/clkref/frequency" "1" ;;
+        2) publish "system/clkref/source" "gps";   publish "system/clkref/frequency" "1" ;;
+        *) publish "system/clkref/source" "none";  publish "system/clkref/frequency" "n/a" ;;
       esac
     else
       publish "system/clkref/source"    "n/a"
@@ -460,6 +461,26 @@ dump_data () {
     fi
     publish "system/clkref/frequency"   "n/a"
     publish "system/clkref/correction"  "n/a"
+  fi
+
+  # Boards with both (SignalSDRPro): the DAC loop above owns the main
+  # topics, the ADF4001 PLL that takes over whenever a 10 MHz is plugged
+  # into its input reports under system/clkref/adf/*, plus which of the
+  # two the tune mux currently follows.
+  if [ -n "$VCXO_BASE" ] && [ "$REFCLK_HW" = adf4001 ] && refclk_read; then
+    publish "system/clkref/adf/mode"    "$(refclk_mode)"
+    publish "system/clkref/adf/present" "$REF_PRESENT"
+    publish "system/clkref/adf/lock"    "$REF_LOCK"
+    publish "system/clkref/adf/cp"      "$REF_CP"
+    publish "system/clkref/adf/state"   "$REF_STATE"
+    publish "system/clkref/adf/count"   "$REF_COUNT"
+    if [ -n "$REFCLK_I_MUX" ]; then
+      case "$(gpioget "$REFCLK_CHIP" $(( ${REFCLK_EMIO_BASE:-54} + REFCLK_I_MUX )) 2>/dev/null)" in
+        1) publish "system/clkref/tune" "dac" ;;
+        0) publish "system/clkref/tune" "adf4001" ;;
+        *) publish "system/clkref/tune" "n/a" ;;
+      esac
+    fi
   fi
 
   local _iface _cidr _mac _gw _dns _line _f
@@ -1039,7 +1060,8 @@ parse_cmd () {
       local _sel
       case "$val" in
         10mhz) _sel=0 ;;
-        pps)   _sel=1 ;;
+        pps)   _sel=1 ;;   # PPS_IN, the external PPS connector
+        gps)   _sel=2 ;;   # PPS_GPS, the onboard GNSS receiver
         none)  _sel=3 ;;
         *) return ;;
       esac
