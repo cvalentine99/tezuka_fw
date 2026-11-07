@@ -21,6 +21,12 @@ else
         DEVICES=""
 fi
 
+# A kernel PPS source (pps-gpio or the serial line discipline) lets gpsd
+# publish the pulse to chrony as NTP SHM 1, next to the NMEA time on SHM 0.
+if [ -n "$DEVICES" ] && [ -e "/dev/pps0" ]; then
+        DEVICES="$DEVICES /dev/pps0"
+fi
+
 start() {
         if [ -z "$DEVICES" ]; then
                 echo "Error: Neither /dev/ttyUL0 nor /dev/ttyACM0 was found."
@@ -29,9 +35,10 @@ start() {
 
         printf 'Starting %s using %s: ' "$NAME" "$DEVICES"
         # shellcheck disable=SC2086
-        start-stop-daemon -S -q -p "$PIDFILE" --exec "$DAEMON" -- -P "$PIDFILE" $GPSD_OPTIONS "$DEVICES" && echo "OK"
+        start-stop-daemon -S -q -p "$PIDFILE" --exec "$DAEMON" -- -P "$PIDFILE" $GPSD_OPTIONS $DEVICES && echo "OK"
         sleep 3
-        gpsctl --nmea
+        # with a PPS device also attached gpsctl needs to be told which one
+        gpsctl --nmea "${DEVICES%% *}"
 }
 
 stop() {
