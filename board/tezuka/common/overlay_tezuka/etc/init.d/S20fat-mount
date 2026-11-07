@@ -1,26 +1,46 @@
 #!/bin/sh
+#
+# The SD card's FAT partition holds the boot set (BOOT.bin, uImage,
+# devicetree.dtb, uramdisk.image.xz, system_top.bin, uEnv.txt) that u-boot
+# loads. Linux only needs to read it, so it is mounted read-only: nothing in
+# the firmware writes there, and a read-only mount never sets the FAT dirty
+# bit. Anyone replacing boot files remounts it first:
+#
+#   mount -o remount,rw /boot && cp ... /boot/ && sync && umount /boot; reboot
+#
+# Before mounting, a volume whose dirty bit is set (an earlier unclean
+# unmount: power cut, card pulled, written on a host without eject) gets a
+# repair pass. The kernel never clears a dirty bit it found at mount time,
+# it only logs "Volume was not properly unmounted" at every boot, so fsck is
+# the only way back to a clean state.
 
 SD_FILE="/dev/mmcblk0p1"
 
-start() {
-  
+# dirty bit: FAT32 keeps it in boot sector byte 65 (0x41), FAT12/16 in
+# byte 37 (0x25), bit 0 in both cases
+fat_dirty() {
+	fstype=$(dd if="$SD_FILE" bs=1 skip=82 count=5 2>/dev/null)
+	if [ "$fstype" = "FAT32" ]; then off=65; else off=37; fi
+	flag=$(dd if="$SD_FILE" bs=1 skip=$off count=1 2>/dev/null | od -An -tu1 | tr -d ' ')
+	[ -n "$flag" ] && [ $(( flag & 1 )) -eq 1 ]
+}
 
+start() {
 	if [ -e "$SD_FILE" ]; then
-   		echo "Mounting SD on /boot"
+		if command -v fsck.fat >/dev/null 2>&1 && fat_dirty; then
+			echo "SD boot partition was not unmounted cleanly, checking it"
+			fsck.fat -a -w "$SD_FILE"
+		fi
+		echo "Mounting SD read-only on /boot"
 		mkdir -p /boot
-		mount $SD_FILE /boot
+		mount -o ro "$SD_FILE" /boot
 	fi
 }
 
 stop() {
-
-	if [ -n "$nfs_server" ]
-	then
-		echo "Stopping NFS"
-		umount /mnt/nfs
+	if mountpoint -q /boot; then
+		umount /boot
 	fi
-
-	
 }
 
 restart() {
@@ -45,6 +65,3 @@ case "$1" in
 esac
 
 exit $?
-
-
-
