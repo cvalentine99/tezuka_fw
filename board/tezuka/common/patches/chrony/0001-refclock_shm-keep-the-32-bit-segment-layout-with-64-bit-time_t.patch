@@ -1,0 +1,86 @@
+From: Chase Valentine <machivell@gmail.com>
+Subject: [PATCH] refclock_shm: keep the 32-bit segment layout with 64-bit time_t
+
+The NTP SHM segment is an ABI shared with ntpd and gpsd and follows the
+platform's default time_t. On a 32-bit ABI built with _TIME_BITS=64
+(Buildroot BR2_TIME_BITS_64) chrony's struct grows to 96 bytes with the
+seconds as 64-bit fields, while gpsd deliberately keeps the classic
+80-byte layout and stores the upper bits in the former dummy[0..1]
+(gpsd include/ntpshm.h). chrony then reads every field at the wrong
+offset and the refclock never gets a sample (reach stays 0 while
+ntpshmmon shows good samples).
+
+Use the gpsd convention when _TIME_BITS is 64 and glibc's __TIMESIZE is
+32, and reassemble the 64-bit seconds from the two halves.
+
+Signed-off-by: Chase Valentine <machivell@gmail.com>
+---
+--- a/refclock_shm.c
++++ b/refclock_shm.c
+@@ -35,6 +35,18 @@
+ 
+ #define SHMKEY 0x4e545030
+ 
++/* The segment layout is an ABI shared with ntpd and gpsd and follows the
++   platform's default time_t. With 64-bit time_t selected on a 32-bit ABI
++   (glibc _TIME_BITS=64, __TIMESIZE=32) the writers keep the classic 32-bit
++   layout and put the upper bits of the seconds in the former dummy[0..1]
++   (gpsd include/ntpshm.h). Using a native 64-bit time_t here would make the
++   struct 96 bytes instead of 80 and read every field at the wrong offset. */
++#if defined(_TIME_BITS) && _TIME_BITS == 64 && defined(__TIMESIZE) && __TIMESIZE == 32
++#define SHM_TIME32_LAYOUT 1
++#else
++#define SHM_TIME32_LAYOUT 0
++#endif
++
+ struct shmTime {
+   int    mode; /* 0 - if valid set
+                 *       use values, 
+@@ -45,9 +57,17 @@
+                 *       clear valid
+                 */
+   volatile int count;
++#if SHM_TIME32_LAYOUT
++  unsigned clockTimeStampSec;
++#else
+   time_t clockTimeStampSec;
++#endif
+   int    clockTimeStampUSec;
++#if SHM_TIME32_LAYOUT
++  unsigned receiveTimeStampSec;
++#else
+   time_t receiveTimeStampSec;
++#endif
+   int    receiveTimeStampUSec;
+   int    leap;
+   int    precision;
+@@ -55,7 +75,13 @@
+   volatile int valid;
+   int    clockTimeStampNSec;
+   int    receiveTimeStampNSec;
++#if SHM_TIME32_LAYOUT
++  unsigned top_clockTimeStampSec;
++  unsigned top_receiveTimeStampSec;
++  int    dummy[6];
++#else
+   int    dummy[8]; 
++#endif
+ };
+ 
+ static int shm_initialise(RCL_Instance instance) {
+@@ -109,8 +135,15 @@
+ 
+   shm->valid = 0;
+ 
++#if SHM_TIME32_LAYOUT
++  receive_ts.tv_sec = (time_t)t.receiveTimeStampSec |
++                      ((time_t)t.top_receiveTimeStampSec << 32);
++  clock_ts.tv_sec = (time_t)t.clockTimeStampSec |
++                    ((time_t)t.top_clockTimeStampSec << 32);
++#else
+   receive_ts.tv_sec = t.receiveTimeStampSec;
+   clock_ts.tv_sec = t.clockTimeStampSec;
++#endif
+ 
+   if (t.clockTimeStampNSec / 1000 == t.clockTimeStampUSec &&
+       t.receiveTimeStampNSec / 1000 == t.receiveTimeStampUSec) {
