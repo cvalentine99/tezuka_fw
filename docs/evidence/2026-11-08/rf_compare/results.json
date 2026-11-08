@@ -1,0 +1,2944 @@
+{
+ "revisions": {
+  "baseline_7997d95": {
+   "path": "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+   "sha256": "29999610181d2e67eb46aaf45068e1a0e33ad336729d09103f4d95c3e8669cee"
+  },
+  "pinned_fb9b86a": {
+   "path": "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+   "sha256": "e952dd4ecd3dcb335f1a7733c452fad01ef22483dcab3e57b92de87c217e07da"
+  },
+  "fixed": {
+   "path": "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+   "sha256": "5b1f7f3cd03c02299b9d9711bdaaf0a3d30a6966d8ca6fc6956535e389198ccd"
+  }
+ },
+ "qemu": "/usr/bin/qemu-arm-static",
+ "sysroot": "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+ "results": {
+  "spur_only_cold": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_cold.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": null,
+    "off": {
+     "decisions": 45,
+     "labels": {
+      "unknown": 45
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "hz_per_bin": 610.5,
+     "hot": 71,
+     "masked": 5
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_cold.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": null,
+    "off": {
+     "decisions": 45,
+     "labels": {
+      "unknown": 45
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 5
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_cold.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": null,
+    "off": {
+     "decisions": 45,
+     "labels": {
+      "unknown": 45
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 5
+    }
+   }
+  },
+  "spur_only_settled": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_settled.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 1800 frames processed"
+    ],
+    "result_lines": 226,
+    "on": null,
+    "off": {
+     "decisions": 213,
+     "labels": {
+      "unknown": 213
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "hz_per_bin": 610.5,
+     "hot": 71,
+     "masked": 5
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_settled.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 1800 frames processed"
+    ],
+    "result_lines": 226,
+    "on": null,
+    "off": {
+     "decisions": 213,
+     "labels": {
+      "unknown": 213
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 5
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_settled.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 1800 frames processed"
+    ],
+    "result_lines": 226,
+    "on": null,
+    "off": {
+     "decisions": 213,
+     "labels": {
+      "unknown": 213
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 5
+    }
+   }
+  },
+  "quiet_no_spur": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/quiet_no_spur.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": null,
+    "off": {
+     "decisions": 45,
+     "labels": {
+      "unknown": 45
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "hz_per_bin": 610.5,
+     "hot": 0,
+     "masked": 5
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/quiet_no_spur.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": null,
+    "off": {
+     "decisions": 45,
+     "labels": {
+      "unknown": 45
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 0,
+     "masked": 5
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/quiet_no_spur.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": null,
+    "off": {
+     "decisions": 45,
+     "labels": {
+      "unknown": 45
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 0,
+     "masked": 5
+    }
+   }
+  },
+  "fm_offcenter": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_offcenter.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "FM Broadcast": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.948,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.965,
+      "freq_offset": 900,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 20.8,
+      "prom_db": 19.3,
+      "margin": 0.554,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 610.5,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_offcenter.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "FM Broadcast": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.948,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.965,
+      "freq_offset": 900,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 20.8,
+      "prom_db": 19.3,
+      "margin": 0.554,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.965,
+       "snr_db": 20.8,
+       "prom_db": 19.3,
+       "bin_offset": 900,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.554,
+       "best": {
+        "template_id": 1,
+        "score": 0.965,
+        "snr_db": 20.8,
+        "prom_db": 19.3
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.047863,
+       "bandwidth_hz": 119628.9,
+       "spectral_papr_db": 15.72,
+       "flatness": 0.1315,
+       "peak_count": 6,
+       "peak_bin": 1203,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_offcenter.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "FM Broadcast": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.948,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.965,
+      "freq_offset": 900,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 20.8,
+      "prom_db": 19.3,
+      "margin": 0.554,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.965,
+       "snr_db": 20.8,
+       "prom_db": 19.3,
+       "bin_offset": 900,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.554,
+       "best": {
+        "template_id": 1,
+        "score": 0.965,
+        "snr_db": 20.8,
+        "prom_db": 19.3
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.047863,
+       "bandwidth_hz": 119628.9,
+       "spectral_papr_db": 15.72,
+       "flatness": 0.1315,
+       "peak_count": 6,
+       "peak_bin": 1203,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   }
+  },
+  "fm_near_lo": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_near_lo.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "FM Broadcast": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.917,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.933,
+      "freq_offset": 1719,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 24.4,
+      "prom_db": 22.8,
+      "margin": 0.764,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 610.5,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_near_lo.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "FM Broadcast": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.917,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.933,
+      "freq_offset": 1719,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 24.4,
+      "prom_db": 22.8,
+      "margin": 0.764,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.933,
+       "snr_db": 24.4,
+       "prom_db": 22.8,
+       "bin_offset": 1719,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.764,
+       "best": {
+        "template_id": 1,
+        "score": 0.933,
+        "snr_db": 24.4,
+        "prom_db": 22.8
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.021734,
+       "bandwidth_hz": 54321.3,
+       "spectral_papr_db": 16.6,
+       "flatness": 0.0679,
+       "peak_count": 4,
+       "peak_bin": 2035,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_near_lo.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "FM Broadcast": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.917,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.933,
+      "freq_offset": 1719,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 24.4,
+      "prom_db": 22.8,
+      "margin": 0.764,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.933,
+       "snr_db": 24.4,
+       "prom_db": 22.8,
+       "bin_offset": 1719,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.764,
+       "best": {
+        "template_id": 1,
+        "score": 0.933,
+        "snr_db": 24.4,
+        "prom_db": 22.8
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.021734,
+       "bandwidth_hz": 54321.3,
+       "spectral_papr_db": 16.6,
+       "flatness": 0.0679,
+       "peak_count": 4,
+       "peak_bin": 2035,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   }
+  },
+  "dab_fullspan": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/dab_fullspan.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "DAB+": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.91,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "DAB+",
+      "confidence": 0.916,
+      "freq_offset": 0,
+      "bandwidth_bins": 4095,
+      "frame_bins": 4095,
+      "template_id": 2,
+      "snr_db": 18.0,
+      "prom_db": 0.0,
+      "margin": 0.916,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 610.5,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/dab_fullspan.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "DAB+": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.91,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "DAB+",
+      "confidence": 0.916,
+      "freq_offset": 0,
+      "bandwidth_bins": 4095,
+      "frame_bins": 4095,
+      "template_id": 2,
+      "snr_db": 18.0,
+      "prom_db": 0.0,
+      "margin": 0.916,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "DAB+",
+       "accepted": true,
+       "template_id": 2,
+       "score": 0.916,
+       "snr_db": 18.0,
+       "prom_db": 0.0,
+       "bin_offset": 0,
+       "bandwidth_bins": 4095,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.916,
+       "best": {
+        "template_id": 2,
+        "score": 0.916,
+        "snr_db": 18.0,
+        "prom_db": 0.0
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 2,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.293773,
+       "bandwidth_hz": 734252.9,
+       "spectral_papr_db": 6.63,
+       "flatness": 0.4517,
+       "peak_count": 42,
+       "peak_bin": 2044,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/dab_fullspan.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "DAB+": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.91,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "DAB+",
+      "confidence": 0.916,
+      "freq_offset": 0,
+      "bandwidth_bins": 4095,
+      "frame_bins": 4095,
+      "template_id": 2,
+      "snr_db": 18.0,
+      "prom_db": 0.0,
+      "margin": 0.916,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "DAB+",
+       "accepted": true,
+       "template_id": 2,
+       "score": 0.916,
+       "snr_db": 18.0,
+       "prom_db": 0.0,
+       "bin_offset": 0,
+       "bandwidth_bins": 4095,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.916,
+       "best": {
+        "template_id": 2,
+        "score": 0.916,
+        "snr_db": 18.0,
+        "prom_db": 0.0
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 2,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.293773,
+       "bandwidth_hz": 734252.9,
+       "spectral_papr_db": 6.63,
+       "flatness": 0.4517,
+       "peak_count": 42,
+       "peak_bin": 2044,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   }
+  },
+  "cw_offcenter": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/cw_offcenter.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "CW / Beacon": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.912,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.952,
+      "freq_offset": 3000,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 24.7,
+      "prom_db": 23.9,
+      "margin": 0.533,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 610.5,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/cw_offcenter.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "CW / Beacon": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.912,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.952,
+      "freq_offset": 3000,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 24.7,
+      "prom_db": 23.9,
+      "margin": 0.533,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "CW / Beacon",
+       "accepted": true,
+       "template_id": 3,
+       "score": 0.952,
+       "snr_db": 24.7,
+       "prom_db": 23.9,
+       "bin_offset": 3000,
+       "bandwidth_bins": 49,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.533,
+       "best": {
+        "template_id": 3,
+        "score": 0.952,
+        "snr_db": 24.7,
+        "prom_db": 23.9
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 3,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.005617,
+       "bandwidth_hz": 14038.1,
+       "spectral_papr_db": 23.03,
+       "flatness": 0.205,
+       "peak_count": 2,
+       "peak_bin": 3024,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/cw_offcenter.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "CW / Beacon": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.912,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.952,
+      "freq_offset": 3000,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 24.7,
+      "prom_db": 23.9,
+      "margin": 0.533,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "CW / Beacon",
+       "accepted": true,
+       "template_id": 3,
+       "score": 0.952,
+       "snr_db": 24.7,
+       "prom_db": 23.9,
+       "bin_offset": 3000,
+       "bandwidth_bins": 49,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.533,
+       "best": {
+        "template_id": 3,
+        "score": 0.952,
+        "snr_db": 24.7,
+        "prom_db": 23.9
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 3,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.005617,
+       "bandwidth_hz": 14038.1,
+       "spectral_papr_db": 23.03,
+       "flatness": 0.205,
+       "peak_count": 2,
+       "peak_bin": 3024,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   }
+  },
+  "unknown_block_1mhz": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/unknown_block_1mhz.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "unknown": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "hz_per_bin": 610.5,
+     "hot": 71,
+     "masked": 5
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/unknown_block_1mhz.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "unknown": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 5
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/unknown_block_1mhz.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "unknown": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 5
+    }
+   }
+  },
+  "overlap_fm_cw": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/overlap_fm_cw.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "CW / Beacon": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.872,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.912,
+      "freq_offset": 1300,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 26.6,
+      "prom_db": 6.6,
+      "margin": 0.136,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 610.5,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/overlap_fm_cw.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "CW / Beacon": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.872,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.912,
+      "freq_offset": 1300,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 26.6,
+      "prom_db": 6.6,
+      "margin": 0.136,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "CW / Beacon",
+       "accepted": true,
+       "template_id": 3,
+       "score": 0.912,
+       "snr_db": 26.6,
+       "prom_db": 6.6,
+       "bin_offset": 1300,
+       "bandwidth_bins": 49,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.136,
+       "best": {
+        "template_id": 3,
+        "score": 0.912,
+        "snr_db": 26.6,
+        "prom_db": 6.6
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 3,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.008547,
+       "bandwidth_hz": 21362.3,
+       "spectral_papr_db": 21.07,
+       "flatness": 0.0972,
+       "peak_count": 4,
+       "peak_bin": 1325,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/overlap_fm_cw.raw",
+     "-f",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 450 frames processed"
+    ],
+    "result_lines": 58,
+    "on": {
+     "decisions": 38,
+     "labels": {
+      "CW / Beacon": 38
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 38,
+     "misses": 0,
+     "min_correct_score": 0.872,
+     "first_false_accept": null
+    },
+    "off": {
+     "decisions": 7,
+     "labels": {
+      "unknown": 7
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": {
+     "t": 20.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.912,
+      "freq_offset": 1300,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 26.6,
+      "prom_db": 6.6,
+      "margin": 0.136,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 20,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "CW / Beacon",
+       "accepted": true,
+       "template_id": 3,
+       "score": 0.912,
+       "snr_db": 26.6,
+       "prom_db": 6.6,
+       "bin_offset": 1300,
+       "bandwidth_bins": 49,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.136,
+       "best": {
+        "template_id": 3,
+        "score": 0.912,
+        "snr_db": 26.6,
+        "prom_db": 6.6
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 3,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.008547,
+       "bandwidth_hz": 21362.3,
+       "spectral_papr_db": 21.07,
+       "flatness": 0.0972,
+       "peak_count": 4,
+       "peak_bin": 1325,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 20.4,
+       "frames": 154
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 0,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 71,
+      "masked": 5
+     }
+    }
+   }
+  }
+ }
+}

@@ -57,3 +57,56 @@ def test_jsonw_overflow_latches(host_tools):
     assert out == "overflow"
     out = subprocess.run([str(host_tools["jsonw_check"]), "--overflow", "200"], capture_output=True, text=True).stdout.strip()
     assert out == "ok"
+
+
+# Independent review 2026-11-08, R2: jw_double formatted into a 64-byte local
+# buffer and passed snprintf's *would-be* length to the copier, so a large
+# finite value read past the buffer (ASan: READ of size 309 for DBL_MAX).
+DOUBLE_CASES = [
+    ("1.7976931348623157e308", 0),    # DBL_MAX
+    ("-1.7976931348623157e308", 0),
+    ("1e300", 17),
+    ("1e22", 3),                      # 23 chars with "%.3f": the last size that fits the old buffer
+    ("1e40", 17),                     # 59 chars: the first size that did not
+    ("433000000", 0),                 # ordinary RF values
+    ("2500000", 0),
+    ("1090000000", 3),
+    ("610.351562", 3),
+    ("0.001", 3),
+    ("-42.5", 1),
+    ("0", 0),
+]
+
+
+@pytest.mark.parametrize("text,decimals", DOUBLE_CASES)
+def test_jsonw_double_is_bounded_and_valid_json(host_tools, text, decimals):
+    p = subprocess.run([str(host_tools["jsonw_check"]), "--double", text, str(decimals)], capture_output=True, text=True)
+    assert p.returncode == 0, p.stderr
+    rep = json.loads(p.stdout)
+    assert rep["v"] == pytest.approx(float(text), rel=1e-15, abs=10.0 ** -decimals)
+
+
+@pytest.mark.parametrize("text", ["nan", "inf", "-inf"])
+def test_jsonw_double_non_finite_is_null(host_tools, text):
+    p = subprocess.run([str(host_tools["jsonw_check"]), "--double", text, "3"], capture_output=True, text=True)
+    assert p.returncode == 0 and json.loads(p.stdout) == {"v": None}
+
+
+@pytest.mark.parametrize("text,decimals,cap", [
+    ("1.7976931348623157e308", 0, 8), ("1.7976931348623157e308", 0, 16), ("1.7976931348623157e308", 0, 27),
+    ("433000000", 0, 4), ("433000000", 0, 14), ("-1e40", 17, 20), ("0.001", 3, 10),
+])
+def test_jsonw_double_small_destination_fails_safely(host_tools, text, decimals, cap):
+    # {"v":...} needs at least 7 + len(number) bytes: with less the writer
+    # must latch overflow (exit 70) and never write past the buffer (71 =
+    # canary hit; ASan/UBSan on the host tool would also abort).
+    p = subprocess.run([str(host_tools["jsonw_check"]), "--double", text, str(decimals), str(cap)], capture_output=True, text=True)
+    assert p.returncode == 70, (p.returncode, p.stdout, p.stderr)
+    assert p.stdout == ""
+
+
+@pytest.mark.parametrize("text,decimals,cap", [("1.7976931348623157e308", 0, 32), ("433000000", 0, 16), ("0.001", 3, 12)])
+def test_jsonw_double_just_enough_destination_is_ok(host_tools, text, decimals, cap):
+    p = subprocess.run([str(host_tools["jsonw_check"]), "--double", text, str(decimals), str(cap)], capture_output=True, text=True)
+    assert p.returncode == 0, (p.returncode, p.stderr)
+    assert json.loads(p.stdout)["v"] == pytest.approx(float(text), rel=1e-15, abs=10.0 ** -decimals)

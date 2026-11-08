@@ -101,21 +101,37 @@ void jw_key(struct jw *w, const char *key)
 void jw_strn(struct jw *w, const char *s, size_t n) { before_value(w); write_escaped(w, (const unsigned char *)s, n); }
 void jw_str(struct jw *w, const char *s) { jw_strn(w, s, s ? strlen(s) : 0); }
 
+/* snprintf() returns the length the text WOULD have had, so a truncated
+ * result must never be handed to put() as a byte count: that reads past
+ * the local buffer. These helpers only emit what actually fits. */
+static void put_fmt(struct jw *w, const char *b, size_t cap, int n)
+{
+    if (n < 0 || (size_t)n >= cap) { w->overflow = true; return; }
+    before_value(w); put(w, b, (size_t)n);
+}
+
 void jw_int(struct jw *w, long long v)
 {
     char b[32]; int n = snprintf(b, sizeof(b), "%lld", v);
-    before_value(w); put(w, b, (size_t)n);
+    put_fmt(w, b, sizeof(b), n);
 }
 void jw_uint(struct jw *w, unsigned long long v)
 {
     char b[32]; int n = snprintf(b, sizeof(b), "%llu", v);
-    before_value(w); put(w, b, (size_t)n);
+    put_fmt(w, b, sizeof(b), n);
 }
 void jw_double(struct jw *w, double v, int decimals)
 {
     if (!isfinite(v)) { jw_null(w); return; }
-    char b[64]; int n = snprintf(b, sizeof(b), "%.*f", decimals < 0 ? 0 : decimals > 17 ? 17 : decimals, v);
-    before_value(w); put(w, b, (size_t)n);
+    char b[64];
+    int d = decimals < 0 ? 0 : decimals > 17 ? 17 : decimals;
+    int n = snprintf(b, sizeof(b), "%.*f", d, v);
+    /* "%.*f" of a large magnitude needs one digit per decade (DBL_MAX is
+     * 309 digits before the point) and does not fit here. Fall back to a
+     * bounded "%.17g" (at most 24 characters, still a valid JSON number,
+     * round-trips the double) instead of passing the truncated length on. */
+    if (n < 0 || (size_t)n >= sizeof(b)) n = snprintf(b, sizeof(b), "%.17g", v);
+    put_fmt(w, b, sizeof(b), n);
 }
 void jw_bool(struct jw *w, bool v) { before_value(w); put(w, v ? "true" : "false", v ? 4 : 5); }
 void jw_null(struct jw *w) { before_value(w); put(w, "null", 4); }

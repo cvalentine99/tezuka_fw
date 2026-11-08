@@ -174,21 +174,65 @@ Cached state from a persistent `state/#` subscription. Each receiver and
 sensor field carries `{value, status, age_s, retained_replay_seen,
 live_messages}` where `status` is `fresh` (a non-retained message within
 `TEZUKA_STATE_MAX_AGE_S`), `stale`, `retained` (only the broker's replayed
-copy seen since connecting — the producer may be down) or `unavailable`.
-The `classifier` section is the latest `observation` (status by the same
-rule with `TEZUKA_OBSERVATION_MAX_AGE_S`; a repeated `seq` is ignored) and
-is `best_effort: true` with explicit nulls when the sensor only publishes
-the legacy `result`. Nothing is defaulted: an unseen frequency is `null`.
+copy is held for this value — the producer may be down) or `unavailable`.
+Freshness belongs to the payload it arrived with: a retained copy that
+carries a *different* payload than the last live message replaces the
+value and the entry drops back to `retained`; a replayed copy of the same
+payload keeps the live evidence. `provenance.connection_epoch` counts
+successful (re)connects, each of which replays the retained tree.
+
+The `classifier` section is the accepted `observation`, held as one record
+`(payload, producer identity, seq, freshness)`:
+
+* A message is accepted only if it validates: `schema`
+  `tezuka.classifier.observation/1`, an integer `seq ≥ 0`, a `sensor`
+  object with `session_id` (or `boot_id`) as the producer identity, and
+  every section (`time`, `sensor`, `input`, `config`, `templates`,
+  `decision`, `features`, `temporal`, `background`, `health`) an object or
+  null. Anything else is counted in `validation.rejected_messages` with
+  `validation.last_rejection` and otherwise ignored: the previous record
+  keeps its own age, and no invalid or empty message is ever shown as
+  fresh.
+* Within one producer session a repeated `seq` (`seq_repeats_ignored`,
+  and `seq_repeats_with_changed_content` if the payload differs) or an
+  older `seq` (`out_of_order_ignored`) does not replace the record.
+* A message from a *different* producer session (`producer_sessions_seen`)
+  is accepted even if its `seq` repeats the previous session's number: a
+  restarted daemon starts at 1 again.
+* A retained message that does replace the record is `retained`
+  (`age_s: null`); it never inherits the previous payload's live
+  freshness. `live_from_current_connection` says whether the live message
+  came in on the current connection epoch.
+
+The section's `status` follows the same rule with
+`TEZUKA_OBSERVATION_MAX_AGE_S`, and the section is `best_effort: true` with
+explicit nulls when the sensor only publishes the legacy `result`.
+Nothing is defaulted: an unseen frequency is `null`.
 
 ### `snapshot_fpga_waterfall` → `tezuka.mcp.waterfall_snapshot/1`
 
 Collects ≤ `max_frames` (≤ `TEZUKA_WATERFALL_MAX_FRAMES`) frames within
 `timeout_s` (≤ `TEZUKA_WATERFALL_MAX_TIMEOUT_S`). Reads `/api` before and
 after; rejects the collection if the spectrometer/receiver context changed,
-if FFT sizes differ, or if the step word varied while sweep is engaged or
-the sweep state is unknown. Reports `support.supported: false` with reasons
-for DDC input, DDC enabled, sweep active or an unknown mode, and produces no
-summary in that case. Output: `context` from `/api`, `summary{grid,
+if FFT sizes differ, or if the step word varied while sweep is engaged.
+
+The sweep state is evidence, not a cached flag: `sweep_active` is known
+(`true`/`false`) only while the MQTT subscriber is connected and *both*
+`state/rx/sweep/activate` and `state/rx/sweep/engaged` were delivered live
+within `TEZUKA_STATE_MAX_AGE_S` (api_controller.sh republishes them every
+2 s) with a value of `0` or `1`. Disconnected, only-retained, stale,
+missing or malformed flags make it unknown, with the reason in
+`context.sweep_state.before.reason`, and an unknown sweep state is
+*unsupported*: an old "off" is not evidence that the frames are one
+ADC-centred span, and the free-running step word cannot tell. The state
+is read again after the collection (`context.sweep_state.after`); if the
+flag or the sweep message count changed in between, the collection is
+rejected as straddling a mode change. With sweep known off, the
+free-running 0..7 step word is recorded and does not split the context.
+
+Reports `support.supported: false` with reasons for DDC input, DDC
+enabled, sweep active, sweep state unknown or an unknown mode, and
+produces no summary in that case. Output: `context` from `/api`, `summary{grid,
 frames_averaged, step_words_seen, noise_floor{db, estimator}, peak,
 psd_summary (128 buckets, max and mean dB), segments{threshold_over_floor_db,
 items[start/end bin and Hz, peak, width], truncated}, level_unit,

@@ -22,7 +22,7 @@ import math
 import statistics
 import time
 import urllib.request
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from . import SCHEMA_WATERFALL
 from .frame import Frame, decode_frame, mean_power, power_to_db, bins_index_to_hz
@@ -59,9 +59,12 @@ def context_from_api(api: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def support_check(ctx: Dict[str, Any], sweep_active: Optional[bool]) -> Dict[str, Any]:
+def support_check(ctx: Dict[str, Any], sweep_active: Optional[bool], sweep_reason: Optional[str] = None) -> Dict[str, Any]:
     """Which spectrometer configurations this tool interprets. Anything
-    else is reported as unsupported with the reason, never guessed at."""
+    else is reported as unsupported with the reason, never guessed at.
+    An unknown sweep state (None) is unsupported too: the free-running
+    step word cannot tell sweep stepping from a fixed centre, and the
+    /api context alone does not carry the sweep flags."""
     reasons = []
     if ctx.get("input") != "AD9361":
         reasons.append(f"spectrometer input is {ctx.get('input')!r}; only the direct AD9361 (ADC) input is interpreted, the DDC path's span and centre differ")
@@ -69,6 +72,9 @@ def support_check(ctx: Dict[str, Any], sweep_active: Optional[bool]) -> Dict[str
         reasons.append("DDC is enabled")
     if sweep_active:
         reasons.append("sweep mode is active: each frame is one step of a wider sweep and the step grid is not interpreted here")
+    elif sweep_active is None:
+        reasons.append("sweep state could not be established" + (f" ({sweep_reason})" if sweep_reason else "")
+                       + ": without a current, live sweep-off reading the frames cannot be read as one ADC-centred span")
     if ctx.get("mode") not in ("Average", "PeakDetect"):
         reasons.append(f"unknown spectrometer mode {ctx.get('mode')!r}")
     return {"supported": not reasons, "reasons": reasons}
@@ -219,9 +225,25 @@ def check_coherent(payloads: List[bytes], api_before: Dict[str, Any], api_after:
 
 
 def build_waterfall_snapshot(host: str, port: int, path: str, max_frames: int, timeout_s: float,
-                             sweep_active: Optional[bool], threshold_db: float = 10.0) -> Dict[str, Any]:
+                             sweep_active: Optional[bool], threshold_db: float = 10.0,
+                             sweep_state_fn: Optional[Callable[[], Dict[str, Any]]] = None) -> Dict[str, Any]:
     """Synchronous driver used by the MCP tool (runs its own event loop for
-    the WebSocket collection)."""
+    the WebSocket collection).
+
+    The sweep state is read through `sweep_state_fn` (see
+    Service.sweep_state: {"active": bool|None, "reason": str|None,
+    "generation": int, "epoch": int, ...}) BEFORE the collection, to
+    decide support, and AGAIN AFTER it: a change of the flag, of the
+    sweep topics' value-change generation (off -> on -> off included) or
+    of the MQTT connection epoch (a reconnect) in between means the
+    frames may straddle a mode change, and the collection is rejected.
+    Unchanged republishes of the flags do not move the generation. A bare `sweep_active` is accepted for
+    callers (tests) that have no live source; it is then treated as
+    constant."""
+    if sweep_state_fn is None:
+        def sweep_state_fn() -> Dict[str, Any]:   # noqa: E306 - static stand-in
+            return {"active": sweep_active, "reason": None if sweep_active is not None else "no sweep state source given",
+                    "generation": 0, "epoch": 0}
     t0 = time.time()
     url = f"ws://{host}:{port}{path}"
     out: Dict[str, Any] = {"schema": SCHEMA_WATERFALL, "provenance": {
@@ -233,9 +255,12 @@ def build_waterfall_snapshot(host: str, port: int, path: str, max_frames: int, t
         out.update({"ok": False, "error": f"GET /api failed before collection: {e}", "context": None})
         return out
     ctx = context_from_api(api_before)
-    sup = support_check(ctx, sweep_active)
+    sweep_before = sweep_state_fn()
+    sweep_active = sweep_before.get("active")
+    sup = support_check(ctx, sweep_active, sweep_before.get("reason"))
     out["context"] = ctx
     out["context"]["sweep_active_per_mqtt"] = sweep_active
+    out["context"]["sweep_state"] = {"before": sweep_before, "after": None}
     out["support"] = sup
     if not sup["supported"]:
         out.update({"ok": False, "error": "unsupported spectrometer configuration; no spectrum summary produced: " + "; ".join(sup["reasons"])})
@@ -250,8 +275,19 @@ def build_waterfall_snapshot(host: str, port: int, path: str, max_frames: int, t
     except Exception as e:
         out.update({"ok": False, "error": f"GET /api failed after collection: {e}"})
         return out
+    sweep_after = sweep_state_fn()
+    out["context"]["sweep_state"]["after"] = sweep_after
     out["provenance"]["frames_received"] = len(payloads)
     out["provenance"]["elapsed_s"] = round(time.time() - t0, 3)
+    if (sweep_after.get("active") != sweep_before.get("active") or sweep_after.get("generation") != sweep_before.get("generation")
+            or sweep_after.get("epoch") != sweep_before.get("epoch")):
+        out.update({"ok": False, "error": ("sweep state changed during the collection "
+                                            f"(active {sweep_before.get('active')!r} -> {sweep_after.get('active')!r}, "
+                                            f"sweep value changes {sweep_before.get('generation')} -> {sweep_after.get('generation')}, "
+                                            f"MQTT connection epoch {sweep_before.get('epoch')} -> {sweep_after.get('epoch')}"
+                                            + (f"; {sweep_after.get('reason')}" if sweep_after.get("reason") else "")
+                                            + "); the frames may straddle a mode change and are not interpreted")})
+        return out
     if not payloads:
         out.update({"ok": False, "error": "no frames received within the timeout"})
         return out

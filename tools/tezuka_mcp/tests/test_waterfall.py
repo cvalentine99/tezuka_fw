@@ -84,9 +84,14 @@ def test_support_check():
     ctx = WF.context_from_api({"spectrometer": {"input": "AD9361", "mode": "Average"}, "ddc": {"enabled": False}})
     assert WF.support_check(ctx, False)["supported"] is True
     assert WF.support_check(ctx, True)["supported"] is False
+    # unknown sweep state is unsupported too (review R5): an old or missing
+    # "off" is not evidence that the frames are one ADC-centred span
+    r = WF.support_check(ctx, None, "state/rx/sweep/activate never seen")
+    assert r["supported"] is False and len(r["reasons"]) == 1
+    assert "could not be established" in r["reasons"][0] and "never seen" in r["reasons"][0]
     ctx_ddc = WF.context_from_api({"spectrometer": {"input": "DDC", "mode": "Average"}, "ddc": {"enabled": True}})
     r = WF.support_check(ctx_ddc, None)
-    assert r["supported"] is False and len(r["reasons"]) == 2
+    assert r["supported"] is False and len(r["reasons"]) == 3
 
 
 # --- end-to-end against a fake sensor -------------------------------------
@@ -181,13 +186,58 @@ def test_end_to_end_cycling_steps_accepted_when_sweep_off(fixture_frames, fixtur
     assert res["summary"]["frames_averaged"] == 3
 
 
-def test_end_to_end_cycling_steps_rejected_when_sweep_unknown(fixture_frames, fixture_meta):
+def test_end_to_end_unknown_sweep_is_unsupported_before_collection(fixture_frames, fixture_meta):
     srv = FakeSensor(fixture_meta["api_before"], fixture_frames).start()
     try:
         res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None)
     finally:
         srv.stop()
-    assert res["ok"] is False and "step word" in res["error"] and "unknown" in res["error"]
+    assert res["ok"] is False and res["support"]["supported"] is False
+    assert "sweep state could not be established" in res["error"] and "summary" not in res
+    assert "frames_received" not in res["provenance"]      # nothing was collected
+    assert res["context"]["sweep_state"]["before"]["active"] is None
+
+
+def test_end_to_end_sweep_change_during_collection_is_rejected(fixture_frames, fixture_meta):
+    calls = []
+
+    def sweep_state_fn():
+        calls.append(1)
+        # off before the collection; a sweep message arrives while collecting
+        return {"active": False, "reason": None, "generation": 10 + (len(calls) > 1)}
+
+    srv = FakeSensor(fixture_meta["api_before"], [fixture_frames[0]] * 3).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=sweep_state_fn)
+    finally:
+        srv.stop()
+    assert len(calls) == 2
+    assert res["ok"] is False and "sweep state changed during the collection" in res["error"] and "summary" not in res
+    assert res["context"]["sweep_state"]["before"]["generation"] == 10
+    assert res["context"]["sweep_state"]["after"]["generation"] == 11
+
+
+def test_end_to_end_sweep_turning_on_during_collection_is_rejected(fixture_frames, fixture_meta):
+    states = iter([{"active": False, "reason": None, "generation": 1}, {"active": True, "reason": None, "generation": 1}])
+    srv = FakeSensor(fixture_meta["api_before"], [fixture_frames[0]] * 3).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=lambda: next(states))
+    finally:
+        srv.stop()
+    assert res["ok"] is False and "active False -> True" in res["error"]
+
+
+def test_end_to_end_stable_live_sweep_off_is_accepted(fixture_frames, fixture_meta):
+    srv = FakeSensor(fixture_meta["api_before"], fixture_frames).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=lambda: {"active": False, "reason": None, "generation": 4})
+    finally:
+        srv.stop()
+    assert res["ok"] is True and res["summary"]["step_words_seen"] == [0.0, 1.0, 2.0]
+    assert res["context"]["sweep_state"]["after"]["generation"] == 4
 
 
 def test_end_to_end_unsupported_ddc(fixture_frames, fixture_meta):
@@ -205,3 +255,40 @@ def test_end_to_end_unsupported_ddc(fixture_frames, fixture_meta):
 def test_unreachable_sensor_is_reported_not_guessed():
     res = WF.build_waterfall_snapshot("127.0.0.1", 1, "/waterfall", max_frames=1, timeout_s=2, sweep_active=None)
     assert res["ok"] is False and "/api failed" in res["error"] and res["context"] is None
+
+
+def test_end_to_end_off_on_off_during_collection_is_rejected(fixture_frames, fixture_meta):
+    # both readings say "off", but the value-change generation moved by two
+    states = iter([{"active": False, "reason": None, "generation": 4, "epoch": 1},
+                   {"active": False, "reason": None, "generation": 6, "epoch": 1}])
+    srv = FakeSensor(fixture_meta["api_before"], [fixture_frames[0]] * 3).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=lambda: next(states))
+    finally:
+        srv.stop()
+    assert res["ok"] is False and "sweep value changes 4 -> 6" in res["error"]
+
+
+def test_end_to_end_reconnect_during_collection_is_rejected(fixture_frames, fixture_meta):
+    states = iter([{"active": False, "reason": None, "generation": 0, "epoch": 1},
+                   {"active": False, "reason": None, "generation": 0, "epoch": 2}])
+    srv = FakeSensor(fixture_meta["api_before"], [fixture_frames[0]] * 3).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=lambda: next(states))
+    finally:
+        srv.stop()
+    assert res["ok"] is False and "connection epoch 1 -> 2" in res["error"]
+
+
+def test_end_to_end_unchanged_republish_during_collection_is_accepted(fixture_frames, fixture_meta):
+    # the fake source stands for flags republished unchanged every 2 s: same
+    # generation and epoch before and after, so the collection is fine
+    srv = FakeSensor(fixture_meta["api_before"], fixture_frames).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=lambda: {"active": False, "reason": None, "generation": 7, "epoch": 3})
+    finally:
+        srv.stop()
+    assert res["ok"] is True and res["context"]["sweep_state"]["after"]["epoch"] == 3

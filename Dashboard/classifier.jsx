@@ -369,6 +369,12 @@ function ClassifierPage({ d }) {
 
   // Status readout from the atomic result + background summary.
   const bg = (d.classifierBackground && typeof d.classifierBackground === 'object') ? d.classifierBackground : null;
+  // Per-cycle observation (state/classifier/observation) and the retained
+  // verdict of the last template upload (state/classifier/templates_status);
+  // both are parsed JSON or null in data.jsx, and both are optional: a
+  // daemon that predates them simply never populates these fields.
+  const obs = (d.classifierObservation && typeof d.classifierObservation === 'object') ? d.classifierObservation : null;
+  const tstat = (d.classifierTemplatesStatus && typeof d.classifierTemplatesStatus === 'object') ? d.classifierTemplatesStatus : null;
   const stateText = !res ? '\u2014'
     : res.online === false ? 'offline'
     : res.state === 'learning' ? `learning background (${res.bg_age_s ?? 0} s)`

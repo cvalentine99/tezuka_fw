@@ -65,9 +65,16 @@ The SDK returns a plain-dict tool result as `structuredContent: {"result":
 ## Reading the results honestly
 
 * `status` per field: `fresh`, `stale`, `retained` (only the broker's
-  replayed copy was seen since this server connected — the producer may be
-  down) or `unavailable`. Retained replays never count as fresh, and a
-  repeated observation `seq` is ignored.
+  replayed copy is held for this value — the producer may be down) or
+  `unavailable`. Retained replays never count as fresh, and a retained
+  copy with a different payload replaces the value as `retained` rather
+  than inheriting the earlier live freshness.
+* The classifier observation is validated (schema, integer `seq`,
+  producer identity, object-typed sections) before it replaces the held
+  record; rejected messages are counted under `classifier.validation` and
+  the previous record keeps its own age. Within one producer session a
+  repeated or older `seq` is ignored; a new session (daemon restart) is
+  accepted even when its `seq` repeats.
 * `classifier.best_effort: true` means the sensor runs a daemon without the
   `observation` message; sequence, boot id, template hash and feature
   semantics are then `null`, not guessed.
@@ -76,7 +83,11 @@ The SDK returns a plain-dict tool result as `structuredContent: {"result":
   unsupported/rejected instead of being averaged.
 * On the deployed firmware the frame's step word free-runs 0..7 even with
   sweep off; the tool uses the MQTT sweep state to tell that apart from
-  real stepping and rejects the collection when that state is unknown.
+  real stepping. That state counts as known only while the subscriber is
+  connected and both `state/rx/sweep/{activate,engaged}` arrived live
+  within `TEZUKA_STATE_MAX_AGE_S` with `0`/`1`; otherwise the collection
+  is unsupported (reason in `context.sweep_state`), and it is rejected if
+  the sweep state or its message count changed during the collection.
 
 ## Tests
 

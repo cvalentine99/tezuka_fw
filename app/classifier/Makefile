@@ -35,7 +35,24 @@ $(HOSTDIR)/jsonw_check: jsonw_check.c $(CORE_SRCS) $(CORE_HDRS) | $(HOSTDIR)
 test: host-tools
 	python3 -m pytest -q tests
 
+# ThreadSanitizer harness (see tsan/harness.c): the daemon compiled natively
+# against stub network headers, replaying frames while a second thread
+# rewrites the MQTT-derived observation fields. CLASSIFIER_SRC may point at
+# another revision's classifier.c. TSan needs ASLR off on recent kernels.
+CLASSIFIER_SRC ?= $(abspath classifier.c)
+TSAN_FLAGS = -O1 -g -fsanitize=thread -fno-omit-frame-pointer -Wall -Wno-unused-function -Wno-unused-parameter
+tsan: build/tsan/harness
+build/tsan/harness: tsan/harness.c tsan/stubs/mosquitto.h tsan/stubs/libwebsockets.h $(CLASSIFIER_SRC) $(CORE_SRCS) $(CORE_HDRS)
+	mkdir -p build/tsan
+	$(HOSTCC) $(TSAN_FLAGS) -I tsan/stubs -iquote . -DCLASSIFIER_SRC='"$(CLASSIFIER_SRC)"' tsan/harness.c $(CORE_SRCS) -o $@ -lm -lpthread
+build/tsan/replay300.raw: tests/fixtures/wf_avg4096_frame0.bin
+	mkdir -p build/tsan
+	python3 -c 'import sys; d=open(sys.argv[1],"rb").read(); open(sys.argv[2],"wb").write(d*300)' $< $@
+tsan-run: build/tsan/harness build/tsan/replay300.raw
+	TSAN_OPTIONS="halt_on_error=0 $(TSAN_OPTIONS)" setarch $$(uname -m) -R build/tsan/harness -r build/tsan/replay300.raw -n 4096 -B none -S 2500000 -l 2 -F 7.5 -i 0.5 \
+	    -f ../../board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin > build/tsan/replay.out
+
 clean:
 	rm -rf classifier build
 
-.PHONY: all host-tools test clean
+.PHONY: all host-tools test tsan tsan-run clean

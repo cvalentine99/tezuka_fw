@@ -1,0 +1,370 @@
+"""rf_compare.py - controlled offline comparison of classifier revisions on
+a frozen fixture set (independent review 2026-11-08, RF acceptance gate).
+
+Every revision's cross-compiled daemon is run under qemu-arm-static in
+replay mode (-r, -B none: no network, no board) on the SAME frame
+sequences with the SAME template bytes and the SAME arguments, and the
+result/observation/background lines it prints are tallied per fixture.
+
+Fixtures are generated deterministically (seeded) from the three recorded
+/waterfall frames in tools/tezuka_mcp/tests/fixtures (SignalSDR Pro,
+1.09 GHz, 2.5 MHz span, 4096-point Average spectrometer, DC spur at
+usable bin 2047). Injected emitters are shaped like the templates they are
+meant to be recognised as (or like nothing in the set, for the unknown
+cases): they are SOFTWARE fixtures, positive controls for the pipeline,
+not evidence of performance on real RF. The frame contract is the one in
+waterfall_frame.py: float 0 is the step word, usable bin j is float j+1,
+linear power, span / fft_size per bin, DC at usable index fft_size/2 - 1.
+
+    python3 rf_compare.py --out DIR --fixtures tools/tezuka_mcp/tests/fixtures \
+        --templates board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin \
+        --sysroot SYSROOT --bin baseline=/path/classifier --bin pinned=... --bin fixed=...
+
+Writes DIR/fixtures.json (manifest with SHA-256 and expected disposition),
+DIR/raw/*.raw (the sequences), DIR/runs/<fixture>__<rev>.out (daemon
+output), DIR/results.json and DIR/results.md.
+"""
+import argparse
+import concurrent.futures
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+from collections import Counter
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, ".."))
+from templates_format import read_templates  # noqa: E402
+
+N = 4096                 # floats per frame (step word + 4095 usable bins)
+SPAN_HZ = 2.5e6
+CENTER_HZ = 1.09e9
+FPS = 7.5
+DC = N // 2 - 1          # usable-bins index of DC
+LIVE_HZ = SPAN_HZ / N
+LEARN_S = 10.0
+# Identical arguments for every revision: the daemon defaults, spelled out.
+DAEMON_ARGS = ["-n", str(N), "-F", str(FPS), "-S", str(int(SPAN_HZ)), "-B", "none",
+               "-c", "0.6", "-m", "0.15", "-i", "1.0", "-s", "6", "-g", "4", "-l", str(int(LEARN_S)), "-a", "300",
+               "-w", "4e6", "-x", "8"]
+
+
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_recorded(fixture_dir):
+    frames = []
+    for i in range(3):
+        p = os.path.join(fixture_dir, f"wf_avg4096_frame{i}.bin")
+        a = np.fromfile(p, dtype="<f4")
+        assert a.size == N, p
+        frames.append(a)
+    return np.stack(frames)
+
+
+def cycled(base, seconds):
+    n = int(round(seconds * FPS))
+    return base[np.arange(n) % base.shape[0]].copy()
+
+
+def template_shape(tpl, canonical_n):
+    """0..1 shape of a template stretched to its real width on this grid
+    (the same stretch inject_emitter.py and the daemon apply)."""
+    shape = np.array(tpl.data, dtype=np.float64)
+    shape -= shape.min()
+    shape /= shape.max()
+    if tpl.hz_per_bin > 0:
+        n_live = max(8, int(round(canonical_n * tpl.hz_per_bin / LIVE_HZ)))
+        n_live = min(n_live, N - 1)
+        shape = np.interp(np.linspace(0, canonical_n - 1, n_live), np.arange(canonical_n), shape)
+    return shape
+
+
+def flat_block(width_bins, rolloff=0.1):
+    """A flat-top block with raised-cosine edges: like nothing in the
+    template set (wider than FM, narrower than DAB+, no central peak)."""
+    x = np.ones(width_bins)
+    e = max(1, int(width_bins * rolloff))
+    ramp = 0.5 - 0.5 * np.cos(np.linspace(0, np.pi, e))
+    x[:e] = ramp
+    x[-e:] = ramp[::-1]
+    return x
+
+
+def inject(a, shape, start, snr_db, t_on, t_off, rng):
+    """Add `shape` (0..1) at usable bin `start` during [t_on, t_off) with its
+    peak snr_db above the median level of that window in the first 10 s,
+    with the ~25 % per-bin fluctuation (gamma k=16) an averaged steady
+    signal shows. Same recipe as inject_emitter.py."""
+    n = shape.size
+    win = a[: int(FPS * 10), 1 + start:1 + start + n]
+    noise = float(np.median(win))
+    peak = noise * 10 ** (snr_db / 10)
+    for i in range(a.shape[0]):
+        if t_on <= i / FPS < t_off:
+            a[i, 1 + start:1 + start + n] += (peak * shape * rng.gamma(16.0, 1.0 / 16.0, n)).astype("<f4")
+    return {"start_bin": start, "end_bin": start + n - 1, "width_bins": n,
+            "center_hz": CENTER_HZ + (start + n / 2 - 0.5 + 1 - N / 2) * LIVE_HZ, "width_hz": n * LIVE_HZ,
+            "snr_db_over_local_median": snr_db, "t_on_s": t_on, "t_off_s": t_off}
+
+
+def remove_spur(a, rng, half=40):
+    """Replace the DC spur region with values drawn from the same frame's
+    neighbouring bins (software fixture: a receiver without the spur)."""
+    lo, hi = DC - half, DC + half
+    for i in range(a.shape[0]):
+        pool = np.concatenate([a[i, 1 + DC - 300:1 + DC - 100], a[i, 1 + DC + 100:1 + DC + 300]])
+        a[i, 1 + lo:1 + hi + 1] = rng.choice(pool, hi - lo + 1).astype("<f4")
+    return {"replaced_bins": [lo, hi]}
+
+
+def build_fixtures(base, templates, out_raw):
+    """Returns the manifest list; writes the .raw sequences."""
+    canonical_n, tpls = templates
+    fm, dab, cw = tpls[0], tpls[1], tpls[2]
+    fm_shape, dab_shape, cw_shape = (template_shape(t, canonical_n) for t in (fm, dab, cw))
+    specs = []
+
+    def add(name, seconds, expected_on, expected_off, condition, basis, builder, t_on=None, t_off=None):
+        rng = np.random.default_rng(abs(hash(name)) % (2 ** 32) if False else sum(map(ord, name)))
+        a = cycled(base, seconds)
+        detail = builder(a, rng) if builder else {}
+        p = os.path.join(out_raw, name + ".raw")
+        a.astype("<f4").tofile(p)
+        specs.append({"name": name, "file": os.path.relpath(p, os.path.dirname(out_raw)), "sha256": sha256(p),
+                      "frames": int(a.shape[0]), "duration_s": seconds, "fps": FPS,
+                      "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+                      "grid": {"center_hz": CENTER_HZ, "span_hz": SPAN_HZ, "fft_size": N, "hz_per_bin": LIVE_HZ, "dc_usable_index": DC},
+                      "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled" + (", then modified as `detail` says" if detail else ""),
+                      "detail": detail, "on_window_s": [t_on, t_off] if t_on is not None else None,
+                      "expected_on": sorted(expected_on), "expected_off": sorted(expected_off),
+                      "condition": condition, "expected_basis": basis, "kind": "recorded" if not detail else "software fixture"})
+
+    nothing = set()
+    add("spur_only_cold", 60, nothing, nothing, "cold start: learning begins on the first frame",
+        "the recorded band holds only the receiver's DC spur (waterfall summary: one segment, contains_dc); no emitter class is correct", None)
+    add("spur_only_settled", 240, nothing, nothing, "settled: 240 s of the same frames, background adaptation tau 300 s",
+        "as spur_only_cold", None)
+    add("quiet_no_spur", 60, nothing, nothing, "cold start",
+        "the spur region is replaced by neighbouring-bin samples: nothing is on air", remove_spur)
+    add("fm_offcenter", 60, {"FM Broadcast"}, nothing, "cold start; emitter on from 20 s",
+        "an emitter with the FM template's own 400 kHz shape at -500 kHz from the LO (positive control derived from the template, not independent RF)",
+        lambda a, rng: inject(a, fm_shape, 900, 20.0, 20.0, 60.0, rng), 20.0, 60.0)
+    add("fm_near_lo", 60, {"FM Broadcast"}, nothing, "cold start; emitter on from 20 s, centred on the LO over the spur",
+        "a legitimate signal AT the LO must stay recognisable: a blanket DC exclusion would remove it (positive control derived from the template)",
+        lambda a, rng: inject(a, fm_shape, DC - fm_shape.size // 2, 20.0, 20.0, 60.0, rng), 20.0, 60.0)
+    add("dab_fullspan", 60, {"DAB+"}, nothing, "cold start; emitter on from 20 s, fills the whole span",
+        "the DAB+ template is 2.5 MHz wide, the whole span at this grid (positive control derived from the template)",
+        lambda a, rng: inject(a, dab_shape, 0, 15.0, 20.0, 60.0, rng), 20.0, 60.0)
+    add("cw_offcenter", 60, {"CW / Beacon"}, nothing, "cold start; emitter on from 20 s",
+        "a 30 kHz carrier-like shape at +580 kHz (positive control derived from the template)",
+        lambda a, rng: inject(a, cw_shape, 3000, 25.0, 20.0, 60.0, rng), 20.0, 60.0)
+    add("unknown_block_1mhz", 60, nothing, nothing, "cold start; emitter on from 20 s",
+        "a 1 MHz flat-top block is in no template: any accepted label is a false accept; 'unknown' is correct",
+        lambda a, rng: inject(a, flat_block(1638), 300, 15.0, 20.0, 60.0, rng), 20.0, 60.0)
+    add("overlap_fm_cw", 60, {"FM Broadcast", "CW / Beacon"}, nothing, "cold start; two emitters on from 20 s, the carrier inside the FM window",
+        "both emitters are present, so either label is defensible; DAB+ would be false",
+        lambda a, rng: (inject(a, fm_shape, 1000, 20.0, 20.0, 60.0, rng), inject(a, cw_shape, 1300, 25.0, 20.0, 60.0, rng))[0] | {"second": "CW at 1300"}, 20.0, 60.0)
+    return specs
+
+
+def daemon_args_for(fps):
+    """DAEMON_ARGS with the frame rate replaced: a recorded sequence is
+    replayed at the rate it was captured at unless the caller says otherwise."""
+    args = list(DAEMON_ARGS)
+    args[args.index("-F") + 1] = repr(float(fps))
+    return args
+
+
+def add_recorded(specs, spec_arg, out_raw):
+    """--recorded name=path[:fps]: a raw sequence captured from a sensor
+    (capture.py / capture_from_device.py layout, step word included), used
+    as it is. Expected disposition: nothing on air -> unknown; the caller
+    states the band in the meta file next to it (path + '.meta.json')."""
+    name, rest = spec_arg.split("=", 1)
+    path, _, fps_s = rest.partition(":")
+    fps = float(fps_s) if fps_s else FPS
+    a = np.fromfile(path, dtype="<f4")
+    if a.size == 0 or a.size % N:
+        raise SystemExit(f"{path}: {a.size} floats is not a multiple of {N}")
+    frames = a.size // N
+    dst = os.path.join(out_raw, name + ".raw")
+    shutil.copyfile(path, dst)
+    meta = {}
+    if os.path.exists(path + ".meta.json"):
+        with open(path + ".meta.json") as f:
+            meta = json.load(f)
+    api = meta.get("api", {})
+    rx = api.get("ad9361", {})
+    sp = api.get("spectrometer", {})
+    specs.append({"name": name, "file": os.path.relpath(dst, os.path.dirname(out_raw)), "sha256": sha256(dst),
+                  "frames": int(frames), "duration_s": frames / fps, "fps": fps,
+                  "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+                  "grid": {"center_hz": rx.get("rx_lo_frequency"), "span_hz": rx.get("sampling_frequency"), "fft_size": sp.get("fft_size", N),
+                           "hz_per_bin": (rx.get("sampling_frequency") or SPAN_HZ) / sp.get("fft_size", N), "dc_usable_index": DC},
+                  "source": f"recorded as captured from {meta.get('host', '?')} at {meta.get('captured_unix_s')} (unix s): "
+                            f"rx_lo {rx.get('rx_lo_frequency')} Hz, fs {rx.get('sampling_frequency')} Hz, gain {rx.get('rx_gain')} dB {rx.get('rx_gain_mode')}, "
+                            f"{sp.get('mode')} x{sp.get('number_integrations')}, {sp.get('fft_size')}-point; capture sha256 {meta.get('sha256')}",
+                  "detail": {"meta": meta, "replay_fps": fps},
+                  "on_window_s": None, "expected_on": [], "expected_off": [],
+                  "condition": f"recorded sequence as captured, replayed at {fps:g} frames/s: cold start, learning begins on the first frame",
+                  "expected_basis": "nothing was on air in the band at capture time except the receiver's own DC spur (see meta): no emitter class is correct",
+                  "kind": "recorded", "daemon_args": daemon_args_for(fps)})
+
+
+def run_daemon(qemu, sysroot, binary, raw, templates, out_path, daemon_args=DAEMON_ARGS):
+    cmd = [qemu, "-L", sysroot, binary, "-r", raw, "-f", templates] + list(daemon_args)
+    with open(out_path, "w") as f:
+        p = subprocess.run(cmd, stdout=f, stderr=subprocess.PIPE, text=True)
+    return cmd, p.returncode, p.stderr
+
+
+def parse_output(path):
+    rows = {"result": [], "observation": [], "background": []}
+    with open(path) as f:
+        for line in f:
+            parts = line.rstrip("\n").split(" ", 2)
+            if len(parts) < 3:
+                continue
+            t, topic, payload = parts
+            key = topic.rsplit("/", 1)[-1]
+            if key in rows:
+                try:
+                    rows[key].append((float(t), json.loads(payload)))
+                except ValueError:
+                    pass
+    return rows
+
+
+def tally(spec, rows):
+    on = spec["on_window_s"]
+    settle = LEARN_S + 2.0                     # skip learning plus one cycle
+    dec_on, dec_off = [], []
+    for t, r in rows["result"]:
+        if t < settle:
+            continue
+        if on and on[0] <= t < on[1]:
+            dec_on.append((t, r))
+        elif not on or t < on[0]:
+            dec_off.append((t, r))
+        else:
+            dec_off.append((t, r))
+    exp_on, exp_off = set(spec["expected_on"]), set(spec["expected_off"])
+
+    def summarize(decs, allowed):
+        labels = Counter(r["label"] for _, r in decs)
+        accepted = [(t, r) for t, r in decs if r["label"] != "unknown"]
+        false_acc = [(t, r) for t, r in accepted if r["label"] not in allowed]
+        correct = [(t, r) for t, r in accepted if r["label"] in allowed]
+        misses = [(t, r) for t, r in decs if allowed and r["label"] not in allowed]
+        worst_false = max((r.get("confidence", 0) for _, r in false_acc), default=None)
+        min_correct = min((r.get("confidence", 0) for _, r in correct), default=None)
+        return {"decisions": len(decs), "labels": dict(labels), "false_accepts": len(false_acc),
+                "false_accept_labels": dict(Counter(r["label"] for _, r in false_acc)),
+                "worst_false_accept_score": worst_false, "recognized": len(correct) if allowed else None,
+                "misses": len(misses) if allowed else None, "min_correct_score": min_correct,
+                "first_false_accept": {"t": false_acc[0][0], **false_acc[0][1]} if false_acc else None}
+
+    out = {"on": summarize(dec_on, exp_on) if on else None, "off": summarize(dec_off, exp_off)}
+    # explanatory record for the first accepted decision, from the observation
+    # message when the revision publishes one (pinned/fixed), else from result
+    first_acc = next(((t, r) for t, r in rows["result"] if t >= settle and r["label"] != "unknown"), None)
+    if first_acc:
+        t0 = first_acc[0]
+        obs = next((o for t, o in rows["observation"] if abs(t - t0) < 0.01), None)
+        bg = [b for t, b in rows["background"] if t <= t0]
+        out["explain_first_accept"] = {"t": t0, "result": first_acc[1],
+                                       "observation": {k: obs.get(k) for k in ("decision", "features", "background", "input")} if obs else None,
+                                       "background_learned": bg[-1] if bg else None}
+    else:
+        bg = rows["background"]
+        out["explain_first_accept"] = None
+        out["background_learned"] = bg[-1][1] if bg else None
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--fixtures", required=True, help="dir with wf_avg4096_frame{0,1,2}.bin")
+    ap.add_argument("--templates", required=True)
+    ap.add_argument("--sysroot", required=True)
+    ap.add_argument("--qemu", default=shutil.which("qemu-arm-static") or "qemu-arm-static")
+    ap.add_argument("--bin", action="append", required=True, help="name=path (repeat)")
+    ap.add_argument("--jobs", type=int, default=os.cpu_count() or 2)
+    ap.add_argument("--recorded", action="append", default=[],
+                    help="name=path[:fps]: add a captured raw sequence as a recorded fixture (repeat)")
+    ap.add_argument("--only", default="", help="comma-separated fixture names to run (default: all)")
+    args = ap.parse_args()
+
+    os.makedirs(os.path.join(args.out, "raw"), exist_ok=True)
+    os.makedirs(os.path.join(args.out, "runs"), exist_ok=True)
+    base = load_recorded(args.fixtures)
+    templates = read_templates(args.templates)
+    specs = build_fixtures(base, templates, os.path.join(args.out, "raw"))
+    for rec in args.recorded:
+        add_recorded(specs, rec, os.path.join(args.out, "raw"))
+    if args.only:
+        wanted = set(args.only.split(","))
+        missing = wanted - {s["name"] for s in specs}
+        if missing:
+            raise SystemExit(f"--only names not found: {sorted(missing)}")
+        specs = [s for s in specs if s["name"] in wanted]
+    manifest = {"recorded_frames": [{"file": f"wf_avg4096_frame{i}.bin", "sha256": sha256(os.path.join(args.fixtures, f"wf_avg4096_frame{i}.bin"))} for i in range(3)],
+                "templates": {"file": args.templates, "sha256": sha256(args.templates),
+                              "labels": [t.label for t in templates[1]], "canonical_n": templates[0]},
+                "daemon_args": DAEMON_ARGS, "fixtures": specs}
+    with open(os.path.join(args.out, "fixtures.json"), "w") as f:
+        json.dump(manifest, f, indent=1)
+
+    bins = dict(b.split("=", 1) for b in args.bin)
+    revs = {name: {"path": path, "sha256": sha256(path)} for name, path in bins.items()}
+    jobs = [(spec, name) for spec in specs for name in bins]
+
+    def job(spec, name):
+        raw = os.path.join(args.out, spec["file"])
+        outp = os.path.join(args.out, "runs", f"{spec['name']}__{name}.out")
+        cmd, rc, err = run_daemon(args.qemu, args.sysroot, bins[name], raw, args.templates, outp,
+                                  spec.get("daemon_args", DAEMON_ARGS))
+        rows = parse_output(outp)
+        return spec["name"], name, {"command": cmd, "returncode": rc, "stderr_tail": err.strip().splitlines()[-3:],
+                                    "result_lines": len(rows["result"]), **tally(spec, rows)}
+
+    results = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
+        for fx, name, res in ex.map(lambda j: job(*j), jobs):
+            results.setdefault(fx, {})[name] = res
+    doc = {"revisions": revs, "qemu": args.qemu, "sysroot": args.sysroot, "results": results}
+    with open(os.path.join(args.out, "results.json"), "w") as f:
+        json.dump(doc, f, indent=1)
+
+    # markdown table
+    lines = ["| fixture | expected (ON / OFF) | revision | ON: accepted / decisions | OFF: accepted / decisions | false accepts (worst score) | misses | condition |",
+             "|---|---|---|---|---|---|---|---|"]
+    for spec in specs:
+        exp = f"{' or '.join(spec['expected_on']) or 'unknown'} / {' or '.join(spec['expected_off']) or 'unknown'}"
+        for name in bins:
+            r = results[spec["name"]][name]
+            on, off = r["on"], r["off"]
+            on_s = f"{on['recognized'] if on['recognized'] is not None else sum(v for k, v in on['labels'].items() if k != 'unknown')}/{on['decisions']} {on['labels']}" if on else "-"
+            off_s = f"{sum(v for k, v in off['labels'].items() if k != 'unknown')}/{off['decisions']} {off['labels']}"
+            fa = (on["false_accepts"] if on else 0) + off["false_accepts"]
+            worst = max([x for x in ((on or {}).get("worst_false_accept_score"), off.get("worst_false_accept_score")) if x is not None], default=None)
+            misses = on["misses"] if on and on["misses"] is not None else "-"
+            lines.append(f"| {spec['name']} | {exp} | {name} | {on_s} | {off_s} | {fa}{f' ({worst})' if worst is not None else ''} | {misses} | {spec['condition']} |")
+    with open(os.path.join(args.out, "results.md"), "w") as f:
+        f.write("\n".join(lines) + "\n")
+    print("\n".join(lines))
+
+
+if __name__ == "__main__":
+    main()

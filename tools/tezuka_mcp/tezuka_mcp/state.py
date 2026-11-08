@@ -1,28 +1,39 @@
 """Persistent MQTT subscriber and the sensor snapshot built from it.
 
 Freshness is decided per topic from how the message arrived, not from
-its content:
+its content, and it belongs to the payload it arrived with:
 
   * A message delivered with the RETAIN flag set is the broker's stored
-    copy, replayed at subscribe time. It tells us the last known value
-    but nothing about whether the producer is alive now, so it populates
-    `value` with source="retained" and never refreshes `live_at`.
+    copy, replayed at subscribe time (and again after every reconnect).
+    It tells us the last known value but nothing about whether the
+    producer is alive now, so it never refreshes `live_at`; when it
+    carries a different payload than the last live message it also
+    REPLACES that payload, so the live freshness no longer applies and
+    the entry drops back to "retained". A replayed copy of the very same
+    payload keeps the live evidence we already had for that payload.
   * A message without RETAIN came from the producer during this
     connection: it sets `live_at` and source="live".
-  * For the classifier observation, a repeated `seq` is also not new.
+  * For the classifier observation the record is (payload, producer
+    identity, seq, freshness) as one unit. It is replaced only by a valid
+    message that is newer within the same producer session, or by any
+    valid message from a different session (a restarted daemon starts
+    its seq again at 1). A repeated or older seq within a session is
+    counted and otherwise ignored, and a message that fails schema
+    validation is counted and otherwise ignored: the previous record
+    keeps its own age.
 
 A snapshot therefore reports, per section, one of: fresh (live and
 younger than the configured max age), stale (live but older), retained
-(only the replayed copy was ever seen) or unavailable (never seen). It
-never invents a frequency, rate or template hash: a missing value is
-None with a reason.
+(only the replayed copy is held) or unavailable (never seen). It never
+invents a frequency, rate or template hash: a missing value is None with
+a reason.
 """
 import json
 import logging
 import threading
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, Optional, Tuple
 
 from . import SCHEMA_SNAPSHOT
 
@@ -38,15 +49,60 @@ RX_TOPICS = (
 MAIN_TOPICS = ("state/main/serial", "state/main/hw_model", "state/main/fw_version", "state/main/uptime")
 CLASSIFIER_SIDE_TOPICS = ("state/classifier/enabled", "state/classifier/background", "state/classifier/templates_status")
 
+# The observation message contract (docs/classifier_telemetry.md).
+OBSERVATION_SCHEMA_PREFIX = "tezuka.classifier.observation/"
+OBSERVATION_SCHEMA_VERSIONS = (1,)
+# Sections that, when present, must be JSON objects (or null); the snapshot
+# reads into them with .get().
+OBSERVATION_OBJECT_FIELDS = ("time", "sensor", "input", "config", "templates", "decision",
+                             "features", "temporal", "background", "health")
+UNAVAILABLE = {"value": None, "status": "unavailable", "age_s": None}
+
+
+def validate_observation(obj: Any) -> Tuple[Optional[str], Optional[str], Optional[int]]:
+    """Return (error, producer identity, seq). error is None when the
+    message is a usable observation. Nothing is defaulted: a message that
+    lacks the schema, the sequence or the producer identity is rejected
+    rather than presented as a fresh observation of unknown origin."""
+    if not isinstance(obj, dict):
+        return "not a JSON object", None, None
+    schema = obj.get("schema")
+    if not isinstance(schema, str) or not schema.startswith(OBSERVATION_SCHEMA_PREFIX):
+        return f"missing or foreign schema {schema!r}", None, None
+    try:
+        version = int(schema[len(OBSERVATION_SCHEMA_PREFIX):])
+    except ValueError:
+        return f"malformed schema version in {schema!r}", None, None
+    if version not in OBSERVATION_SCHEMA_VERSIONS:
+        return f"unsupported schema version {version} (supported: {list(OBSERVATION_SCHEMA_VERSIONS)})", None, None
+    seq = obj.get("seq")
+    if isinstance(seq, bool) or not isinstance(seq, int) or seq < 0:
+        return f"missing or invalid seq {seq!r}", None, None
+    for name in OBSERVATION_OBJECT_FIELDS:
+        v = obj.get(name)
+        if v is not None and not isinstance(v, dict):
+            return f"field {name!r} is {type(v).__name__}, not an object", None, None
+    sensor = obj.get("sensor")
+    if not isinstance(sensor, dict):
+        return "missing sensor identity object", None, None
+    ident = sensor.get("session_id")
+    if not isinstance(ident, str) or not ident:
+        ident = sensor.get("boot_id")
+    if not isinstance(ident, str) or not ident:
+        return "missing producer identity (sensor.session_id or sensor.boot_id)", None, None
+    return None, ident, seq
+
 
 @dataclass
 class Entry:
     value: str
     wall_at: float          # time.time() of the last message of any kind
     mono_at: float          # time.monotonic() of the last message of any kind
-    live_at: Optional[float] = None   # monotonic of the last NON-retained message
+    live_at: Optional[float] = None   # monotonic of the live message that carried `value`
     retained_seen: bool = False
     live_count: int = 0
+    live_epoch: Optional[int] = None  # connection epoch of that live message
+    change_count: int = 0             # messages whose payload differed from the one before
 
     def describe(self, now_mono: float, max_age_s: float) -> Dict[str, Any]:
         if self.live_at is None:
@@ -61,13 +117,28 @@ class Entry:
 
 @dataclass
 class ObservationEntry:
+    """The accepted observation: payload, producer identity, sequence and
+    the freshness of THAT payload, replaced only as one unit."""
     obj: Dict[str, Any]
-    seq: Optional[int]
+    identity: str
+    seq: int
     mono_at: float
     live_at: Optional[float]
-    retained_seen: bool
+    live_epoch: Optional[int] = None
+
+
+@dataclass
+class ObservationStats:
+    """Counters that outlive individual records."""
+    retained_seen: bool = False
     live_count: int = 0
-    seq_repeats: int = 0
+    accepted: int = 0
+    seq_repeats: int = 0            # same session, same seq (content equal or not)
+    seq_repeat_content_changed: int = 0
+    out_of_order: int = 0           # same session, older seq
+    sessions_seen: int = 0          # distinct producer identities accepted
+    validation_errors: int = 0
+    last_validation_error: Optional[str] = None
 
 
 class StateCache:
@@ -81,9 +152,14 @@ class StateCache:
         self._lock = threading.Lock()
         self._entries: Dict[str, Entry] = {}
         self._observation: Optional[ObservationEntry] = None
+        self._obs_stats = ObservationStats()
         self.connected = False
         self.connected_at_mono: Optional[float] = None
         self.connect_attempts = 0
+        # Bumped on every successful (re)connect. Retained copies are
+        # replayed at the start of each epoch; a live message's epoch says
+        # which connection delivered it.
+        self.connection_epoch = 0
         self.last_error: Optional[str] = None
         self._client = None
         self._client_id = "tezuka_mcp" + client_id_suffix
@@ -115,10 +191,7 @@ class StateCache:
 
     def _on_connect(self, client, userdata, flags, reason_code, properties=None):
         ok = (getattr(reason_code, "is_failure", None) is not None and not reason_code.is_failure) or reason_code == 0
-        with self._lock:
-            self.connected = bool(ok)
-            self.connected_at_mono = time.monotonic() if ok else None
-            self.last_error = None if ok else f"connect refused: {reason_code}"
+        self.mark_connected(bool(ok), None if ok else f"connect refused: {reason_code}")
         if ok:
             client.subscribe("state/#", qos=0)
             if not self.classifier_prefix.startswith("state/"):
@@ -128,10 +201,18 @@ class StateCache:
             log.warning("MQTT connect failed: %s", reason_code)
 
     def _on_disconnect(self, client, userdata, flags, reason_code=None, properties=None):
-        with self._lock:
-            self.connected = False
-            self.last_error = f"disconnected: {reason_code}"
+        self.mark_connected(False, f"disconnected: {reason_code}")
         log.warning("MQTT disconnected: %s", reason_code)
+
+    def mark_connected(self, ok: bool, error: Optional[str], now_mono: Optional[float] = None) -> None:
+        """Connection bookkeeping (also driven directly by the tests)."""
+        now_mono = time.monotonic() if now_mono is None else now_mono
+        with self._lock:
+            self.connected = ok
+            self.connected_at_mono = now_mono if ok else None
+            self.last_error = error
+            if ok:
+                self.connection_epoch += 1
 
     def _on_message(self, client, userdata, msg):
         try:
@@ -149,44 +230,75 @@ class StateCache:
             if e is None:
                 e = Entry(value=payload, wall_at=now_wall, mono_at=now_mono)
                 self._entries[topic] = e
-            e.value, e.wall_at, e.mono_at = payload, now_wall, now_mono
+            if payload != e.value:
+                e.change_count += 1
             if retained:
                 e.retained_seen = True
+                if payload != e.value:
+                    # The broker's stored copy differs from the payload our
+                    # live evidence was about: that evidence does not carry
+                    # over to this value.
+                    e.live_at, e.live_epoch = None, None
             else:
-                e.live_at = now_mono
+                e.live_at, e.live_epoch = now_mono, self.connection_epoch
                 e.live_count += 1
+            e.value, e.wall_at, e.mono_at = payload, now_wall, now_mono
             if topic == self.observation_topic:
                 self._ingest_observation(payload, retained, now_mono)
 
+    def change_generation(self, *topics: str) -> int:
+        """Value changes seen on these topics (a message carrying the same
+        payload as the one before does not count, so api_controller.sh's
+        2 s republish of unchanged flags leaves it alone): a generation a
+        caller compares across two points in time to know whether any of
+        the values moved in between, even if they moved back."""
+        with self._lock:
+            return sum(self._entries[t].change_count for t in topics if t in self._entries)
+
     def _ingest_observation(self, payload: str, retained: bool, now_mono: float) -> None:
+        st = self._obs_stats
         try:
             obj = json.loads(payload)
-            if not isinstance(obj, dict):
-                raise ValueError("not an object")
         except ValueError as ex:
-            log.warning("observation payload is not JSON (%s); ignored", ex)
-            return
-        seq = obj.get("seq") if isinstance(obj.get("seq"), int) else None
-        prev = self._observation
-        if prev is None:
-            self._observation = ObservationEntry(obj=obj, seq=seq, mono_at=now_mono, live_at=None, retained_seen=retained)
-            prev = self._observation
+            obj, err = None, f"not JSON ({ex})"
         else:
-            prev.obj, prev.mono_at = obj, now_mono
+            err, ident, seq = validate_observation(obj)
+        if err is not None:
+            st.validation_errors += 1
+            st.last_validation_error = err
+            log.warning("observation rejected (%s); previous observation kept", err)
+            return
         if retained:
-            prev.retained_seen = True
-            return
-        if seq is not None and prev.seq == seq and prev.live_at is not None:
-            prev.seq_repeats += 1   # a replay of the same cycle is not fresh evidence
-            return
-        prev.seq = seq
-        prev.live_at = now_mono
-        prev.live_count += 1
+            st.retained_seen = True
+        prev = self._observation
+        if prev is not None and prev.identity == ident:
+            if seq == prev.seq:
+                st.seq_repeats += 1          # a replay of the same cycle is not fresh evidence
+                if obj != prev.obj:
+                    st.seq_repeat_content_changed += 1
+                    log.warning("observation seq %d repeated with different content; first copy kept", seq)
+                return
+            if seq < prev.seq:
+                st.out_of_order += 1         # older cycle of the same session (replay, reorder)
+                return
+        elif prev is None or prev.identity != ident:
+            st.sessions_seen += 1
+        st.accepted += 1
+        if retained:
+            # The stored copy replaces the record but inherits no freshness.
+            self._observation = ObservationEntry(obj=obj, identity=ident, seq=seq, mono_at=now_mono, live_at=None)
+        else:
+            st.live_count += 1
+            self._observation = ObservationEntry(obj=obj, identity=ident, seq=seq, mono_at=now_mono,
+                                                 live_at=now_mono, live_epoch=self.connection_epoch)
 
     # --- snapshot ---------------------------------------------------------
     def snapshot(self, observation_max_age_s: float, state_max_age_s: float, now_mono: Optional[float] = None) -> Dict[str, Any]:
         now_mono = time.monotonic() if now_mono is None else now_mono
         with self._lock:
+            def section(topics, strip):
+                return {t.split(strip, 1)[1]: self._entries[t].describe(now_mono, state_max_age_s) if t in self._entries
+                        else dict(UNAVAILABLE) for t in topics}
             out: Dict[str, Any] = {
                 "schema": SCHEMA_SNAPSHOT,
                 "generated_at_unix_s": round(time.time(), 3),
@@ -194,25 +306,27 @@ class StateCache:
                     "source": f"mqtt://{self.host}:{self.port} state/#",
                     "classifier_prefix": self.classifier_prefix,
                     "subscriber_connected": self.connected,
+                    "connection_epoch": self.connection_epoch,
                     "subscriber_uptime_s": round(now_mono - self.started_mono, 1),
                     "connected_for_s": None if self.connected_at_mono is None else round(now_mono - self.connected_at_mono, 1),
                     "last_error": self.last_error,
-                    "freshness_rule": "fresh = a non-retained message within max_age; retained = only the broker's replayed copy seen; stale = live but older; unavailable = never seen",
+                    "freshness_rule": ("fresh = a non-retained message within max_age; retained = only the broker's replayed copy is held "
+                                       "for this value; stale = live but older; unavailable = never seen. Freshness belongs to the payload "
+                                       "it arrived with: a retained copy with a different payload replaces the value as retained."),
                     "observation_max_age_s": observation_max_age_s,
                     "state_max_age_s": state_max_age_s,
                 },
-                "receiver": {t.split("state/", 1)[1]: self._entries[t].describe(now_mono, state_max_age_s) if t in self._entries
-                             else {"value": None, "status": "unavailable", "age_s": None} for t in RX_TOPICS},
-                "sensor": {t.split("state/", 1)[1]: self._entries[t].describe(now_mono, state_max_age_s) if t in self._entries
-                           else {"value": None, "status": "unavailable", "age_s": None} for t in MAIN_TOPICS},
-                "classifier_side": {t.split("state/classifier/", 1)[1]: self._entries[t].describe(now_mono, state_max_age_s) if t in self._entries
-                                    else {"value": None, "status": "unavailable", "age_s": None} for t in CLASSIFIER_SIDE_TOPICS},
+                "receiver": section(RX_TOPICS, "state/"),
+                "sensor": section(MAIN_TOPICS, "state/"),
+                "classifier_side": section(CLASSIFIER_SIDE_TOPICS, "state/classifier/"),
             }
             out["classifier"] = self._classifier_section(now_mono, observation_max_age_s)
             return out
 
     def _classifier_section(self, now_mono: float, max_age_s: float) -> Dict[str, Any]:
         ob = self._observation
+        st = self._obs_stats
+        validation = {"rejected_messages": st.validation_errors, "last_rejection": st.last_validation_error}
         if ob is not None:
             if ob.live_at is None:
                 status, age = "retained", None
@@ -220,24 +334,33 @@ class StateCache:
                 age = now_mono - ob.live_at
                 status = "fresh" if age <= max_age_s else "stale"
             o = ob.obj
+            sensor = o.get("sensor") or {}
+            templates = o.get("templates") or {}
             return {
                 "source": self.observation_topic,
                 "best_effort": False,
                 "status": status,
                 "age_s": None if age is None else round(age, 3),
-                "retained_replay_seen": ob.retained_seen,
-                "live_messages": ob.live_count,
-                "seq_repeats_ignored": ob.seq_repeats,
+                "retained_replay_seen": st.retained_seen,
+                "live_messages": st.live_count,
+                "live_from_current_connection": None if ob.live_epoch is None else ob.live_epoch == self.connection_epoch,
+                "seq_repeats_ignored": st.seq_repeats,
+                "seq_repeats_with_changed_content": st.seq_repeat_content_changed,
+                "out_of_order_ignored": st.out_of_order,
+                "producer_sessions_seen": st.sessions_seen,
+                "validation": validation,
                 "schema": o.get("schema"),
-                "seq": o.get("seq"),
+                "seq": ob.seq,
+                "producer_identity": ob.identity,
                 "producer_time": o.get("time"),
-                "sensor": o.get("sensor"),
-                "boot_id": (o.get("sensor") or {}).get("boot_id"),
+                "sensor": sensor,
+                "boot_id": sensor.get("boot_id"),
+                "session_id": sensor.get("session_id"),
                 "input": o.get("input"),
                 "config": o.get("config"),
-                "templates": o.get("templates"),
-                "template_sha256": (o.get("templates") or {}).get("sha256"),
-                "feature_semantics": (o.get("templates") or {}).get("feature_semantics"),
+                "templates": templates,
+                "template_sha256": templates.get("sha256"),
+                "feature_semantics": templates.get("feature_semantics"),
                 "decision": o.get("decision"),
                 "features": o.get("features"),
                 "temporal": o.get("temporal"),
@@ -250,7 +373,8 @@ class StateCache:
         r = self._entries.get(self.result_topic)
         if r is None:
             return {"source": None, "best_effort": True, "status": "unavailable",
-                    "reason": f"neither {self.observation_topic} nor {self.result_topic} seen"}
+                    "reason": f"neither {self.observation_topic} nor {self.result_topic} seen",
+                    "validation": validation}
         try:
             res = json.loads(r.value)
             if not isinstance(res, dict):
@@ -263,7 +387,8 @@ class StateCache:
             "best_effort": True,
             "best_effort_reason": f"daemon does not publish {self.observation_topic}; fields below are reassembled from the legacy result message and the retained per-field topics",
             "status": d["status"], "age_s": d["age_s"], "retained_replay_seen": d["retained_replay_seen"], "live_messages": d["live_messages"],
-            "schema": None, "seq": None, "boot_id": None, "template_sha256": None, "feature_semantics": None,
+            "validation": validation,
+            "schema": None, "seq": None, "boot_id": None, "session_id": None, "template_sha256": None, "feature_semantics": None,
             "missing_reason": "sequence, boot id, template hash and feature semantics are only carried by the observation message",
             "decision": res,
             "online": res.get("online") if isinstance(res, dict) else None,

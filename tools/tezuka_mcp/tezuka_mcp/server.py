@@ -58,13 +58,48 @@ class Service:
         except OSError as e:  # pragma: no cover
             log.warning("health file %s: %s", self.cfg.health_path, e)
 
-    def sweep_active(self) -> Optional[bool]:
+    SWEEP_TOPICS = ("state/rx/sweep/activate", "state/rx/sweep/engaged")
+
+    def sweep_state(self) -> Dict[str, Any]:
+        """The receiver's sweep state as evidence, not a bare flag.
+
+        `active` is True/False only when the MQTT subscriber is connected
+        and BOTH state/rx/sweep/activate and state/rx/sweep/engaged were
+        delivered live (api_controller.sh republishes them every 2 s, so a
+        live copy younger than TEZUKA_STATE_MAX_AGE_S is the normal case)
+        with a value of "0" or "1". Anything else - disconnected, only the
+        broker's retained copy, stale, missing or malformed - is None with
+        the reason: an old "off" is not evidence that a collection can be
+        read as one ADC-centred span. `generation` counts value CHANGES on
+        the two topics (unchanged 2 s republishes do not move it) and
+        `epoch` the MQTT connection epoch, so a caller comparing two
+        readings sees a flag that went off -> on -> off in between, or a
+        reconnect in between, even when both readings say "off"."""
         snap = self.cache.snapshot(self.cfg.observation_max_age_s, self.cfg.state_max_age_s)
-        v = snap["receiver"].get("rx/sweep/activate", {}).get("value")
-        e = snap["receiver"].get("rx/sweep/engaged", {}).get("value")
-        if v is None and e is None:
-            return None
-        return v == "1" or e == "1"
+        flags = {t.rsplit("/", 1)[1]: snap["receiver"].get("rx/sweep/" + t.rsplit("/", 1)[1], {}) for t in self.SWEEP_TOPICS}
+        out: Dict[str, Any] = {"active": None, "reason": None, "generation": self.cache.change_generation(*self.SWEEP_TOPICS),
+                               "epoch": snap["provenance"]["connection_epoch"],
+                               "subscriber_connected": snap["provenance"]["subscriber_connected"],
+                               "flags": {k: {"value": f.get("value"), "status": f.get("status"), "age_s": f.get("age_s")} for k, f in flags.items()}}
+        reasons = []
+        if not out["subscriber_connected"]:
+            reasons.append("MQTT subscriber is not connected, so the cached sweep flags may be outdated")
+        for name, f in flags.items():
+            v, status = f.get("value"), f.get("status")
+            if v is None:
+                reasons.append(f"state/rx/sweep/{name} never seen")
+            elif v not in ("0", "1"):
+                reasons.append(f"state/rx/sweep/{name} has an unexpected value {v!r}")
+            elif status != "fresh":
+                reasons.append(f"state/rx/sweep/{name} is {status} (no live copy within {self.cfg.state_max_age_s} s)")
+        if reasons:
+            out["reason"] = "; ".join(reasons)
+            return out
+        out["active"] = flags["activate"]["value"] == "1" or flags["engaged"]["value"] == "1"
+        return out
+
+    def sweep_active(self) -> Optional[bool]:
+        return self.sweep_state()["active"]
 
 
 def build_server(service: Service) -> MCPServer:
@@ -99,7 +134,9 @@ def build_server(service: Service) -> MCPServer:
             "before and after, constant FFT size and step word), average them in the power domain and return the "
             "frequency grid, a decimated PSD summary, a declared noise-floor estimate, above-floor segments and "
             "provenance. Levels are dB relative to the producer's unit scale, not dBm. DDC input, non-ADC input and "
-            "sweep mode are reported as unsupported rather than interpreted. Read-only."
+            "sweep mode are reported as unsupported rather than interpreted; so is a sweep state that cannot be "
+            "established from live MQTT (subscriber disconnected, flags missing, stale or only retained), and a "
+            "collection during which the sweep state changed is rejected. Read-only."
         ),
         annotations=READ_ONLY,
     )
@@ -109,7 +146,8 @@ def build_server(service: Service) -> MCPServer:
         mf = max(1, min(int(max_frames), cfg.waterfall_max_frames))
         to = max(1.0, min(float(timeout_s), cfg.waterfall_max_timeout_s))
         thr = max(1.0, min(float(threshold_over_floor_db), 60.0))
-        res = build_waterfall_snapshot(cfg.http_host, cfg.http_port, cfg.waterfall_path, mf, to, service.sweep_active(), thr)
+        res = build_waterfall_snapshot(cfg.http_host, cfg.http_port, cfg.waterfall_path, mf, to, None, thr,
+                                       sweep_state_fn=service.sweep_state)
         res["provenance"]["bounds_applied"] = {"max_frames": mf, "timeout_s": to, "threshold_over_floor_db": thr}
         service.write_health("snapshot_fpga_waterfall")
         return res

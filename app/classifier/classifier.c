@@ -742,6 +742,24 @@ static void mqtt_pub(const char *topic, const char *value)
         fprintf(stderr, "mqtt: publish %s failed (%u so far): %s\n", full, g_pub_errors, mosquitto_strerror(rc));
 }
 
+/* Everything publish_observation() reports from the fields the MQTT
+ * thread writes (mqtt_on_message, under `lock`), copied in ONE locked
+ * region at the start of a frame so the observation describes a single
+ * instant of that state: the generation and the settings it counts are
+ * never mixed from two different updates, and the frame thread never
+ * reads those strings while the network thread is rewriting them. */
+struct obs_ctx {
+    char     freq[64];           /* state/rx/frequency, "" if never seen */
+    char     serial[80];
+    char     sampling[32];
+    char     rfinput[8];
+    char     sweep_activate[8], sweep_engaged[8];
+    uint32_t config_generation;
+};
+
+/* Caller holds a->lock. */
+static void obs_ctx_copy_locked(const struct app *a, struct obs_ctx *oc);
+
 /* RX settings whose change invalidates the learned background (reset=true),
  * plus identity/mode topics that are only recorded for the observation.
  * These are api_controller.sh's retained state/ topics; the retained value
@@ -769,6 +787,17 @@ static void set_str(char *dst, size_t cap, const char *src)
     if (n >= cap) n = cap - 1;
     memcpy(dst, src, n);
     dst[n] = '\0';
+}
+
+static void obs_ctx_copy_locked(const struct app *a, struct obs_ctx *oc)
+{
+    set_str(oc->freq, sizeof(oc->freq), a->freq_mqtt);
+    set_str(oc->serial, sizeof(oc->serial), a->serial_mqtt);
+    set_str(oc->sampling, sizeof(oc->sampling), a->sampling_mqtt);
+    set_str(oc->rfinput, sizeof(oc->rfinput), a->rfinput_mqtt);
+    set_str(oc->sweep_activate, sizeof(oc->sweep_activate), a->sweep_activate);
+    set_str(oc->sweep_engaged, sizeof(oc->sweep_engaged), a->sweep_engaged);
+    oc->config_generation = a->config_generation;
 }
 
 static void mqtt_on_connect(struct mosquitto *m, void *ud, int rc)
@@ -1338,7 +1367,7 @@ static void background_learned(struct app *a, const char *freq)
 
 static void publish_observation(struct app *a, uint32_t live_n, const char *state, double bg_age_s,
                                 const struct frame_features *ff, const struct temporal_features *tf,
-                                const struct decision *dec, const char *freq, bool classified)
+                                const struct decision *dec, const struct obs_ctx *oc, bool classified)
 {
     static char buf[OBSERVATION_BUF];
     struct jw w;
@@ -1366,7 +1395,7 @@ static void publish_observation(struct app *a, uint32_t live_n, const char *stat
 
     jw_key(&w, "sensor"); jw_obj_open(&w);
     jw_kv_str(&w, "hostname", a->hostname);
-    if (a->serial_mqtt[0]) jw_kv_str(&w, "serial", a->serial_mqtt);
+    if (oc->serial[0]) jw_kv_str(&w, "serial", oc->serial);
     else { jw_kv_null(&w, "serial"); jw_kv_str(&w, "serial_reason", "state/main/serial not seen on MQTT"); }
     if (a->boot_id[0]) jw_kv_str(&w, "boot_id", a->boot_id);
     else { jw_kv_null(&w, "boot_id"); jw_kv_str(&w, "boot_id_reason", "/proc/sys/kernel/random/boot_id unreadable"); }
@@ -1397,19 +1426,19 @@ static void publish_observation(struct app *a, uint32_t live_n, const char *stat
     jw_key(&w, "config"); jw_obj_open(&w);
     jw_kv_bool(&w, "bound", false);
     jw_kv_str(&w, "bound_reason", "RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings");
-    jw_kv_uint(&w, "generation", a->config_generation);
-    if (freq[0]) jw_kv_double(&w, "frequency_hz", atof(freq), 0);
+    jw_kv_uint(&w, "generation", oc->config_generation);
+    if (oc->freq[0]) jw_kv_double(&w, "frequency_hz", atof(oc->freq), 0);
     else { jw_kv_null(&w, "frequency_hz"); jw_kv_str(&w, "frequency_reason", "state/rx/frequency not seen"); }
     if (a->span_hz > 0) jw_kv_double(&w, "span_hz", a->span_hz, 0);
     else jw_kv_null(&w, "span_hz");
-    if (a->sampling_mqtt[0]) jw_kv_double(&w, "sampling_hz", atof(a->sampling_mqtt), 0);
+    if (oc->sampling[0]) jw_kv_double(&w, "sampling_hz", atof(oc->sampling), 0);
     else jw_kv_null(&w, "sampling_hz");
-    if (a->rfinput_mqtt[0]) jw_kv_str(&w, "rfinput", a->rfinput_mqtt);
+    if (oc->rfinput[0]) jw_kv_str(&w, "rfinput", oc->rfinput);
     else jw_kv_null(&w, "rfinput");
     jw_key(&w, "sweep"); jw_obj_open(&w);
-    if (a->sweep_activate[0]) jw_kv_bool(&w, "activate", strcmp(a->sweep_activate, "1") == 0);
+    if (oc->sweep_activate[0]) jw_kv_bool(&w, "activate", strcmp(oc->sweep_activate, "1") == 0);
     else jw_kv_null(&w, "activate");
-    if (a->sweep_engaged[0]) jw_kv_bool(&w, "engaged", strcmp(a->sweep_engaged, "1") == 0);
+    if (oc->sweep_engaged[0]) jw_kv_bool(&w, "engaged", strcmp(oc->sweep_engaged, "1") == 0);
     else jw_kv_null(&w, "engaged");
     jw_kv_str(&w, "note", "sweep/DDC frames are not interpreted by this daemon; when engaged, span and hz_per_bin describe one step, not the sweep");
     jw_obj_close(&w);
@@ -1527,12 +1556,12 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
 
     /* Retune or explicit relearn requested from the MQTT thread? */
     bool reset = false; const char *why = "";
-    char freq[64];
+    struct obs_ctx oc;
     pthread_mutex_lock(&a->lock);
     if (a->tune_changed) { reset = true; why = "RX settings changed"; a->tune_changed = false; }
     if (a->relearn)      { reset = true; why = "cmd/classifier/background learn"; a->relearn = false; }
     if (a->span_hz_mqtt > 0) a->span_hz = a->span_hz_mqtt;
-    snprintf(freq, sizeof(freq), "%s", a->freq_mqtt);
+    obs_ctx_copy_locked(a, &oc);
     pthread_mutex_unlock(&a->lock);
     if (reset) background_reset(a, live_n, why);
     /* The grid is span / fft_size: the producer's FFT has fft_size bins
@@ -1559,7 +1588,7 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     if (half < 1) half = 1;
     if (half > live_n / 2) half = live_n / 2;
     baseline_compute(a->bg, a->base, live_n, half);
-    if (!learning && !a->bg_learned) background_learned(a, freq);
+    if (!learning && !a->bg_learned) background_learned(a, oc.freq);
     templates_prepare(&a->templates, a->live_hz, live_n);
 
     /* Masked live: spur bins pinned to the baseline so they count as
@@ -1593,7 +1622,7 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
         struct match_result none = { .found = false };
         const char *state = learning ? "learning" : "idle";
         publish_result(a, &none, &(struct templates){ .count = 0 }, live_n, state, bg_age, NULL, &ff, &dec);
-        publish_observation(a, live_n, state, bg_age, &ff, &tf, &dec, freq, false);
+        publish_observation(a, live_n, state, bg_age, &ff, &tf, &dec, &oc, false);
         free(resid); free(lv);
         return;
     }
@@ -1602,7 +1631,7 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     if (hits) {
         classify_all(resid, lv, a->base, live_n, &a->templates, &ff, a->snr_min_db, hits);
         publish_result(a, hits, &a->templates, live_n, "ok", bg_age, resid, &ff, &dec);
-        publish_observation(a, live_n, "ok", bg_age, &ff, &tf, &dec, freq, true);
+        publish_observation(a, live_n, "ok", bg_age, &ff, &tf, &dec, &oc, true);
         free(hits);
     }
     free(resid); free(lv);
