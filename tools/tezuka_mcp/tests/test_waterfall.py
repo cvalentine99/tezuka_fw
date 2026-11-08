@@ -5,12 +5,25 @@ import copy
 import json
 import struct
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
 
 from tezuka_mcp.frame import decode_frame
 from tezuka_mcp import waterfall as WF
+from tezuka_mcp.config import Config
+from tezuka_mcp.server import Service
+
+ACT, ENG = "state/rx/sweep/activate", "state/rx/sweep/engaged"
+
+
+def make_service(state_max_age_s=10.0):
+    """A Service whose cache is fed directly (same shape as test_sweep_state's helper)."""
+    cfg = Config(mqtt_host="127.0.0.1", mqtt_port=1, http_host="127.0.0.1", http_port=1, waterfall_path="/waterfall",
+                 observation_max_age_s=5.0, state_max_age_s=state_max_age_s, waterfall_max_frames=32,
+                 waterfall_max_timeout_s=60.0, health_path="", classifier_prefix="state/classifier/")
+    return Service(cfg)
 
 
 def test_summary_of_recorded_frames(fixture_frames, fixture_meta):
@@ -292,3 +305,58 @@ def test_end_to_end_unchanged_republish_during_collection_is_accepted(fixture_fr
     finally:
         srv.stop()
     assert res["ok"] is True and res["context"]["sweep_state"]["after"]["epoch"] == 3
+
+
+# --- end-to-end with a REAL Service.sweep_state as the sweep source --------
+
+def _service_after_retained_only_reconnect():
+    """Epoch 1: both sweep flags live "0"; disconnect; epoch 2: only the
+    broker's retained replay of the same values has arrived so far."""
+    svc = make_service()
+    now = time.monotonic()
+    svc.cache.mark_connected(True, None, now_mono=now)
+    svc.cache.ingest(ACT, "0", retained=False, now_mono=now)
+    svc.cache.ingest(ENG, "0", retained=False, now_mono=now)
+    svc.cache.mark_connected(False, "disconnected: 7", now_mono=now)
+    svc.cache.mark_connected(True, None, now_mono=now)
+    svc.cache.ingest(ACT, "0", retained=True, now_mono=now)
+    svc.cache.ingest(ENG, "0", retained=True, now_mono=now)
+    return svc
+
+
+def test_end_to_end_real_service_retained_only_reconnect_is_unsupported(fixture_frames, fixture_meta):
+    svc = _service_after_retained_only_reconnect()
+    srv = FakeSensor(fixture_meta["api_before"], fixture_frames).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=svc.sweep_state)
+    finally:
+        srv.stop()
+    assert res["ok"] is False and res["support"]["supported"] is False and "summary" not in res
+    assert "frames_received" not in res["provenance"]      # rejected before collecting anything
+    before = res["context"]["sweep_state"]["before"]
+    assert before["active"] is None and before["epoch"] == 2 and before["subscriber_connected"] is True
+    assert "previous connection (epoch 1 vs current 2)" in before["reason"]
+    assert "previous connection" in res["error"]
+    assert before["flags"]["activate"]["from_current_connection"] is False
+    assert before["flags"]["engaged"]["from_current_connection"] is False
+    assert res["context"]["sweep_state"]["after"] is None
+
+
+def test_end_to_end_real_service_both_flags_live_in_new_epoch_is_accepted(fixture_frames, fixture_meta):
+    svc = _service_after_retained_only_reconnect()
+    now = time.monotonic()
+    svc.cache.ingest(ACT, "0", retained=False, now_mono=now)     # api_controller.sh republishes on the new connection
+    svc.cache.ingest(ENG, "0", retained=False, now_mono=now)
+    srv = FakeSensor(fixture_meta["api_before"], fixture_frames).start()
+    try:
+        res = WF.build_waterfall_snapshot("127.0.0.1", srv.port, "/waterfall", max_frames=3, timeout_s=10, sweep_active=None,
+                                          sweep_state_fn=svc.sweep_state)
+    finally:
+        srv.stop()
+    assert res["ok"] is True, res
+    assert res["summary"]["step_words_seen"] == [0.0, 1.0, 2.0] and res["summary"]["frames_averaged"] == 3
+    before, after = res["context"]["sweep_state"]["before"], res["context"]["sweep_state"]["after"]
+    assert before["active"] is False and after["active"] is False
+    assert before["epoch"] == after["epoch"] == 2 and before["generation"] == after["generation"] == 0
+    assert all(after["flags"][k]["from_current_connection"] is True for k in ("activate", "engaged"))

@@ -1,0 +1,894 @@
+{
+ "revisions": {
+  "fixed": {
+   "path": "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+   "sha256": "97665cc1be00b6c017078c974320ad2baba59259e65952e6c7c4eeaab451208d"
+  }
+ },
+ "qemu": "/usr/bin/qemu-arm-static",
+ "sysroot": "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+ "results": {
+  "spur_retune_sequence": {
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur_retune_sequence.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.5",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8",
+     "-E",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur_retune_sequence.events"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 1800 frames processed",
+     "replay: 4 of 4 events delivered"
+    ],
+    "result_lines": 226,
+    "on": null,
+    "off": {
+     "decisions": 213,
+     "labels": {
+      "unknown": 213
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null
+    },
+    "explain_first_accept": null,
+    "background_learned": {
+     "frequency": "1090000000",
+     "bins": 4095,
+     "fft_size": 4096,
+     "hz_per_bin": 610.4,
+     "hot": 71,
+     "masked": 70
+    },
+    "coverage": {
+     "columns": [
+      "t",
+      "masked_bins",
+      "valid_bins",
+      "spur_bins",
+      "learn_count",
+      "label"
+     ],
+     "sample_interval_s": 5.0,
+     "series": [
+      [
+       0.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       5.5,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       10.8,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       16.1,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       21.5,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       26.8,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       32.1,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       37.5,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       42.8,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       48.1,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       53.5,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       58.8,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       64.1,
+       0,
+       4095,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       69.5,
+       0,
+       4095,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       74.8,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       80.1,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       85.5,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       90.8,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       96.1,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       101.5,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       106.8,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       112.1,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       117.5,
+       70,
+       4025,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       122.8,
+       0,
+       4095,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       128.1,
+       0,
+       4095,
+       70,
+       2,
+       "unknown"
+      ],
+      [
+       133.5,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       138.8,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       144.1,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       149.5,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       154.8,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       160.1,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       165.5,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       170.8,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       176.1,
+       70,
+       4025,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       181.5,
+       0,
+       4095,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       186.8,
+       0,
+       4095,
+       70,
+       3,
+       "unknown"
+      ],
+      [
+       192.1,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       197.5,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       202.8,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       208.1,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       213.5,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       218.8,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       224.1,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       229.5,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ],
+      [
+       234.8,
+       70,
+       4025,
+       70,
+       4,
+       "unknown"
+      ]
+     ],
+     "final": [
+      239.1,
+      70,
+      4025,
+      70,
+      4,
+      "unknown"
+     ],
+     "final_mask_coverage": 0.017094017094017096,
+     "max_masked_bins": 70,
+     "bins_used": 4095,
+     "backgrounds": [
+      {
+       "t": 10.8,
+       "frequency": "1090000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 71,
+       "masked": 5
+      },
+      {
+       "t": 70.5,
+       "frequency": "1095000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 70,
+       "masked": 70
+      },
+      {
+       "t": 130.3,
+       "frequency": "1100000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 70,
+       "masked": 70
+      },
+      {
+       "t": 190.0,
+       "frequency": "1090000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 71,
+       "masked": 70
+      }
+     ]
+    }
+   }
+  },
+  "spur433_live_retune": {
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur433_live_retune.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "0.5966",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8",
+     "-E",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur433_live_retune.events"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 60 frames processed",
+     "replay: 4 of 4 events delivered"
+    ],
+    "result_lines": 60,
+    "on": null,
+    "off": {
+     "decisions": 52,
+     "labels": {
+      "FM Broadcast": 10,
+      "unknown": 42
+     },
+     "false_accepts": 10,
+     "false_accept_labels": {
+      "FM Broadcast": 10
+     },
+     "worst_false_accept_score": 0.652,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 13.4,
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 13.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.65,
+       "snr_db": 18.1,
+       "prom_db": 13.4,
+       "bin_offset": 1724,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.255,
+       "best": {
+        "template_id": 1,
+        "score": 0.65,
+        "snr_db": 18.1,
+        "prom_db": 13.4
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": true,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.007326,
+       "bandwidth_hz": 18310.5,
+       "spectral_papr_db": 18.44,
+       "flatness": 0.2999,
+       "peak_count": 5,
+       "peak_bin": 2050,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 13.4,
+       "frames": 9,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 234,
+       "learn_count": 1
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 4,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "433000000",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 234,
+      "masked": 5
+     }
+    },
+    "coverage": {
+     "columns": [
+      "t",
+      "masked_bins",
+      "valid_bins",
+      "spur_bins",
+      "learn_count",
+      "label"
+     ],
+     "sample_interval_s": 5.0,
+     "series": [
+      [
+       0.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       5.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       10.1,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       15.1,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       20.1,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       25.1,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       30.2,
+       0,
+       4095,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       35.2,
+       0,
+       4095,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       40.2,
+       231,
+       3864,
+       231,
+       2,
+       "unknown"
+      ],
+      [
+       45.3,
+       231,
+       3864,
+       231,
+       2,
+       "unknown"
+      ],
+      [
+       50.3,
+       231,
+       3864,
+       231,
+       2,
+       "unknown"
+      ],
+      [
+       55.3,
+       231,
+       3864,
+       231,
+       2,
+       "unknown"
+      ],
+      [
+       60.3,
+       0,
+       4095,
+       231,
+       2,
+       "unknown"
+      ],
+      [
+       65.4,
+       0,
+       4095,
+       231,
+       2,
+       "unknown"
+      ],
+      [
+       70.4,
+       237,
+       3858,
+       237,
+       3,
+       "unknown"
+      ],
+      [
+       75.4,
+       237,
+       3858,
+       237,
+       3,
+       "unknown"
+      ],
+      [
+       80.5,
+       237,
+       3858,
+       237,
+       3,
+       "unknown"
+      ],
+      [
+       85.5,
+       237,
+       3858,
+       237,
+       3,
+       "unknown"
+      ],
+      [
+       90.5,
+       237,
+       3858,
+       237,
+       3,
+       "unknown"
+      ],
+      [
+       95.5,
+       237,
+       3858,
+       237,
+       3,
+       "unknown"
+      ]
+     ],
+     "final": [
+      98.9,
+      237,
+      3858,
+      237,
+      3,
+      "unknown"
+     ],
+     "final_mask_coverage": 0.05787545787545788,
+     "max_masked_bins": 237,
+     "bins_used": 4095,
+     "backgrounds": [
+      {
+       "t": 10.1,
+       "frequency": "433000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 234,
+       "masked": 5
+      },
+      {
+       "t": 40.2,
+       "frequency": "438000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 235,
+       "masked": 231
+      },
+      {
+       "t": 70.4,
+       "frequency": "443000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 238,
+       "masked": 237
+      }
+     ]
+    }
+   }
+  }
+ }
+}

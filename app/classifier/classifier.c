@@ -76,6 +76,19 @@
  * -r FILE   replay raw float32 frames from FILE instead of /waterfall (offline test)
  * -n N      floats per replayed frame (default: 4096)
  * -F FPS    virtual frame rate for replay timing (default: 7.5)
+ * -E FILE   replay events (only with -r): scripted MQTT messages delivered
+ *           on the virtual clock. One event per line,
+ *             <t_seconds> <topic> <payload>
+ *           (payload = rest of the line, may contain spaces or be empty),
+ *           '#' comment and blank lines ignored, lines sorted by t (an
+ *           unsorted or malformed file is rejected, exit 1). Before the
+ *           frame at virtual time t every event with t_event <= t is
+ *           handed to the real mqtt_on_message(), so state/rx retunes
+ *           (background reset, config_generation, span) and the
+ *           cmd/classifier/background "learn" command behave exactly as
+ *           they do live. Events after the last frame are not delivered
+ *           (counted on stderr). This is how the spur mask growth seen on
+ *           a sensor after many retunes is reproduced offline.
  * -T PREFIX MQTT topic prefix for the published state (default:
  *           state/classifier/). A non-default prefix is for a side-by-side
  *           test instance: it also moves the command topic to
@@ -152,6 +165,7 @@
 #include <stdint.h>
 #include <pthread.h>
 #include <fcntl.h>
+#include <errno.h>
 #ifdef __ARM_NEON
 #include <arm_neon.h>
 #endif
@@ -642,6 +656,20 @@ struct app {
     double      learn_s;         /* -l */
     double      bg_tau_s;        /* -a; 0 = frozen after learning */
 
+    /* Mask coverage, reported in the observation's "background" object so
+     * a consumer can see how much of the span is still being classified
+     * (on a sensor the spur map grew to 3563 of 4095 bins after many
+     * retunes). Frame thread only. masked_bins counts mask[i] != 0 (zero
+     * while relearning: background_reset() clears the mask), spur_bins
+     * the bins the two-frequency rule has flagged (spur_count >= 2; they
+     * persist across resets and are re-applied at the next learn),
+     * hot_last_learn the hot count of the last background_learned(), and
+     * learn_count how many times background_learned() has run. */
+    uint32_t    masked_bins;
+    uint32_t    spur_bins;
+    uint32_t    hot_last_learn;
+    uint32_t    learn_count;
+
     /* Set from libmosquitto's network thread (see mqtt_on_message), read
      * and cleared on the frame thread under `lock`. */
     pthread_mutex_t lock;
@@ -655,6 +683,14 @@ struct app {
     uint32_t    replay_floats;
     double      replay_fps;
     double      replay_t;        /* virtual seconds */
+
+    /* -E FILE: scripted MQTT messages for replay, sorted by t, delivered
+     * through the real mqtt_on_message() before the frame whose virtual
+     * time reaches them (see replay_events_load() / replay_file()). */
+    const char *events_path;
+    struct replay_event { double t; char *topic; char *payload; } *events;
+    size_t      events_n;
+    size_t      events_next;     /* first event not yet delivered */
 
     /* Rolling history of recent peak positions, for the two cross-cycle
      * features a single frame can't show on its own (see history_push() /
@@ -1241,6 +1277,12 @@ static void background_reset(struct app *a, uint32_t live_n, const char *why)
     a->bg_t0 = a->bg_last_t = now_s();
     a->locked = false;
     a->history_filled = 0; a->history_next = 0;
+    /* The mask is cleared with the model; the spur map is not (see the
+     * coverage fields in struct app), so the counters say exactly that. */
+    a->masked_bins = 0;
+    a->spur_bins = 0;
+    if (a->spur_count && a->spur_n == live_n)
+        for (uint32_t i = 0; i < a->spur_n; i++) if (a->spur_count[i] >= 2) a->spur_bins++;
     if (a->verbose) fprintf(stderr, "background: reset (%s), learning for %.0f s\n", why, a->learn_s);
 }
 
@@ -1316,7 +1358,7 @@ static void background_learned(struct app *a, const char *freq)
     double fhz = freq[0] ? atof(freq) : 0.0;
     double far = a->span_hz > 0 ? a->span_hz : 1e12;   /* unknown span: never recount */
     double thr = pow(10.0, a->spur_db / 10.0);
-    uint32_t hot = 0, masked = 0;
+    uint32_t hot = 0, masked = 0, spurs = 0;
     for (uint32_t i = 0; i < n; i++) {
         bool is_hot = a->base[i] > 0 && a->bg[i] > a->base[i] * thr;
         if (is_hot) hot++;
@@ -1326,6 +1368,7 @@ static void background_learned(struct app *a, const char *freq)
             a->spur_last_hz[i] = fhz;
         }
         a->mask[i] = (a->spur_count && a->spur_count[i] >= 2) ? 1 : 0;
+        if (a->mask[i]) spurs++;
         /* DC: the fftshifted frame has DC at float index fft_size/2, i.e.
          * bins-array index fft_size/2 - 1 (the step word took float 0). */
         uint32_t dc = (n + 1) / 2 - 1;
@@ -1333,6 +1376,10 @@ static void background_learned(struct app *a, const char *freq)
         if (a->mask[i]) masked++;
     }
     a->bg_learned = true;
+    a->masked_bins = masked;
+    a->spur_bins = spurs;
+    a->hot_last_learn = hot;
+    a->learn_count++;
     char buf[256];
     struct jw w;
     jw_init(&w, buf, sizeof(buf));
@@ -1534,6 +1581,19 @@ static void publish_observation(struct app *a, uint32_t live_n, const char *stat
     jw_kv_bool(&w, "learned", a->bg_learned);
     jw_kv_double(&w, "age_s", bg_age_s, 1);
     jw_kv_uint(&w, "frames", a->bg_frames);
+    /* Mask coverage (additive, schema unchanged): how much of the span the
+     * decision above could actually look at. masked_bins counts mask[i]
+     * != 0 right now (0 while relearning), valid_bins = bins_used minus
+     * that, spur_bins the bins flagged by the two-frequency rule (the DC
+     * bins are masked unconditionally and are not spurs), hot_last_learn
+     * the hot count of the last learn (0 before the first), learn_count
+     * the number of learns since the daemon started. */
+    uint32_t masked_now = a->masked_bins <= live_n ? a->masked_bins : live_n;
+    jw_kv_uint(&w, "masked_bins", masked_now);
+    jw_kv_uint(&w, "valid_bins", live_n - masked_now);
+    jw_kv_uint(&w, "spur_bins", a->spur_bins);
+    jw_kv_uint(&w, "hot_last_learn", a->hot_last_learn);
+    jw_kv_uint(&w, "learn_count", a->learn_count);
     jw_obj_close(&w);
 
     jw_key(&w, "health"); jw_obj_open(&w);
@@ -1637,9 +1697,111 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     free(resid); free(lv);
 }
 
+/* -E FILE: scripted MQTT messages for a replay. One event per line,
+ * "<t_seconds> <topic> <payload>" where the payload is the rest of the line
+ * (may contain spaces, may be empty); '#' comments and blank lines are
+ * skipped. Events must be sorted by t (non-decreasing): anything else, or
+ * a line that does not parse, is a hard error (message on stderr, -1),
+ * because a silently reordered or dropped retune would make the replay
+ * lie about what the daemon saw. Lines are accepted verbatim as topics,
+ * so state/rx retunes and the g_background_cmd "learn" command both
+ * work; they go through the real mqtt_on_message() at delivery time. */
+static void replay_events_free(struct app *a)
+{
+    for (size_t i = 0; i < a->events_n; i++) { free(a->events[i].topic); free(a->events[i].payload); }
+    free(a->events);
+    a->events = NULL; a->events_n = 0; a->events_next = 0;
+}
+
+static int replay_events_load(struct app *a, const char *path)
+{
+    FILE *f = fopen(path, "r");
+    if (!f) { fprintf(stderr, "classifier: -E %s: %s\n", path, strerror(errno)); return -1; }
+    char *line = NULL;
+    size_t cap = 0, alloc = 0;
+    ssize_t len;
+    int lineno = 0, rc = 0;
+    double prev_t = -1.0;
+    while ((len = getline(&line, &cap, f)) != -1) {
+        lineno++;
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) line[--len] = '\0';
+        char *p = line;
+        while (*p == ' ' || *p == '\t') p++;
+        if (*p == '\0' || *p == '#') continue;
+
+        char *end = NULL;
+        errno = 0;
+        /* plain decimal seconds only: digits and at most one '.', no sign,
+         * no hex, no exponent, so a typo cannot pass as a time */
+        size_t tok = strspn(p, "0123456789.");
+        bool plain = tok > 0 && (p[tok] == ' ' || p[tok] == '\t') && strchr(p, '.') == strrchr(p, '.') && strspn(p, ".") == 0;
+        double t = plain ? strtod(p, &end) : 0.0;
+        if (!plain || end != p + tok || errno != 0 || !isfinite(t) || t < 0.0) {
+            fprintf(stderr, "classifier: -E %s: line %d: expected '<t_seconds> <topic> <payload>' "
+                            "with a non-negative time, got: %s\n", path, lineno, p);
+            rc = -1; break;
+        }
+        p = end;
+        while (*p == ' ' || *p == '\t') p++;
+        char *topic = p;
+        while (*p && *p != ' ' && *p != '\t') p++;
+        if (p == topic) {
+            fprintf(stderr, "classifier: -E %s: line %d: missing topic after t=%g\n", path, lineno, t);
+            rc = -1; break;
+        }
+        size_t topic_len = (size_t)(p - topic);
+        if (*p) p++;                              /* exactly one separator; the payload keeps the rest */
+        {   /* trailing blanks are not part of an MQTT payload */
+            size_t pl = strlen(p);
+            while (pl > 0 && (p[pl - 1] == ' ' || p[pl - 1] == '\t')) p[--pl] = '\0';
+        }
+        if (t < prev_t) {
+            fprintf(stderr, "classifier: -E %s: line %d: t=%g is earlier than the previous event (t=%g); "
+                            "events must be sorted by time\n", path, lineno, t, prev_t);
+            rc = -1; break;
+        }
+        prev_t = t;
+
+        if (a->events_n == alloc) {
+            size_t na = alloc ? alloc * 2 : 64;
+            struct replay_event *ne = realloc(a->events, na * sizeof(*ne));
+            if (!ne) { fprintf(stderr, "classifier: -E %s: out of memory\n", path); rc = -1; break; }
+            a->events = ne; alloc = na;
+        }
+        struct replay_event *e = &a->events[a->events_n];
+        e->t = t;
+        e->topic = strndup(topic, topic_len);
+        e->payload = strdup(p);
+        if (!e->topic || !e->payload) { free(e->topic); free(e->payload); fprintf(stderr, "classifier: -E %s: out of memory\n", path); rc = -1; break; }
+        a->events_n++;
+    }
+    free(line);
+    fclose(f);
+    if (rc != 0) { replay_events_free(a); return -1; }
+    fprintf(stderr, "replay: %zu events loaded from %s\n", a->events_n, path);
+    return 0;
+}
+
+/* Hand every event due at or before virtual time t to the daemon's real
+ * MQTT message handler, as the network thread would have. */
+static void replay_events_deliver(struct app *a, double t)
+{
+    while (a->events_next < a->events_n && a->events[a->events_next].t <= t) {
+        struct replay_event *e = &a->events[a->events_next++];
+        struct mosquitto_message m;
+        memset(&m, 0, sizeof(m));
+        m.topic = e->topic;
+        m.payload = e->payload;
+        m.payloadlen = (int)strlen(e->payload);
+        mqtt_on_message(NULL, NULL, &m);
+        if (a->verbose) fprintf(stderr, "replay: t=%.3f event %s %s\n", t, e->topic, e->payload);
+    }
+}
+
 /* -r FILE: replay raw float32 frames (the exact /waterfall payload layout,
  * replay_floats per frame) at a virtual clock of replay_fps, then exit.
- * With -B none nothing is published, results go to stdout. */
+ * With -B none nothing is published, results go to stdout. Scripted -E
+ * events are delivered before the frame whose virtual time reaches them. */
 static int replay_file(struct app *a)
 {
     FILE *f = fopen(a->replay_path, "rb");
@@ -1650,10 +1812,18 @@ static int replay_file(struct app *a)
     size_t count = 0;
     while (fread(frame, sizeof(float), n, f) == n) {
         a->replay_t = count / a->replay_fps;
+        replay_events_deliver(a, a->replay_t);
         handle_frame(a, frame, n);
         count++;
     }
     fprintf(stderr, "replay: %zu frames processed\n", count);
+    if (a->events_n) {
+        fprintf(stderr, "replay: %zu of %zu events delivered", a->events_next, a->events_n);
+        if (a->events_next < a->events_n)
+            fprintf(stderr, ", %zu not delivered (after the last frame at t=%.3f)",
+                    a->events_n - a->events_next, count ? (count - 1) / a->replay_fps : 0.0);
+        fputc('\n', stderr);
+    }
     free(frame);
     fclose(f);
     return 0;
@@ -1737,6 +1907,9 @@ static void usage(const char *prog)
         "  -r FILE   replay raw float32 frames from FILE (offline test)\n"
         "  -n N      floats per replayed frame (default: 4096)\n"
         "  -F FPS    virtual frame rate for replay (default: 7.5)\n"
+        "  -E FILE   replay events (with -r only): '<t_seconds> <topic> <payload>' per\n"
+        "            line, sorted by t, '#' comments; delivered to the MQTT handler on\n"
+        "            the virtual clock (state/rx/* retunes, cmd/classifier/background learn)\n"
         "  -T PREFIX MQTT topic prefix (default: state/classifier/); a non-default\n"
         "            prefix also moves the command topic to PREFIX cmd/background and\n"
         "            derives its own MQTT client id, for a side-by-side test instance\n"
@@ -1788,7 +1961,7 @@ int main(int argc, char **argv)
 
     const char *validate_path = NULL;
     int opt;
-    while ((opt = getopt(argc, argv, "H:p:P:f:B:q:c:m:i:s:g:l:a:r:n:F:S:w:x:T:V:vh")) != -1) {
+    while ((opt = getopt(argc, argv, "H:p:P:f:B:q:c:m:i:s:g:l:a:r:n:F:S:w:x:T:V:E:vh")) != -1) {
         switch (opt) {
         case 'T': {
             size_t l = strlen(optarg);
@@ -1821,13 +1994,21 @@ int main(int argc, char **argv)
         case 'r': A.replay_path     = optarg;      break;
         case 'n': A.replay_floats   = (uint32_t)atoi(optarg); break;
         case 'F': A.replay_fps      = atof(optarg); break;
+        case 'E':
+            if (A.events_path) { fprintf(stderr, "classifier: -E given twice; one events file per replay\n"); return 1; }
+            A.events_path = optarg; break;
         case 'v': A.verbose         = true;         break;
         case 'h': usage(argv[0]); return 0;
         default:  usage(argv[0]); return 1;
         }
     }
 
+    if (A.events_path && !A.replay_path) {
+        fprintf(stderr, "classifier: -E FILE is only meaningful with -r FILE (replay)\n");
+        return 1;
+    }
     if (validate_path) return validate_mode(validate_path);
+    if (A.events_path && replay_events_load(&A, A.events_path) != 0) return 1;
 
     signal(SIGINT,  on_signal);
     signal(SIGTERM, on_signal);
@@ -1846,6 +2027,7 @@ int main(int argc, char **argv)
         int rc = replay_file(&A);
         mqtt_shutdown();
         templates_free(&A.templates);
+        replay_events_free(&A);
         free(A.bg); free(A.base); free(A.mask); free(A.spur_count); free(A.spur_last_hz);
         return rc;
     }

@@ -1,0 +1,5 @@
+# scripted retunes over the recorded 433 MHz spur frames (same frames, new RX frequency announced)
+0 state/rx/frequency 433000000
+0 state/rx/span 2500000
+30 state/rx/frequency 438000000
+60 state/rx/frequency 443000000

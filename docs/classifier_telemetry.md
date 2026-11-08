@@ -155,7 +155,15 @@ counted as a publish error). Unknown values are `null` with a sibling
   and `units` text; nulls with `invalid_reason` when the residual is empty.
 * `temporal`: `history_samples`, `drift_bins_per_s`, `occupancy_pct`, each
   null with a reason until the history is long enough; `occupancy_note`.
-* `background`: `learned`, `age_s`, `frames`.
+* `background`: `learned`, `age_s`, `frames`, plus the mask coverage:
+  `masked_bins` (bins currently masked, DC and spurs; 0 while relearning),
+  `valid_bins` (`bins_used - masked_bins`, what the decision could look at),
+  `spur_bins` (bins flagged by the two-frequency spur rule; they persist
+  across retunes), `hot_last_learn` (hot bins at the end of the last learn,
+  0 before the first), `learn_count` (learns since daemon start). The spur
+  map is kept across retunes for as long as the frame size is unchanged (a
+  change of `fft_size` discards it), so `masked_bins` can only grow across
+  retunes at one frame size; `-r FILE -E EVENTS` replays that offline.
 * `health`: `publish_errors`, `publish_ok`, `waterfall_connected`.
 
 History (drift/occupancy) and the learned background are reset whenever any
@@ -220,15 +228,23 @@ The sweep state is evidence, not a cached flag: `sweep_active` is known
 (`true`/`false`) only while the MQTT subscriber is connected and *both*
 `state/rx/sweep/activate` and `state/rx/sweep/engaged` were delivered live
 within `TEZUKA_STATE_MAX_AGE_S` (api_controller.sh republishes them every
-2 s) with a value of `0` or `1`. Disconnected, only-retained, stale,
-missing or malformed flags make it unknown, with the reason in
+2 s) with a value of `0` or `1`, *by the current MQTT connection*. After a
+reconnect the broker replays the stored flags whether or not the producer
+still runs; the cache keeps the earlier live provenance for an unchanged
+payload, so each flag in `context.sweep_state.*.flags` carries
+`live_epoch` and `from_current_connection`, and a flag whose live
+evidence is from a previous connection epoch makes the state unknown
+(reason: "live evidence is from a previous connection (epoch N vs current
+M)") until that flag arrives live again. Disconnected, only-retained,
+stale, missing or malformed flags make it unknown too, with the reason in
 `context.sweep_state.before.reason`, and an unknown sweep state is
 *unsupported*: an old "off" is not evidence that the frames are one
 ADC-centred span, and the free-running step word cannot tell. The state
 is read again after the collection (`context.sweep_state.after`); if the
-flag or the sweep message count changed in between, the collection is
-rejected as straddling a mode change. With sweep known off, the
-free-running 0..7 step word is recorded and does not split the context.
+flag, the sweep topics' value-change `generation` or the connection
+`epoch` changed in between, the collection is rejected as straddling a
+mode change. With sweep known off, the free-running 0..7 step word is
+recorded and does not split the context.
 
 Reports `support.supported: false` with reasons for DDC input, DDC
 enabled, sweep active, sweep state unknown or an unknown mode, and

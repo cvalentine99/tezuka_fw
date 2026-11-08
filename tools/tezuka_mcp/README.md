@@ -85,9 +85,15 @@ The SDK returns a plain-dict tool result as `structuredContent: {"result":
   sweep off; the tool uses the MQTT sweep state to tell that apart from
   real stepping. That state counts as known only while the subscriber is
   connected and both `state/rx/sweep/{activate,engaged}` arrived live
-  within `TEZUKA_STATE_MAX_AGE_S` with `0`/`1`; otherwise the collection
-  is unsupported (reason in `context.sweep_state`), and it is rejected if
-  the sweep state or its message count changed during the collection.
+  within `TEZUKA_STATE_MAX_AGE_S` with `0`/`1` *on the current MQTT
+  connection*: after a reconnect the broker replays the stored flags
+  whether or not the producer still runs, so a flag whose live evidence
+  predates the reconnect (`flags.<name>.from_current_connection: false`,
+  `live_epoch` older than `epoch`) leaves the state unknown until
+  api_controller.sh republishes it live. Otherwise the collection is
+  unsupported (reason in `context.sweep_state`), and it is rejected if
+  the sweep state, its value-change generation or the connection epoch
+  changed during the collection.
 
 ## Tests
 

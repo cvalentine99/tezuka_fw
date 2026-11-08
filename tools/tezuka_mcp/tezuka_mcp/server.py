@@ -65,33 +65,49 @@ class Service:
 
         `active` is True/False only when the MQTT subscriber is connected
         and BOTH state/rx/sweep/activate and state/rx/sweep/engaged were
-        delivered live (api_controller.sh republishes them every 2 s, so a
-        live copy younger than TEZUKA_STATE_MAX_AGE_S is the normal case)
-        with a value of "0" or "1". Anything else - disconnected, only the
-        broker's retained copy, stale, missing or malformed - is None with
-        the reason: an old "off" is not evidence that a collection can be
-        read as one ADC-centred span. `generation` counts value CHANGES on
-        the two topics (unchanged 2 s republishes do not move it) and
-        `epoch` the MQTT connection epoch, so a caller comparing two
-        readings sees a flag that went off -> on -> off in between, or a
-        reconnect in between, even when both readings say "off"."""
-        snap = self.cache.snapshot(self.cfg.observation_max_age_s, self.cfg.state_max_age_s)
-        flags = {t.rsplit("/", 1)[1]: snap["receiver"].get("rx/sweep/" + t.rsplit("/", 1)[1], {}) for t in self.SWEEP_TOPICS}
-        out: Dict[str, Any] = {"active": None, "reason": None, "generation": self.cache.change_generation(*self.SWEEP_TOPICS),
-                               "epoch": snap["provenance"]["connection_epoch"],
-                               "subscriber_connected": snap["provenance"]["subscriber_connected"],
-                               "flags": {k: {"value": f.get("value"), "status": f.get("status"), "age_s": f.get("age_s")} for k, f in flags.items()}}
+        delivered live ON THE CURRENT CONNECTION (api_controller.sh
+        republishes them every 2 s, so a live copy younger than
+        TEZUKA_STATE_MAX_AGE_S is the normal case) with a value of "0" or
+        "1". Anything else - disconnected, only the broker's retained copy,
+        stale, missing, malformed, or live evidence that predates the last
+        reconnect - is None with the reason: an old "off" is not evidence
+        that a collection can be read as one ADC-centred span. After a
+        reconnect the broker replays the stored flags whether or not the
+        producer still runs; a replay of the same payload keeps the cache's
+        earlier live provenance (live_epoch stays at the old connection),
+        so each flag reports `live_epoch` and `from_current_connection`
+        and both must come from the current epoch before `active` is
+        decided. `generation` counts value CHANGES on the two topics
+        (unchanged 2 s republishes do not move it) and `epoch` the MQTT
+        connection epoch, so a caller comparing two readings sees a flag
+        that went off -> on -> off in between, or a reconnect in between,
+        even when both readings say "off". Everything is read under one
+        acquisition of the cache lock."""
+        ev = self.cache.sweep_evidence(self.SWEEP_TOPICS, self.cfg.state_max_age_s)
+        epoch = ev["connection_epoch"]
+        flags = {t.rsplit("/", 1)[1]: ev["flags"][t] for t in self.SWEEP_TOPICS}
+        out: Dict[str, Any] = {"active": None, "reason": None, "generation": ev["generation"], "epoch": epoch,
+                               "subscriber_connected": ev["subscriber_connected"],
+                               "flags": {k: {"value": f["value"], "status": f["status"], "age_s": f["age_s"],
+                                             "live_epoch": f["live_epoch"],
+                                             "from_current_connection": (None if f["live_epoch"] is None or not ev["subscriber_connected"]
+                                                                         else f["live_epoch"] == epoch)}
+                                         for k, f in flags.items()}}
         reasons = []
         if not out["subscriber_connected"]:
             reasons.append("MQTT subscriber is not connected, so the cached sweep flags may be outdated")
         for name, f in flags.items():
-            v, status = f.get("value"), f.get("status")
+            v, status, live_epoch = f["value"], f["status"], f["live_epoch"]
             if v is None:
                 reasons.append(f"state/rx/sweep/{name} never seen")
             elif v not in ("0", "1"):
                 reasons.append(f"state/rx/sweep/{name} has an unexpected value {v!r}")
             elif status != "fresh":
                 reasons.append(f"state/rx/sweep/{name} is {status} (no live copy within {self.cfg.state_max_age_s} s)")
+            elif live_epoch != epoch:
+                since = ("only the broker's retained replay has been seen since the reconnect" if f.get("retained_replay_seen")
+                         else "nothing has been received for it since the reconnect")
+                reasons.append(f"state/rx/sweep/{name} live evidence is from a previous connection (epoch {live_epoch} vs current {epoch}); {since}")
         if reasons:
             out["reason"] = "; ".join(reasons)
             return out
@@ -135,8 +151,9 @@ def build_server(service: Service) -> MCPServer:
             "frequency grid, a decimated PSD summary, a declared noise-floor estimate, above-floor segments and "
             "provenance. Levels are dB relative to the producer's unit scale, not dBm. DDC input, non-ADC input and "
             "sweep mode are reported as unsupported rather than interpreted; so is a sweep state that cannot be "
-            "established from live MQTT (subscriber disconnected, flags missing, stale or only retained), and a "
-            "collection during which the sweep state changed is rejected. Read-only."
+            "established from live MQTT on the current connection (subscriber disconnected, flags missing, stale, only "
+            "retained, or live only before the last reconnect), and a collection during which the sweep state "
+            "changed is rejected. Read-only."
         ),
         annotations=READ_ONLY,
     )

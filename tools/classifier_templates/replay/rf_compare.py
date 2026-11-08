@@ -23,6 +23,22 @@ linear power, span / fft_size per bin, DC at usable index fft_size/2 - 1.
 Writes DIR/fixtures.json (manifest with SHA-256 and expected disposition),
 DIR/raw/*.raw (the sequences), DIR/runs/<fixture>__<rev>.out (daemon
 output), DIR/results.json and DIR/results.md.
+
+Replay events: a fixture may carry an events file (the daemon's -E FILE:
+"<t_seconds> <topic> <payload>" per line, sorted by t), delivered to the
+daemon's real MQTT handler on its virtual clock, so scripted retunes and
+"learn" commands take the same code path as on a sensor. The generated
+fixture spur_retune_sequence uses one (LO moved by more than a span at
+60, 120 and 180 s over 240 s of the recorded frames: every retune relearns
+the background and the bins hot at a second frequency become receiver
+spurs, so the mask can only grow); --events NAME=PATH attaches a file to
+any fixture (repeatable; the manifest records its SHA-256 and contents).
+Runs of fixtures with events additionally record a "coverage" series
+(t, masked_bins, valid_bins, spur_bins, learn_count, label) from the
+observation messages, sampled at most once per 5 s, with the final mask
+coverage and the peak masked count; results.md gains coverage columns
+when any fixture in the run has events. A revision that predates the
+coverage fields reports them as null.
 """
 import argparse
 import concurrent.futures
@@ -59,6 +75,22 @@ def sha256(path):
         for chunk in iter(lambda: f.read(1 << 20), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def events_record(path, out_dir):
+    """Manifest entry for a replay events file: path, hash and the text
+    itself, so the run is reproducible from the manifest alone."""
+    with open(path) as f:
+        text = f.read()
+    return {"file": os.path.relpath(path, out_dir), "sha256": sha256(path), "contents": text,
+            "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E"}
+
+
+def write_events(out_raw, name, lines):
+    p = os.path.join(out_raw, name + ".events")
+    with open(p, "w") as f:
+        f.write("\n".join(lines) + "\n")
+    return events_record(p, os.path.dirname(out_raw))
 
 
 def load_recorded(fixture_dir):
@@ -174,14 +206,52 @@ def build_fixtures(base, templates, out_raw):
     add("overlap_fm_cw", 60, {"FM Broadcast", "CW / Beacon"}, nothing, "cold start; two emitters on from 20 s, the carrier inside the FM window",
         "both emitters are present, so either label is defensible; DAB+ would be false",
         lambda a, rng: (inject(a, fm_shape, 1000, 20.0, 20.0, 60.0, rng), inject(a, cw_shape, 1300, 25.0, 20.0, 60.0, rng))[0] | {"second": "CW at 1300"}, 20.0, 60.0)
+    add("spur_retune_sequence", 240, nothing, nothing,
+        "cold start at 1.09 GHz, then retuned by > span at 60 s (1.095 GHz), 120 s (1.1 GHz) and 180 s (back to 1.09 GHz) through scripted state/rx/frequency events; the same recorded frames throughout",
+        "nothing is on air but the receiver's own DC spur: any accepted label is a false accept. Each retune relearns the background and the bins hot at a second frequency become receiver spurs, so masked_bins can only grow (the coverage series records how much of the span is left to classify)", None)
+    specs[-1]["events"] = write_events(out_raw, "spur_retune_sequence", [
+        "# spur_retune_sequence: the LO moves by more than the 2.5 MHz span at each step,",
+        "# so a bin hot at two of these frequencies is counted as a receiver spur",
+        "0 state/rx/frequency 1090000000",
+        "60 state/rx/frequency 1095000000",
+        "120 state/rx/frequency 1100000000",
+        "180 state/rx/frequency 1090000000",
+    ])
+    specs[-1]["kind"] = "recorded frames + scripted events"
+    specs[-1]["source"] += "; retuned through the events file (see `events`)"
     return specs
 
 
-def daemon_args_for(fps):
-    """DAEMON_ARGS with the frame rate replaced: a recorded sequence is
-    replayed at the rate it was captured at unless the caller says otherwise."""
+def attach_events(specs, spec_arg, out_raw):
+    """--events NAME=PATH: deliver the replay events in PATH to fixture NAME
+    (the daemon's -E). The file is copied next to the sequences and its
+    hash and contents go into the manifest."""
+    name, sep, path = spec_arg.partition("=")
+    if not sep or not path:
+        raise SystemExit(f"--events expects NAME=PATH, got {spec_arg!r}")
+    spec = next((s for s in specs if s["name"] == name), None)
+    if spec is None:
+        raise SystemExit(f"--events: fixture {name!r} not found (have: {sorted(s['name'] for s in specs)})")
+    if not os.path.isfile(path):
+        raise SystemExit(f"--events: {path}: no such file")
+    dst = os.path.join(out_raw, name + ".events")
+    if os.path.abspath(dst) != os.path.abspath(path):
+        shutil.copyfile(path, dst)
+    spec["events"] = events_record(dst, os.path.dirname(out_raw))
+    spec["events"]["source"] = os.path.abspath(path)
+    steps = [ln.strip() for ln in spec["events"]["contents"].splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
+    spec["condition"] += "; scripted replay events on the virtual clock: " + ", ".join(steps)
+    spec["kind"] = spec.get("kind", "fixture") + " + scripted events"
+
+
+def daemon_args_for(fps, span_hz=None):
+    """DAEMON_ARGS with the frame rate (and, for a capture at another sample
+    rate, the span) replaced: a recorded sequence is replayed at the rate and
+    on the grid it was captured with unless the caller says otherwise."""
     args = list(DAEMON_ARGS)
     args[args.index("-F") + 1] = repr(float(fps))
+    if span_hz:
+        args[args.index("-S") + 1] = str(int(span_hz))
     return args
 
 
@@ -217,12 +287,17 @@ def add_recorded(specs, spec_arg, out_raw):
                   "detail": {"meta": meta, "replay_fps": fps},
                   "on_window_s": None, "expected_on": [], "expected_off": [],
                   "condition": f"recorded sequence as captured, replayed at {fps:g} frames/s: cold start, learning begins on the first frame",
-                  "expected_basis": "nothing was on air in the band at capture time except the receiver's own DC spur (see meta): no emitter class is correct",
-                  "kind": "recorded", "daemon_args": daemon_args_for(fps)})
+                  "expected_basis": meta.get("on_air") or (
+                      "no emitter class of the template set is expected in this band; every accepted label is tallied "
+                      "as a false accept and the report next to the capture says which of them could be correct "
+                      "(the meta file records the receiver settings, not what was on air)"),
+                  "kind": "recorded", "daemon_args": daemon_args_for(fps, rx.get("sampling_frequency"))})
 
 
-def run_daemon(qemu, sysroot, binary, raw, templates, out_path, daemon_args=DAEMON_ARGS):
+def run_daemon(qemu, sysroot, binary, raw, templates, out_path, daemon_args=DAEMON_ARGS, events=None):
     cmd = [qemu, "-L", sysroot, binary, "-r", raw, "-f", templates] + list(daemon_args)
+    if events:
+        cmd += ["-E", events]
     with open(out_path, "w") as f:
         p = subprocess.run(cmd, stdout=f, stderr=subprocess.PIPE, text=True)
     return cmd, p.returncode, p.stderr
@@ -243,6 +318,46 @@ def parse_output(path):
                 except ValueError:
                     pass
     return rows
+
+
+COVERAGE_SAMPLE_S = 5.0
+COVERAGE_COLUMNS = ["t", "masked_bins", "valid_bins", "spur_bins", "learn_count", "label"]
+
+
+def coverage(rows):
+    """Mask coverage over the run, from the observation messages: one row
+    per COVERAGE_COLUMNS sampled at most once per COVERAGE_SAMPLE_S, the
+    final row, the final mask coverage (masked / bins_used) and the peak
+    masked count. A revision without the coverage fields yields nulls."""
+    series, last_t, max_masked, final, bins_used = [], None, None, None, None
+    for t, o in rows["observation"]:
+        bg = o.get("background") or {}
+        row = [t, bg.get("masked_bins"), bg.get("valid_bins"), bg.get("spur_bins"), bg.get("learn_count"),
+               (o.get("decision") or {}).get("label")]
+        if row[1] is not None:
+            max_masked = row[1] if max_masked is None else max(max_masked, row[1])
+        if (o.get("input") or {}).get("bins_used") is not None:
+            bins_used = o["input"]["bins_used"]
+        final = row
+        if last_t is None or t - last_t >= COVERAGE_SAMPLE_S:
+            series.append(row)
+            last_t = t
+    if final is None:
+        return None
+    return {"columns": COVERAGE_COLUMNS, "sample_interval_s": COVERAGE_SAMPLE_S, "series": series, "final": final,
+            "final_mask_coverage": (final[1] / bins_used) if final[1] is not None and bins_used else None,
+            "max_masked_bins": max_masked, "bins_used": bins_used,
+            "backgrounds": [{"t": t, **b} for t, b in rows["background"]]}
+
+
+def coverage_cells(res):
+    """results.md cells for a run: final masked/valid (max masked), spur bins, learns."""
+    cov = res.get("coverage")
+    if not cov:
+        return ["-", "-", "-"]
+    f = cov["final"]
+    pct = f" = {100 * cov['final_mask_coverage']:.1f}%" if cov["final_mask_coverage"] is not None else ""
+    return [f"{f[1]} / {f[2]} (max {cov['max_masked_bins']}){pct}", str(f[3]), str(f[4])]
 
 
 def tally(spec, rows):
@@ -304,6 +419,8 @@ def main():
     ap.add_argument("--recorded", action="append", default=[],
                     help="name=path[:fps]: add a captured raw sequence as a recorded fixture (repeat)")
     ap.add_argument("--only", default="", help="comma-separated fixture names to run (default: all)")
+    ap.add_argument("--events", action="append", default=[],
+                    help="NAME=PATH: deliver the replay events file PATH (daemon -E) to fixture NAME (repeat)")
     args = ap.parse_args()
 
     os.makedirs(os.path.join(args.out, "raw"), exist_ok=True)
@@ -313,6 +430,8 @@ def main():
     specs = build_fixtures(base, templates, os.path.join(args.out, "raw"))
     for rec in args.recorded:
         add_recorded(specs, rec, os.path.join(args.out, "raw"))
+    for ev in args.events:
+        attach_events(specs, ev, os.path.join(args.out, "raw"))
     if args.only:
         wanted = set(args.only.split(","))
         missing = wanted - {s["name"] for s in specs}
@@ -333,11 +452,15 @@ def main():
     def job(spec, name):
         raw = os.path.join(args.out, spec["file"])
         outp = os.path.join(args.out, "runs", f"{spec['name']}__{name}.out")
+        events = os.path.join(args.out, spec["events"]["file"]) if spec.get("events") else None
         cmd, rc, err = run_daemon(args.qemu, args.sysroot, bins[name], raw, args.templates, outp,
-                                  spec.get("daemon_args", DAEMON_ARGS))
+                                  spec.get("daemon_args", DAEMON_ARGS), events)
         rows = parse_output(outp)
-        return spec["name"], name, {"command": cmd, "returncode": rc, "stderr_tail": err.strip().splitlines()[-3:],
-                                    "result_lines": len(rows["result"]), **tally(spec, rows)}
+        res = {"command": cmd, "returncode": rc, "stderr_tail": err.strip().splitlines()[-3:],
+               "result_lines": len(rows["result"]), **tally(spec, rows)}
+        if events:
+            res["coverage"] = coverage(rows)
+        return spec["name"], name, res
 
     results = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
@@ -347,9 +470,12 @@ def main():
     with open(os.path.join(args.out, "results.json"), "w") as f:
         json.dump(doc, f, indent=1)
 
-    # markdown table
-    lines = ["| fixture | expected (ON / OFF) | revision | ON: accepted / decisions | OFF: accepted / decisions | false accepts (worst score) | misses | condition |",
-             "|---|---|---|---|---|---|---|---|"]
+    # markdown table (coverage columns only when a fixture in this run has
+    # events, so a run without them keeps the previous layout)
+    has_events = any(s.get("events") for s in specs)
+    cov_head = " coverage: final masked / valid bins (max masked) | spur bins | learns |" if has_events else ""
+    lines = ["| fixture | expected (ON / OFF) | revision | ON: accepted / decisions | OFF: accepted / decisions | false accepts (worst score) | misses | condition |" + cov_head,
+             "|---|---|---|---|---|---|---|---|" + ("---|---|---|" if has_events else "")]
     for spec in specs:
         exp = f"{' or '.join(spec['expected_on']) or 'unknown'} / {' or '.join(spec['expected_off']) or 'unknown'}"
         for name in bins:
@@ -360,7 +486,8 @@ def main():
             fa = (on["false_accepts"] if on else 0) + off["false_accepts"]
             worst = max([x for x in ((on or {}).get("worst_false_accept_score"), off.get("worst_false_accept_score")) if x is not None], default=None)
             misses = on["misses"] if on and on["misses"] is not None else "-"
-            lines.append(f"| {spec['name']} | {exp} | {name} | {on_s} | {off_s} | {fa}{f' ({worst})' if worst is not None else ''} | {misses} | {spec['condition']} |")
+            cov_s = (" " + " | ".join(coverage_cells(r)) + " |") if has_events else ""
+            lines.append(f"| {spec['name']} | {exp} | {name} | {on_s} | {off_s} | {fa}{f' ({worst})' if worst is not None else ''} | {misses} | {spec['condition']} |" + cov_s)
     with open(os.path.join(args.out, "results.md"), "w") as f:
         f.write("\n".join(lines) + "\n")
     print("\n".join(lines))

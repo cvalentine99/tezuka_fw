@@ -255,6 +255,40 @@ class StateCache:
         with self._lock:
             return sum(self._entries[t].change_count for t in topics if t in self._entries)
 
+    def sweep_evidence(self, topics: Tuple[str, ...], max_age_s: float, now_mono: Optional[float] = None) -> Dict[str, Any]:
+        """Everything Service.sweep_state needs, read under ONE acquisition
+        of the lock so the connection state, the epoch, the generation and
+        the per-topic evidence describe the same instant (snapshot() plus
+        change_generation() would be two readings with a gap between).
+
+        Per topic: value, status (fresh/stale/retained/unavailable), age_s,
+        live_epoch (the connection epoch of the live message that carried
+        the current value, None when none did), live_messages and
+        retained_replay_seen. Entry semantics are unchanged: a retained
+        replay of the same payload keeps the earlier live_at/live_epoch,
+        and that provenance is exposed here as is - the caller decides
+        whether live evidence from a previous connection epoch is good
+        enough (sweep_state does not: after a reconnect the broker replays
+        the stored flags whether or not api_controller.sh still runs)."""
+        now_mono = time.monotonic() if now_mono is None else now_mono
+        with self._lock:
+            flags: Dict[str, Dict[str, Any]] = {}
+            for t in topics:
+                e = self._entries.get(t)
+                if e is None:
+                    flags[t] = {"value": None, "status": "unavailable", "age_s": None, "live_epoch": None,
+                                "live_messages": 0, "retained_replay_seen": False}
+                else:
+                    d = e.describe(now_mono, max_age_s)
+                    d["live_epoch"] = e.live_epoch
+                    flags[t] = d
+            return {
+                "subscriber_connected": self.connected,
+                "connection_epoch": self.connection_epoch,
+                "generation": sum(self._entries[t].change_count for t in topics if t in self._entries),
+                "flags": flags,
+            }
+
     def _ingest_observation(self, payload: str, retained: bool, now_mono: float) -> None:
         st = self._obs_stats
         try:

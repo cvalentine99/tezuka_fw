@@ -1,7 +1,8 @@
 # app/classifier — on-target daemon plus host-side test tools.
 #
 #   make                 cross-build `classifier` (CROSS_COMPILE from the SDK env)
-#   make host-tools      native scft_check / features_check / jsonw_check in build/host/
+#   make host-tools      native scft_check / features_check / jsonw_check and the
+#                        native replay build classifier_replay in build/host/
 #   make test            host-tools + the pytest suite in tests/ (needs python3 + pytest)
 
 CC = $(CROSS_COMPILE)gcc
@@ -18,10 +19,25 @@ classifier: classifier.c $(CORE_SRCS) $(CORE_HDRS)
 HOSTDIR = build/host
 HOST_CFLAGS = -O2 -Wall -Wextra -Wno-unused-parameter -fsanitize=address,undefined -fno-omit-frame-pointer
 
-host-tools: $(HOSTDIR)/scft_check $(HOSTDIR)/features_check $(HOSTDIR)/jsonw_check
+host-tools: $(HOSTDIR)/scft_check $(HOSTDIR)/features_check $(HOSTDIR)/jsonw_check $(HOSTDIR)/classifier_replay
 
 $(HOSTDIR):
 	mkdir -p $(HOSTDIR)
+
+# The daemon source compiled by the native replay build and the TSan harness
+# below. May point at another revision's classifier.c. Defined here, before
+# the first rule that lists it as a prerequisite: make expands prerequisite
+# lists immediately, so a later definition would leave classifier.c out of
+# the dependency list and let stale binaries survive an edit.
+CLASSIFIER_SRC ?= $(abspath classifier.c)
+
+# Native replay build of the daemon (see tsan/replay_main.c): classifier.c
+# compiled against the stub network headers in tsan/stubs with ASan + UBSan
+# (no TSan), so -r / -E replays with -B none run on the host without
+# libwebsockets/libmosquitto. Used by tests/test_replay_events.py.
+REPLAY_CFLAGS = -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-function -Wno-unused-parameter
+$(HOSTDIR)/classifier_replay: tsan/replay_main.c tsan/stubs/mosquitto.h tsan/stubs/libwebsockets.h $(CLASSIFIER_SRC) $(CORE_SRCS) $(CORE_HDRS) | $(HOSTDIR)
+	$(HOSTCC) $(REPLAY_CFLAGS) -I tsan/stubs -iquote . -DCLASSIFIER_SRC='"$(CLASSIFIER_SRC)"' tsan/replay_main.c $(CORE_SRCS) -o $@ -lm -lpthread
 
 $(HOSTDIR)/scft_check: scft_check.c $(CORE_SRCS) $(CORE_HDRS) | $(HOSTDIR)
 	$(HOSTCC) $(HOST_CFLAGS) scft_check.c scft.c sha256.c jsonw.c -o $@ -lm
@@ -37,9 +53,9 @@ test: host-tools
 
 # ThreadSanitizer harness (see tsan/harness.c): the daemon compiled natively
 # against stub network headers, replaying frames while a second thread
-# rewrites the MQTT-derived observation fields. CLASSIFIER_SRC may point at
-# another revision's classifier.c. TSan needs ASLR off on recent kernels.
-CLASSIFIER_SRC ?= $(abspath classifier.c)
+# rewrites the MQTT-derived observation fields. CLASSIFIER_SRC (defined
+# above) may point at another revision's classifier.c. TSan needs ASLR off
+# on recent kernels.
 TSAN_FLAGS = -O1 -g -fsanitize=thread -fno-omit-frame-pointer -Wall -Wno-unused-function -Wno-unused-parameter
 tsan: build/tsan/harness
 build/tsan/harness: tsan/harness.c tsan/stubs/mosquitto.h tsan/stubs/libwebsockets.h $(CLASSIFIER_SRC) $(CORE_SRCS) $(CORE_HDRS)

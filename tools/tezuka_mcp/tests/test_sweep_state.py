@@ -29,7 +29,8 @@ def test_disconnected_with_retained_off_is_unknown_not_false():
     st = svc.sweep_state()
     assert st["active"] is None
     assert "not connected" in st["reason"] and "retained" in st["reason"]
-    assert st["flags"]["activate"] == {"value": "0", "status": "retained", "age_s": None}
+    assert st["flags"]["activate"] == {"value": "0", "status": "retained", "age_s": None,
+                                       "live_epoch": None, "from_current_connection": None}
 
 
 def test_connected_but_only_retained_is_unknown():
@@ -128,4 +129,94 @@ def test_reconnect_moves_epoch_and_retained_replay_is_not_fresh():
     svc.cache.ingest(ENG, "0", retained=True, now_mono=now)
     st = svc.sweep_state()
     assert st["epoch"] == e0 + 1 and st["generation"] == 0
-    assert st["active"] is False      # same payload: the live evidence from before still holds
+    # The cache keeps the earlier live provenance for the unchanged payload
+    # (the retained replay does not overwrite it), but that evidence is from
+    # the previous connection: the producer may have died while we were
+    # away and the broker would replay the same "0" regardless.
+    assert st["active"] is None
+    assert "previous connection" in st["reason"] and f"epoch {e0} vs current {e0 + 1}" in st["reason"]
+    assert "activate" in st["reason"] and "engaged" in st["reason"]
+    for name in ("activate", "engaged"):
+        f = st["flags"][name]
+        assert f["status"] == "fresh" and f["live_epoch"] == e0 and f["from_current_connection"] is False
+
+
+def _reconnect_with_retained_replay(svc, now):
+    """Epoch 1: both flags live "0"; disconnect; epoch 2: the broker replays
+    the same "0" values as RETAINED copies (the reviewer's R5 reproduction)."""
+    svc.cache.mark_connected(True, None, now_mono=now)
+    svc.cache.ingest(ACT, "0", retained=False, now_mono=now)
+    svc.cache.ingest(ENG, "0", retained=False, now_mono=now)
+    assert svc.sweep_state()["active"] is False
+    svc.cache.mark_connected(False, "disconnected: 7", now_mono=now)
+    svc.cache.mark_connected(True, None, now_mono=now)
+    svc.cache.ingest(ACT, "0", retained=True, now_mono=now)
+    svc.cache.ingest(ENG, "0", retained=True, now_mono=now)
+
+
+def test_retained_only_reconnect_is_unknown():
+    svc = make_service()
+    now = time.monotonic()
+    _reconnect_with_retained_replay(svc, now)
+    st = svc.sweep_state()
+    assert st["active"] is None and st["epoch"] == 2 and st["subscriber_connected"] is True
+    assert "previous connection (epoch 1 vs current 2)" in st["reason"]
+    assert st["flags"]["activate"]["from_current_connection"] is False
+    assert st["flags"]["engaged"]["from_current_connection"] is False
+    assert svc.sweep_active() is None
+
+
+def test_only_one_flag_refreshed_live_in_new_epoch_names_the_other():
+    svc = make_service()
+    now = time.monotonic()
+    _reconnect_with_retained_replay(svc, now)
+    svc.cache.ingest(ACT, "0", retained=False, now_mono=now)     # api_controller.sh's first republish after the reconnect
+    st = svc.sweep_state()
+    assert st["active"] is None
+    assert "state/rx/sweep/engaged live evidence is from a previous connection (epoch 1 vs current 2)" in st["reason"]
+    assert "state/rx/sweep/activate" not in st["reason"]
+    assert st["flags"]["activate"] == {"value": "0", "status": "fresh", "age_s": st["flags"]["activate"]["age_s"],
+                                       "live_epoch": 2, "from_current_connection": True}
+    assert st["flags"]["engaged"]["live_epoch"] == 1 and st["flags"]["engaged"]["from_current_connection"] is False
+
+
+def test_both_flags_refreshed_live_in_new_epoch_is_false_and_generation_unchanged():
+    svc = make_service()
+    now = time.monotonic()
+    _reconnect_with_retained_replay(svc, now)
+    svc.cache.ingest(ACT, "0", retained=False, now_mono=now)
+    svc.cache.ingest(ENG, "0", retained=False, now_mono=now)
+    st = svc.sweep_state()
+    assert st["active"] is False and st["reason"] is None
+    assert st["generation"] == 0 and st["epoch"] == 2
+    assert all(st["flags"][k]["from_current_connection"] is True and st["flags"][k]["live_epoch"] == 2
+               for k in ("activate", "engaged"))
+
+
+def test_flag_fields_carry_live_epoch_provenance():
+    svc = make_service()
+    st = svc.sweep_state()
+    assert st["flags"]["activate"] == {"value": None, "status": "unavailable", "age_s": None,
+                                       "live_epoch": None, "from_current_connection": None}
+    now = time.monotonic()
+    svc.cache.ingest(ACT, "0", retained=True, now_mono=now)
+    st = svc.sweep_state()
+    assert st["flags"]["activate"]["live_epoch"] is None and st["flags"]["activate"]["from_current_connection"] is None
+
+
+def test_sweep_evidence_is_one_locked_reading():
+    svc = make_service()
+    now = time.monotonic()
+    svc.cache.mark_connected(True, None, now_mono=now)
+    svc.cache.ingest(ACT, "0", retained=False, now_mono=now)
+    svc.cache.ingest(ACT, "1", retained=False, now_mono=now)
+    ev = svc.cache.sweep_evidence((ACT, ENG), 10.0, now_mono=now)
+    assert ev["subscriber_connected"] is True and ev["connection_epoch"] == 1
+    assert ev["generation"] == 1 == svc.cache.change_generation(ACT, ENG)
+    assert ev["flags"][ACT] == {"value": "1", "status": "fresh", "age_s": 0.0, "retained_replay_seen": False,
+                                "live_messages": 2, "live_epoch": 1}
+    assert ev["flags"][ENG] == {"value": None, "status": "unavailable", "age_s": None, "retained_replay_seen": False,
+                                "live_messages": 0, "live_epoch": None}
+    # the general snapshot keeps its shape (no live_epoch leak into describe())
+    snap = svc.cache.snapshot(5.0, 10.0, now_mono=now)
+    assert "live_epoch" not in snap["receiver"]["rx/sweep/activate"]

@@ -10,7 +10,7 @@
   },
   "fixed": {
    "path": "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
-   "sha256": "5b1f7f3cd03c02299b9d9711bdaaf0a3d30a6966d8ca6fc6956535e389198ccd"
+   "sha256": "97665cc1be00b6c017078c974320ad2baba59259e65952e6c7c4eeaab451208d"
   }
  },
  "qemu": "/usr/bin/qemu-arm-static",
@@ -24,9 +24,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_cold.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur_only_cold.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -56,7 +56,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -90,9 +90,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_cold.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur_only_cold.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -122,7 +122,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -157,9 +157,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_cold.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur_only_cold.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -189,7 +189,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -226,9 +226,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_settled.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur_only_settled.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -258,7 +258,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 1800 frames processed"
     ],
     "result_lines": 226,
@@ -292,9 +292,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_settled.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur_only_settled.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -324,7 +324,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 1800 frames processed"
     ],
     "result_lines": 226,
@@ -359,9 +359,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/spur_only_settled.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur_only_settled.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -391,7 +391,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 1800 frames processed"
     ],
     "result_lines": 226,
@@ -428,9 +428,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/quiet_no_spur.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/quiet_no_spur.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -460,7 +460,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -494,9 +494,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/quiet_no_spur.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/quiet_no_spur.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -526,7 +526,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -561,9 +561,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/quiet_no_spur.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/quiet_no_spur.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -593,7 +593,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -630,9 +630,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_offcenter.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/fm_offcenter.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -662,7 +662,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -726,9 +726,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_offcenter.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/fm_offcenter.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -758,7 +758,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -885,9 +885,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_offcenter.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/fm_offcenter.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -917,7 +917,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1012,7 +1012,12 @@
       "background": {
        "learned": true,
        "age_s": 20.4,
-       "frames": 154
+       "frames": 154,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 71,
+       "learn_count": 1
       },
       "input": {
        "source": "maia-httpd /waterfall",
@@ -1046,9 +1051,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_near_lo.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/fm_near_lo.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1078,7 +1083,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1142,9 +1147,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_near_lo.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/fm_near_lo.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1174,7 +1179,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1301,9 +1306,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/fm_near_lo.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/fm_near_lo.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1333,7 +1338,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1428,7 +1433,12 @@
       "background": {
        "learned": true,
        "age_s": 20.4,
-       "frames": 154
+       "frames": 154,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 71,
+       "learn_count": 1
       },
       "input": {
        "source": "maia-httpd /waterfall",
@@ -1462,9 +1472,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/dab_fullspan.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/dab_fullspan.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1494,7 +1504,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1558,9 +1568,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/dab_fullspan.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/dab_fullspan.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1590,7 +1600,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1717,9 +1727,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/dab_fullspan.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/dab_fullspan.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1749,7 +1759,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1844,7 +1854,12 @@
       "background": {
        "learned": true,
        "age_s": 20.4,
-       "frames": 154
+       "frames": 154,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 71,
+       "learn_count": 1
       },
       "input": {
        "source": "maia-httpd /waterfall",
@@ -1878,9 +1893,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/cw_offcenter.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/cw_offcenter.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -1910,7 +1925,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -1974,9 +1989,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/cw_offcenter.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/cw_offcenter.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2006,7 +2021,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2133,9 +2148,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/cw_offcenter.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/cw_offcenter.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2165,7 +2180,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2260,7 +2275,12 @@
       "background": {
        "learned": true,
        "age_s": 20.4,
-       "frames": 154
+       "frames": 154,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 71,
+       "learn_count": 1
       },
       "input": {
        "source": "maia-httpd /waterfall",
@@ -2294,9 +2314,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/unknown_block_1mhz.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/unknown_block_1mhz.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2326,7 +2346,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2372,9 +2392,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/unknown_block_1mhz.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/unknown_block_1mhz.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2404,7 +2424,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2451,9 +2471,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/unknown_block_1mhz.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/unknown_block_1mhz.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2483,7 +2503,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2532,9 +2552,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/overlap_fm_cw.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/overlap_fm_cw.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2564,7 +2584,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2628,9 +2648,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/overlap_fm_cw.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/overlap_fm_cw.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2660,7 +2680,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2787,9 +2807,9 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rf/raw/overlap_fm_cw.raw",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/overlap_fm_cw.raw",
      "-f",
-     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
      "4096",
      "-F",
@@ -2819,7 +2839,7 @@
     ],
     "returncode": 0,
     "stderr_tail": [
-     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from /home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "replay: 450 frames processed"
     ],
     "result_lines": 58,
@@ -2914,7 +2934,12 @@
       "background": {
        "learned": true,
        "age_s": 20.4,
-       "frames": 154
+       "frames": 154,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 71,
+       "learn_count": 1
       },
       "input": {
        "source": "maia-httpd /waterfall",
@@ -2935,6 +2960,887 @@
       "fft_size": 4096,
       "hz_per_bin": 610.4,
       "hot": 71,
+      "masked": 5
+     }
+    }
+   }
+  },
+  "spur433_live_realrate": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur433_live_realrate.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "0.5966",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 60 frames processed"
+    ],
+    "result_lines": 60,
+    "on": null,
+    "off": {
+     "decisions": 52,
+     "labels": {
+      "FM Broadcast": 52
+     },
+     "false_accepts": 52,
+     "false_accept_labels": {
+      "FM Broadcast": 52
+     },
+     "worst_false_accept_score": 0.659,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 13.4,
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 13.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.5,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 610.5,
+      "hot": 234,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur433_live_realrate.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "0.5966",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 60 frames processed"
+    ],
+    "result_lines": 60,
+    "on": null,
+    "off": {
+     "decisions": 52,
+     "labels": {
+      "FM Broadcast": 52
+     },
+     "false_accepts": 52,
+     "false_accept_labels": {
+      "FM Broadcast": 52
+     },
+     "worst_false_accept_score": 0.659,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 13.4,
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 13.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.65,
+       "snr_db": 18.1,
+       "prom_db": 13.4,
+       "bin_offset": 1724,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.255,
+       "best": {
+        "template_id": 1,
+        "score": 0.65,
+        "snr_db": 18.1,
+        "prom_db": 13.4
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": true,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.007326,
+       "bandwidth_hz": 18310.5,
+       "spectral_papr_db": 18.44,
+       "flatness": 0.2999,
+       "peak_count": 5,
+       "peak_bin": 2050,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 13.4,
+       "frames": 9
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 4,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 234,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/spur433_live_realrate.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "0.5966",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 60 frames processed"
+    ],
+    "result_lines": 60,
+    "on": null,
+    "off": {
+     "decisions": 52,
+     "labels": {
+      "FM Broadcast": 52
+     },
+     "false_accepts": 52,
+     "false_accept_labels": {
+      "FM Broadcast": 52
+     },
+     "worst_false_accept_score": 0.659,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 13.4,
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 13.4,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.65,
+       "snr_db": 18.1,
+       "prom_db": 13.4,
+       "bin_offset": 1724,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.255,
+       "best": {
+        "template_id": 1,
+        "score": 0.65,
+        "snr_db": 18.1,
+        "prom_db": 13.4
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": true,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.007326,
+       "bandwidth_hz": 18310.5,
+       "spectral_papr_db": 18.44,
+       "flatness": 0.2999,
+       "peak_count": 5,
+       "peak_bin": 2050,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 13.4,
+       "frames": 9,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 234,
+       "learn_count": 1
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 4,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 234,
+      "masked": 5
+     }
+    }
+   }
+  },
+  "ism2400_live_realrate": {
+   "baseline_7997d95": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/7997d959b43c8ea250cde85a935d808cd938fb5f/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/ism2400_live_realrate.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.3314",
+     "-S",
+     "30720000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 360 frames processed"
+    ],
+    "result_lines": 46,
+    "on": null,
+    "off": {
+     "decisions": 34,
+     "labels": {
+      "unknown": 13,
+      "CW / Beacon": 20,
+      "DAB+": 1
+     },
+     "false_accepts": 21,
+     "false_accept_labels": {
+      "CW / Beacon": 20,
+      "DAB+": 1
+     },
+     "worst_false_accept_score": 0.99,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 15.4,
+      "label": "CW / Beacon",
+      "confidence": 0.986,
+      "freq_offset": 975,
+      "bandwidth_bins": 8,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 7.8,
+      "prom_db": 5.4,
+      "margin": 0.986,
+      "hz_per_bin": 7501.8,
+      "state": "ok",
+      "bg_age_s": 15,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 15.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.986,
+      "freq_offset": 975,
+      "bandwidth_bins": 8,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 7.8,
+      "prom_db": 5.4,
+      "margin": 0.986,
+      "hz_per_bin": 7501.8,
+      "state": "ok",
+      "bg_age_s": 15,
+      "online": true
+     },
+     "observation": null,
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "hz_per_bin": 7501.8,
+      "hot": 194,
+      "masked": 5
+     }
+    }
+   },
+   "pinned_fb9b86a": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/revs/fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe/app/classifier/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/ism2400_live_realrate.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.3314",
+     "-S",
+     "30720000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 360 frames processed"
+    ],
+    "result_lines": 46,
+    "on": null,
+    "off": {
+     "decisions": 34,
+     "labels": {
+      "unknown": 13,
+      "CW / Beacon": 20,
+      "DAB+": 1
+     },
+     "false_accepts": 21,
+     "false_accept_labels": {
+      "CW / Beacon": 20,
+      "DAB+": 1
+     },
+     "worst_false_accept_score": 0.99,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 15.4,
+      "label": "CW / Beacon",
+      "confidence": 0.986,
+      "freq_offset": 975,
+      "bandwidth_bins": 8,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 7.8,
+      "prom_db": 5.4,
+      "margin": 0.986,
+      "hz_per_bin": 7500.0,
+      "state": "ok",
+      "bg_age_s": 15,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 15.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.986,
+      "freq_offset": 975,
+      "bandwidth_bins": 8,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 7.8,
+      "prom_db": 5.4,
+      "margin": 0.986,
+      "hz_per_bin": 7500.0,
+      "state": "ok",
+      "bg_age_s": 15,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "CW / Beacon",
+       "accepted": true,
+       "template_id": 3,
+       "score": 0.986,
+       "snr_db": 7.8,
+       "prom_db": 5.4,
+       "bin_offset": 975,
+       "bandwidth_bins": 8,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.986,
+       "best": {
+        "template_id": 3,
+        "score": 0.986,
+        "snr_db": 7.8,
+        "prom_db": 5.4
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 3,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.091331,
+       "bandwidth_hz": 2805000.0,
+       "spectral_papr_db": 12.06,
+       "flatness": 0.1389,
+       "peak_count": 27,
+       "peak_bin": 2978,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 15.4,
+       "frames": 114
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 4,
+       "dc_index": 2047,
+       "hz_per_bin": 7500.0
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 7500.0,
+      "hot": 194,
+      "masked": 5
+     }
+    }
+   },
+   "fixed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
+     "-r",
+     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfA2/raw/ism2400_live_realrate.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "7.3314",
+     "-S",
+     "30720000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 360 frames processed"
+    ],
+    "result_lines": 46,
+    "on": null,
+    "off": {
+     "decisions": 34,
+     "labels": {
+      "unknown": 13,
+      "CW / Beacon": 20,
+      "DAB+": 1
+     },
+     "false_accepts": 21,
+     "false_accept_labels": {
+      "CW / Beacon": 20,
+      "DAB+": 1
+     },
+     "worst_false_accept_score": 0.99,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": {
+      "t": 15.4,
+      "label": "CW / Beacon",
+      "confidence": 0.986,
+      "freq_offset": 975,
+      "bandwidth_bins": 8,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 7.8,
+      "prom_db": 5.4,
+      "margin": 0.986,
+      "hz_per_bin": 7500.0,
+      "state": "ok",
+      "bg_age_s": 15,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 15.4,
+     "result": {
+      "label": "CW / Beacon",
+      "confidence": 0.986,
+      "freq_offset": 975,
+      "bandwidth_bins": 8,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 7.8,
+      "prom_db": 5.4,
+      "margin": 0.986,
+      "hz_per_bin": 7500.0,
+      "state": "ok",
+      "bg_age_s": 15,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "CW / Beacon",
+       "accepted": true,
+       "template_id": 3,
+       "score": 0.986,
+       "snr_db": 7.8,
+       "prom_db": 5.4,
+       "bin_offset": 975,
+       "bandwidth_bins": 8,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.986,
+       "best": {
+        "template_id": 3,
+        "score": 0.986,
+        "snr_db": 7.8,
+        "prom_db": 5.4
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 3,
+        "held": false,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.091331,
+       "bandwidth_hz": 2805000.0,
+       "spectral_papr_db": 12.06,
+       "flatness": 0.1389,
+       "peak_count": 27,
+       "peak_bin": 2978,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 15.4,
+       "frames": 114,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 194,
+       "learn_count": 1
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 4,
+       "dc_index": 2047,
+       "hz_per_bin": 7500.0
+      }
+     },
+     "background_learned": {
+      "frequency": "",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 7500.0,
+      "hot": 194,
       "masked": 5
      }
     }

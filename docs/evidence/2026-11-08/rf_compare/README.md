@@ -4,15 +4,21 @@ Offline, read-only comparison requested by `CLAUDE_MO_RF_ACCEPTANCE_DIRECTIVES.m
 (task 2: explain the RF discrepancy before tuning; task 3: freeze an evaluation
 set; task 4: per-fixture results for three revisions). Nothing was transmitted,
 no sensor setting was changed, no service, template or FPGA image on the sensor
-was touched. The only sensor interaction was a read-only subscription to its
-`/waterfall` websocket and two GET requests to `/api` (before and after) to
-record the receiver settings.
+was touched. The sensor interactions were read-only: two `/waterfall`
+websocket subscriptions with `/api` GETs before and after each (the 433 MHz
+capture, then a second capture after the sensor's owner rebooted it and it
+came up at its default 2.4 GHz settings), and the read-only SSH inspection
+described in `../fpga/README.md`. The second capture and the scripted-retune
+replays were added for the follow-up review of 8d06537 (its actions 3 and 4).
 
 ## 1. What is RF evidence here and what is not
 
 | Input | Kind | Why |
 |---|---|---|
 | `raw/wf433_live.raw` (60 frames, 433 MHz, as captured) | **recorded RF** | the sensor's own spectrometer output, unmodified, sequence order kept |
+| `raw/ism2400_live.raw.xz` (360 frames, 2.4 GHz, 30.72 MHz span, as captured) | **recorded RF** | same source, a different band and span; the band carries Wi-Fi, which is in no template, and at least one persistent narrow spike whose origin the capture alone cannot settle (5.5) |
+| `spur433_live_retune` (the 433 MHz frames with scripted `state/rx/frequency` events) | recorded RF frames, **scripted retunes** | the frames are real; the retunes are replay events, so the receiver did not actually move: the fixture exercises the mask mechanism on real spur frames, it does not show what the receiver would have seen at 438 or 443 MHz |
+| `spur_retune_sequence` (cycled 1.09 GHz frames with scripted retunes) | cycled recorded frames, scripted retunes | same construction on the cycled frames |
 | `tools/tezuka_mcp/tests/fixtures/wf_avg4096_frame{0,1,2}.bin` (3 frames, 1.09 GHz) | recorded RF frames, but **cycled** into sequences | only three distinct frames exist; cycling them is a software construction (see 5.3 for the effect) |
 | `fm_*`, `dab_*`, `cw_*`, `unknown_block_1mhz`, `overlap_fm_cw`, `quiet_no_spur` | **software fixtures** | emitters shaped like the templates (or like nothing in the set) are injected into the cycled frames; they are positive and negative controls for the pipeline, not evidence of performance on independent RF |
 
@@ -27,12 +33,14 @@ fixtures: no threshold, template, gate or mask was changed in any revision.
 | Template bundle | `board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin`, sha256 `cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263`, version 3, canonical_n 512, labels FM Broadcast (id 1, 781.25 Hz/bin, 400 kHz), DAB+ (id 2, 4882.8 Hz/bin, 2.5 MHz), CW / Beacon (id 3, 58.6 Hz/bin, 30 kHz), no feature ranges. Same bytes the sensor runs (`templates.sha256` in `live_mcp_e2e.json`). |
 | Recorded 1.09 GHz frames | `wf_avg4096_frame0.bin` `1b26b04cab3406beb5f2f50f87bc3804a4d05cb46230f9c3c088f680a1c4ec4d`, `frame1` `5acadf69568e60cd611e09b1a2bb2c59c44a2d87c58307350feff3435d2b8835`, `frame2` `602c0489845d5b4d698337197c3e2c4c155af318c79cb0b0cb4dfad09419021c` (SignalSDR Pro, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual) |
 | Live 433 MHz capture | `raw/wf433_live.raw`, sha256 `db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4`, 60 frames of 16384 bytes, captured 2026-11-08 (unix 1794170740.7) from 192.168.50.25 with `tools/classifier_templates/replay/capture_waterfall.py`; receiver before and after: rx_lo 433000000 Hz, fs 2500000 Hz, rx_rf_bandwidth 2500000 Hz, gain 70.0 dB Manual, spectrometer Average x1023, 4096-point, 0.5966 frames/s; firmware `tezuka-v0.3.24-34-g6e3a`, maia-httpd `v0.3.24-21-g49403b9`, maia-hdl 0.6.1 (`raw/wf433_live.raw.meta.json`) |
-| Frame layout and grid | float32 LE x 4096 per frame; float 0 is the step word; usable bin j is float j+1; linear integrated power (not dBm); 610.3515625 Hz per bin; DC at usable index 2047 |
-| Daemon arguments (identical for every revision) | `-n 4096 -S 2500000 -B none -c 0.6 -m 0.15 -i 1.0 -s 6 -g 4 -l 10 -a 300 -w 4e6 -x 8` plus `-F <frame rate>`: 7.5 for the generated fixtures, 0.5966 (the capture rate) for `spur433_live_realrate`, 7.5 for `spur433_live_7p5fps`. Threshold 0.6, hold margin 0.15, SNR gate 6 dB, prominence gate 4 dB, learning 10 s, background tau 300 s, baseline width 4 MHz, spur mask DC+-2 and bins hot at 2 or more frequencies. |
-| Revisions | `baseline_7997d95` = parent commit 7997d959b43c8ea250cde85a935d808cd938fb5f, binary sha256 `29999610181d2e67eb46aaf45068e1a0e33ad336729d09103f4d95c3e8669cee`; `pinned_fb9b86a` = reviewed commit fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe, `e952dd4ecd3dcb335f1a7733c452fad01ef22483dcab3e57b92de87c217e07da`; `fixed` = this worktree with the R1-R6 changes, `5b1f7f3cd03c02299b9d9711bdaaf0a3d30a6966d8ca6fc6956535e389198ccd`. Each built with `make classifier` in `app/classifier` from a clean checkout of that commit, with the signalsdrpro Buildroot SDK (`arm-linux-gcc` 15.1.0, Buildroot 2021.11-18033-g83947c7bb6 toolchain wrapper). |
+| Live 2.4 GHz capture | `raw/ism2400_live.raw.xz` (xz -9 of the raw file; raw sha256 `85acf590914f0d1e06d33b10e813958f992147e03505537c532c586152929376`, 360 frames of 16384 bytes; `.xz` sha256 `0d7343061a4049e856f956437596163a8e330e62facec0bd129952e6b3a66c04`), captured 2026-11-08 (unix 1794172478.1) from 192.168.50.25 with the same tool after the owner's reboot; receiver before and after: rx_lo 2400000000 Hz, fs 30720000 Hz, rx_rf_bandwidth 18000000 Hz, gain 69.0 then 71.0 dB SlowAttack (AGC), spectrometer Average x1023, 4096-point, 7.3314 frames/s, so the 360 frames are 49.1 s of air time, not the 10 minutes the frame count was sized for at 0.6 frames/s (`raw/ism2400_live.raw.meta.json`). These are the sensor's power-on defaults, not a setting it is normally operated at. |
+| Replay events | `raw/spur433_retune.events` sha256 `28128de0cb146f5fafa83122e334bdd64a6990d04f26b4f37a895e31b02bbbb8` (hand-written: 433 MHz and 2.5 MHz span at 0 s, 438 MHz at 30 s, 443 MHz at 60 s); `spur_retune_sequence.events` is generated by `rf_compare.py` and recorded in `fixtures_events.json` (sha256 `b86e7ed5b150680188f7390875c4921c2fb57a60de960717fa6e109a54f37080`: 1.09 GHz at 0 s, 1.095 GHz at 60 s, 1.1 GHz at 120 s, 1.09 GHz at 180 s). Events are delivered to the daemon's real `mqtt_on_message()` on the replay clock (`-E`), so they take the same code path as a sensor's MQTT retune. |
+| Frame layout and grid | float32 LE x 4096 per frame; float 0 is the step word; usable bin j is float j+1; linear integrated power (not dBm); 610.3515625 Hz per bin at 2.5 MHz span, 7500 Hz per bin at 30.72 MHz; DC at usable index 2047 |
+| Daemon arguments (identical for every revision) | `-n 4096 -S 2500000 -B none -c 0.6 -m 0.15 -i 1.0 -s 6 -g 4 -l 10 -a 300 -w 4e6 -x 8` plus `-F <frame rate>`: 7.5 for the generated fixtures, 0.5966 (the capture rate) for `spur433_live_realrate` and `spur433_live_retune`, 7.5 for `spur433_live_7p5fps`; for `ism2400_live_realrate` the span is the capture's, `-S 30720000`, and `-F 7.3314`; fixtures with events add `-E <events file>`. Threshold 0.6, hold margin 0.15, SNR gate 6 dB, prominence gate 4 dB, learning 10 s, background tau 300 s, baseline width 4 MHz, spur mask DC+-2 and bins hot at 2 or more frequencies. |
+| Revisions | `baseline_7997d95` = parent commit 7997d959b43c8ea250cde85a935d808cd938fb5f, binary sha256 `29999610181d2e67eb46aaf45068e1a0e33ad336729d09103f4d95c3e8669cee`; `pinned_fb9b86a` = reviewed commit fb9b86aef7880bca41cfc5094d3a0d11eef5d0fe, `e952dd4ecd3dcb335f1a7733c452fad01ef22483dcab3e57b92de87c217e07da`; `fixed` = this worktree with the R1-R6 changes plus the replay events and coverage counters of the follow-up, `97665cc1be00b6c017078c974320ad2baba59259e65952e6c7c4eeaab451208d` (the first pass, published in 8d06537, used `5b1f7f3cd03c02299b9d9711bdaaf0a3d30a6966d8ca6fc6956535e389198ccd`; the two produce the same decisions and scores on every fixture of that pass, compare `results_live433.md` with `results.md`). Each built with `make classifier` in `app/classifier` from a clean checkout of that commit, with the signalsdrpro Buildroot SDK (`arm-linux-gcc` 15.1.0, Buildroot 2021.11-18033-g83947c7bb6 toolchain wrapper). |
 | Execution | `qemu-arm` 8.2.2 (`qemu-arm-static -L <sysroot>`), replay mode `-r FILE`, no network (`-B none`); virtual clock advances by 1/F per frame, so results are independent of host timing |
 
-## 3. Fixture set (`fixtures.json`, `fixtures_live433.json`)
+## 3. Fixture set (`fixtures.json`, `fixtures_events.json`, `fixtures_live433.json`)
 
 | fixture | kind | frames / s | expected while on / off | basis |
 |---|---|---|---|---|
@@ -46,7 +54,10 @@ fixtures: no threshold, template, gate or mask was changed in any revision.
 | unknown_block_1mhz | software | 450 / 60 | unknown / unknown | 1 MHz flat-top block: in no template; any label is a false accept |
 | overlap_fm_cw | software | 450 / 60 | FM Broadcast or CW / Beacon / unknown | both present; DAB+ would be false |
 | spur433_live_realrate | **recorded RF** | 60 / 100.6 | unknown | sensor at 433 MHz with nothing on air except its own DC spur; replayed at the capture rate 0.5966 frames/s |
-| spur433_live_7p5fps | recorded RF, wrong rate | 60 / 8 | unknown | same bytes at 7.5 frames/s: the 60 frames end before the 12 s settle, so it yields no post-learning decision and is kept only to document the rate effect |
+| spur433_live_7p5fps | recorded RF, wrong rate | 60 / 8 | unknown | same bytes at 7.5 frames/s: the 60 frames end before the 12 s settle, so it yields no post-learning decision and is kept only to document the rate effect (first pass only, `fixtures_live433.json`) |
+| ism2400_live_realrate | **recorded RF** | 360 / 49.1 | no template class is expected; see 5.5 for which accepts are confirmed false | sensor at its 2.4 GHz defaults, 30.72 MHz span, AGC; Wi-Fi and a persistent narrow spike in band; replayed at the capture rate 7.3314 frames/s |
+| spur_retune_sequence | cycled recorded + scripted events | 1800 / 240 | unknown | the 1.09 GHz frames throughout; LO announced at 1.09, 1.095, 1.1 and back to 1.09 GHz at 0, 60, 120 and 180 s (each step larger than the span); records the coverage series |
+| spur433_live_retune | **recorded RF** + scripted events | 60 / 100.6 | unknown | the 433 MHz frames throughout; LO announced at 433 MHz (0 s), 438 MHz (30 s), 443 MHz (60 s); the retunes are scripted, the frames do not change |
 
 Decisions are tallied from the `state/classifier/result` lines after a settle
 of 12 s (learning 10 s plus one cycle); for fixtures with an emitter, the
@@ -69,17 +80,32 @@ Generated fixtures (`results.md`, `results.json`; 27 runs, all exit 0):
 | unknown_block_1mhz | 0 false / 45 (ON 38 unknown, max best 0.413) | identical | identical |
 | overlap_fm_cw | ON 38/38 CW / Beacon, OFF 0/7, 0 false | identical | identical |
 
-Live capture (`results_live433.md`, `results_live433.json`; 6 runs, all exit 0):
+Recorded captures (`results.md`, `results.json` for the second pass; the
+first pass's `results_live433.md`, `results_live433.json` are kept; 6 + 6 runs,
+all exit 0):
 
 | fixture | baseline_7997d95 | pinned_fb9b86a | fixed |
 |---|---|---|---|
-| spur433_live_realrate | **52 false accepts / 52 decisions**, all FM Broadcast, scores 0.643..0.659 | **52 / 52**, 0.643..0.659 | **52 / 52**, 0.643..0.659 |
-| spur433_live_7p5fps | 0 decisions after settle (sequence too short at this rate) | same | same |
+| spur433_live_realrate | **52 false accepts / 52 decisions**, all FM Broadcast, confidence 0.631..0.659 | **52 / 52**, 0.631..0.659 | **52 / 52**, 0.631..0.659 |
+| spur433_live_7p5fps (first pass) | 0 decisions after settle (sequence too short at this rate) | same | same |
+| ism2400_live_realrate | 34 decisions after settle: **20 CW / Beacon** (0.984..0.988), **1 DAB+** (0.859), 13 unknown | identical | identical |
+
+Scripted retune replays (fixed revision only, since the coverage fields are
+new; `results_events.md`, `results_events.json`, `fixtures_events.json`; 2
+runs, exit 0). Coverage is `masked_bins / valid_bins` from the observation
+messages (the applied mask; during a relearn it reads 0 because no mask is
+applied until the background is learned):
+
+| fixture | decisions after settle | mask after each learn (hot bins -> masked) | final coverage |
+|---|---|---|---|
+| spur_retune_sequence | 0 accepts / 213, all unknown; `best` 0.404..0.411 before the first retune, 0.561..0.578 after the mask grows | 1.09 GHz: 71 -> 5 (DC+-2); 1.095 GHz: 70 -> 70; 1.1 GHz: 70 -> 70; 1.09 GHz: 71 -> 70 | 70 / 4025 masked (1.7 %), 4 learns |
+| spur433_live_retune | **10 FM Broadcast** (0.644..0.652) between 10.1 s and 30.2 s, then **unknown** for the remaining 42 decisions | 433 MHz: 234 -> 5 (DC+-2); 438 MHz: 235 -> 231; 443 MHz: 238 -> 237 | 237 / 3858 masked (5.8 %), 3 learns |
 
 The three revisions produce the same decisions, the same scores and the same
-`best` values on every fixture. The R1-R6 fixes change serialization, locking
-and the MCP consumer; they do not touch the feature, baseline, mask or scoring
-code, and this confirms it empirically.
+`best` values on every fixture of the three-revision passes (checked field by
+field on the result lines, including both recorded captures). The R1-R6 fixes
+change serialization, locking and the MCP consumer; they do not touch the
+feature, baseline, mask or scoring code, and this confirms it empirically.
 
 ## 5. The discrepancy, explained from the records
 
@@ -92,7 +118,9 @@ revision difference.
 
 On `spur433_live_realrate` every revision locks to FM Broadcast at the first
 post-learning decision (t = 10.1 s, 6 frames learned) and keeps it to the end
-(t = 98.9 s). Explanatory record of the first accepted frame after settle
+(t = 98.9 s); the 52 post-settle confidences span 0.631 to 0.659 (an earlier
+version of this note gave 0.643 as the lower bound, which was the minimum of
+the sampled time series, not of all 52 decisions). Explanatory record of the first accepted frame after settle
 (fixed revision, `runs/spur433_live_realrate__fixed.out.gz`, seq 9, t = 13.4 s):
 
 | field | value |
@@ -105,7 +133,7 @@ post-learning decision (t = 10.1 s, 6 frames learned) and keeps it to the end
 | hysteresis | `locked` true, `held` true, `took_over` false |
 
 This is the same window (1724), the same residual (peak 2050, about 17 kHz)
-and the same score band (0.645) as the board record of seq 116 in
+and the same score band (0.645 on the board, 0.631 to 0.659 here) as the board record of seq 116 in
 `live_mcp_e2e.json`. The board record is therefore reproduced from recorded
 data, not inferred.
 
@@ -151,9 +179,68 @@ the band's roll-off reads as hot; after two or more retunes those bins meet the
 two-frequency spur criterion and are masked. The production instance was
 therefore evaluating 532 unmasked bins and reported unknown with `best 0.000`:
 it was blind, not discriminating. The test instance had seen one frequency
-(`masked 5`) and evaluated the full band. This is not reproducible in replay
-(the mask only accumulates across MQTT frequency changes), so it rests on the
-recorded summaries, which are consistent with the code path.
+(`masked 5`) and evaluated the full band.
+
+The follow-up reproduces the causal chain offline with scripted retunes over
+the recorded 433 MHz frames (`spur433_live_retune`, section 4). With one
+frequency seen, the daemon accepts the spur as FM Broadcast at 0.644..0.652 for
+all 10 decisions between the end of learning (10.1 s) and the first scripted
+retune (30 s); the retune relearns the background, the 231 bins hot at both
+announced frequencies (the spur skirt and the band's roll-off, since the frames
+are the same) meet the two-frequency criterion and are masked, and every later
+decision is `unknown` with `best` empty (42 decisions, 40.2 s to 98.9 s); the
+third frequency adds 6 bins (237 masked). The chain retune -> mask growth ->
+spur skirt masked -> acceptance ends, with `unknown` as the result, is
+therefore reproduced in replay on real frames, in direction and in its effect
+on the decision. It is not reproduced in magnitude: the production summary was
+3563 masked bins, the replay reaches 237. Replaying one capture presents the
+same hot-bin population at every announced frequency, so the mask converges to
+that population (about 235 bins); the production unit saw different spectra at
+each of its retunes (different signals in band, AGC and gain changes), and with
+N frequencies seen, any bin hot at two of them is masked, which over many
+retunes covers most of the band. Reproducing the magnitude needs captures that
+actually differ per frequency, replayed with the matching events, which this
+pass did not have.
+
+One more observation from the same replays: on the cycled 1.09 GHz frames
+(`spur_retune_sequence`) the best score rises from 0.404..0.411 with the DC+-2
+mask to 0.561..0.578 once the 70 hot bins are masked, still below the 0.6
+threshold but not far from it. Masking changes the residual the templates are
+matched against, so a mask change is not a neutral operation on the scores and
+has to be evaluated like any other tuning change.
+
+### 5.5 The 2.4 GHz capture: one confirmed false accept, twenty unverifiable accepts
+
+`ism2400_live_realrate` is the only independent capture in another band. Of
+the 34 decisions after settle, every revision gives:
+
+* **1 DAB+ accept** at 23.1 s, score 0.859, window `bin_offset` 2298, 333 bins
+  (2.5 MHz) at about 2403.1 MHz, SNR 24.3 dB, prominence 7.7 dB; residual
+  bandwidth 5.04 MHz, 27 peaks, flatness 0.22, `peak_bin` 2446. This is Wi-Fi
+  energy (the band's wide bursts: in this capture a block about 7.3 MHz wide,
+  bins 2619..3592, 2404..2412 MHz, 11..21 dB over the floor, plus channel 1
+  activity) matched by the flat 2.5 MHz DAB+ template. DAB+ has no allocation
+  anywhere near 2.4 GHz, so this accept is false whatever the emitter was. It
+  lasted one decision: at 24.1 s the CW template took over.
+* **20 CW / Beacon accepts** (0.984..0.988), all on the same window:
+  `bin_offset` 975, 8 bins (60 kHz), SNR 7.8..9.0 dB, prominence 4.7..6.1 dB
+  (just over the 4 dB gate). The capture holds a persistent narrow spike at
+  usable bins 978..979, about 2391.99 MHz: median 6.3 dB over the floor, 10 dB
+  over its +-30-bin neighbourhood, present in every frame. The classifier
+  oscillates between CW and unknown as the prominence crosses the gate
+  (accepted 15.4..17.6, 24.1..32.9, 35.1..40.5, 42.7..47.1 and 48.1 s; unknown
+  in between: those are the 13 unknowns). Whether this spike is a receiver
+  artefact (like the DC spur) or an emission is not decidable from this
+  capture: a persistent 30 kHz carrier is what the CW / Beacon template is for,
+  so if it is on air the label is right, and if it is internal it is a false
+  accept of the same family as the 433 MHz one. These 20 decisions are
+  recorded as **unverifiable**, counted neither as false accepts nor as a
+  trusted positive. The other persistent spikes (bins 1534..1536, 2396.16 MHz,
+  10 dB) and the DC cluster (bins 2039..2056) were not accepted.
+
+The capture was taken at the sensor's defaults after the owner's reboot (AGC,
+30.72 MHz span), so it is not a setting the sensor is normally operated at; it
+is kept as an independent negative/unknown-band case, not as a tuning set.
 
 ## 6. Verdict on the RF acceptance gate
 
@@ -162,6 +249,11 @@ The gate stays **open**:
 * the DC spur is still accepted as FM Broadcast by the fixed revision (52/52
   decisions on recorded 433 MHz data), exactly as by the baseline and the
   reviewed revision;
+* the production daemon's `unknown` on the same frames is now reproduced as
+  the mask hiding the spur after retunes (5.4), so it is not evidence that the
+  production configuration discriminates; the 2.4 GHz capture adds one
+  confirmed false accept (DAB+ on Wi-Fi energy at 0.859) and twenty accepts
+  whose correctness cannot be decided without knowing what was on air (5.5);
 * the positives are recognised (38/38 in each of fm_offcenter, fm_near_lo,
   dab_fullspan, cw_offcenter), but they are template-derived software fixtures,
   so they show the pipeline works, not that real emissions are recognised;
@@ -172,7 +264,8 @@ The gate stays **open**:
 
 The explaining condition is in the template set and the mask, not in the
 revisions compared: a centre-dominated FM template plus a spur skirt that
-survives the DC+-2 mask. Any change (template shape, feature ranges, a wider
+survives the DC+-2 mask, and a flat 2.5 MHz DAB+ template that a section of a
+wider block can match. Any change (template shape, feature ranges, a wider
 or spur-shaped mask, a spike-vs-template width test) is tuning and is out of
 scope for this pass; it must be evaluated on recorded RF with real emissions,
 not on these fixtures.
@@ -191,7 +284,42 @@ python3 tools/classifier_templates/replay/rf_compare.py --out /tmp/rf \
   --bin fixed=app/classifier/build/arm/classifier \
   --recorded spur433_live_realrate=docs/evidence/2026-11-08/rf_compare/raw/wf433_live.raw:0.5966 \
   --recorded spur433_live_7p5fps=docs/evidence/2026-11-08/rf_compare/raw/wf433_live.raw:7.5
+
+# second pass (results.md / results.json as committed): the 2.4 GHz capture decompressed first
+xz -dk docs/evidence/2026-11-08/rf_compare/raw/ism2400_live.raw.xz   # -> raw/ism2400_live.raw, sha256 85acf590...
+python3 tools/classifier_templates/replay/rf_compare.py --out /tmp/rfA \
+  --fixtures tools/tezuka_mcp/tests/fixtures \
+  --templates board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin \
+  --sysroot $SYSROOT \
+  --bin baseline_7997d95=/path/to/7997d95/app/classifier/classifier \
+  --bin pinned_fb9b86a=/path/to/fb9b86a/app/classifier/classifier \
+  --bin fixed=app/classifier/build/arm/classifier \
+  --recorded spur433_live_realrate=docs/evidence/2026-11-08/rf_compare/raw/wf433_live.raw:0.5966 \
+  --recorded ism2400_live_realrate=docs/evidence/2026-11-08/rf_compare/raw/ism2400_live.raw:7.3314 \
+  --only spur_only_cold,spur_only_settled,quiet_no_spur,fm_offcenter,fm_near_lo,dab_fullspan,cw_offcenter,unknown_block_1mhz,overlap_fm_cw,spur433_live_realrate,ism2400_live_realrate
+
+# scripted retune replays (results_events.md / results_events.json / fixtures_events.json)
+python3 tools/classifier_templates/replay/rf_compare.py --out /tmp/rfB \
+  --fixtures tools/tezuka_mcp/tests/fixtures \
+  --templates board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin \
+  --sysroot $SYSROOT \
+  --bin fixed=app/classifier/build/arm/classifier \
+  --recorded spur433_live_retune=docs/evidence/2026-11-08/rf_compare/raw/wf433_live.raw:0.5966 \
+  --events spur433_live_retune=docs/evidence/2026-11-08/rf_compare/raw/spur433_retune.events \
+  --only spur_retune_sequence,spur433_live_retune
 ```
+
+A single replay with events, without the driver:
+
+```bash
+qemu-arm-static -L $SYSROOT app/classifier/build/arm/classifier -r raw/wf433_live.raw \
+  -E raw/spur433_retune.events -f board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin \
+  -n 4096 -F 0.5966 -S 2500000 -B none -c 0.6 -m 0.15 -i 1.0 -s 6 -g 4 -l 10 -a 300 -w 4e6 -x 8
+```
+
+`runs/` holds the full daemon output of the fixed revision for the recorded
+captures and the scripted-retune replays (gzip), so the timelines quoted above
+can be checked line by line.
 
 The generated `.raw` sequences are deterministic (seeded by fixture name) and
 are not committed; their SHA-256 values in `fixtures.json` must match after
@@ -201,14 +329,24 @@ regeneration. A new capture is taken with
 
 ## 8. Limitations and next step
 
-* Only one recorded RF case exists (433 MHz, gain 70 dB, 100 s, cold start to
-  settled-at-100 s). Cold-versus-settled on real data beyond 100 s, other LO
-  frequencies and other gain settings were not captured. Next step: capture
-  10 minutes at two or three LO settings the sensor normally uses, without
-  changing the sensor's configuration, and add them as recorded fixtures.
+* Two recorded RF cases exist: 433 MHz (gain 70 dB manual, 100 s) and the
+  2.4 GHz defaults (AGC, 49 s, taken after the owner's reboot instead of the
+  planned second 433 MHz capture, since the sensor's 433 MHz tuning was lost
+  and this pass does not retune it). Neither is longer than 100 s and neither
+  is at a setting the sensor is normally operated at besides the 433 MHz one.
+  Next step: with the owner, capture 10 minutes at two or three LO settings the
+  sensor normally uses, and keep them as evaluation data only.
 * No independent trusted positive. Next step: record a real broadcast FM or
   DAB+ emission with this receiver (no transmission needed) and freeze it as a
-  positive fixture before any template or threshold change is evaluated.
-* The production mask degeneration (5.4) is explained from code and recorded
-  summaries, not reproduced. Next step: add an MQTT frequency-change sequence
-  to replay mode so the two-frequency mask criterion can be exercised offline.
+  positive fixture before any template, threshold or mask change is evaluated.
+  The 2391.99 MHz spike in the 2.4 GHz capture is not that positive: its
+  origin is unknown (5.5).
+* The production mask degeneration (5.4) is reproduced in mechanism and in its
+  effect on the decision by the scripted-retune replay, not in magnitude (237
+  masked bins against 3563). Next step: capture at two or three different LO
+  settings in one session and replay them in sequence with matching events,
+  so the hot-bin population differs per frequency as it did on the sensor.
+* Tuning and evaluation data are separate by construction here because
+  nothing was tuned: every capture in this directory is evaluation data. Any
+  future template, threshold or mask change must be developed on captures not
+  listed here and then evaluated on these.
