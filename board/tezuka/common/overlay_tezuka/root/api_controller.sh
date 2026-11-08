@@ -1157,18 +1157,52 @@ parse_cmd () {
       # same reason: the mosquitto_sub/read dispatch loop is line-based
       # and templates.bin is binary. Not secret like a private key, so
       # (unlike vpn/config) this is fine to be readable at 644.
-      [[ "$val" =~ ^[A-Za-z0-9+/=]+$ ]] || return
-      local tmp="/tmp/templates.bin.$$"
-      echo "$val" | base64 -d > "$tmp" 2>/dev/null || { rm -f "$tmp"; return; }
-      # Sanity-check the header (magic "SCFT" + version 1) before
-      # installing — classifier.c would just log and idle on a bad file,
-      # but rejecting garbage here avoids overwriting a working template
-      # set with a corrupt upload.
-      [ "$(head -c4 "$tmp")" = "SCFT" ] || { rm -f "$tmp"; return; }
-      install -D -m 644 -o root -g root "$tmp" "$CLASSIFIER_TEMPLATES"
-      rm -f "$tmp"
-      if [ "$(fw_printenv -n classifier_enabled 2>/dev/null)" = "1" ]; then
-        /etc/init.d/S61classifier restart
+      # Validate-before-replace: the payload is bounded, decoded into a
+      # staging file on the SAME filesystem as the working file, checked
+      # with the daemon's own loader (classifier -V: sizes, versions,
+      # labels, finite normalized vectors, duplicate ids, trailing data),
+      # and only then renamed over the working file (an atomic rename on
+      # JFFS2). A rejected upload is removed and the working file is
+      # never touched; the verdict is published either way as
+      # state/classifier/templates_status so the uploader sees why.
+      local max_b64=$(( (4 << 20) * 4 / 3 + 4 ))   # SCFT_MAX_FILE_BYTES, base64-expanded
+      if [ "${#val}" -gt "$max_b64" ]; then
+        publish_force "classifier/templates_status" '{"accepted":false,"status":"bad_size","error":"payload exceeds the 4 MiB cap"}'
+        return
+      fi
+      [[ "$val" =~ ^[A-Za-z0-9+/=]+$ ]] || {
+        publish_force "classifier/templates_status" '{"accepted":false,"status":"bad_encoding","error":"payload is not base64"}'
+        return
+      }
+      local dir; dir=$(dirname "$CLASSIFIER_TEMPLATES")
+      mkdir -p "$dir"
+      local tmp="$dir/.templates.bin.staged.$$"
+      echo "$val" | base64 -d > "$tmp" 2>/dev/null || {
+        rm -f "$tmp"
+        publish_force "classifier/templates_status" '{"accepted":false,"status":"bad_encoding","error":"base64 decode failed"}'
+        return
+      }
+      local report
+      if report=$(/usr/bin/classifier -V "$tmp" 2>/dev/null); then
+        chmod 644 "$tmp"
+        if mv -f "$tmp" "$CLASSIFIER_TEMPLATES"; then
+          sync
+          # The report is the loader's own JSON line; wrap it with the verdict.
+          publish_force "classifier/templates_status" "{\"accepted\":true,\"installed\":\"$CLASSIFIER_TEMPLATES\",\"report\":${report:-null}}"
+          if [ "$(fw_printenv -n classifier_enabled 2>/dev/null)" = "1" ]; then
+            /etc/init.d/S61classifier restart
+          fi
+        else
+          rm -f "$tmp"
+          publish_force "classifier/templates_status" '{"accepted":false,"status":"io","error":"rename into place failed; working file kept"}'
+        fi
+      else
+        rm -f "$tmp"
+        # Rejected (exit 2) or validator unavailable: keep the working file.
+        case "$report" in
+          \{*\}) publish_force "classifier/templates_status" "{\"accepted\":false,\"report\":${report}}" ;;
+          *)     publish_force "classifier/templates_status" '{"accepted":false,"status":"validator_failed","error":"classifier -V produced no report; working file kept"}' ;;
+        esac
       fi
     ;;
     bandplan/data)

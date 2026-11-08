@@ -145,6 +145,14 @@ function applyMqtt(prev, path, raw) {
     // match cycle. Both zero-mean / unit-L2-norm, directly comparable.
     case 'classifier/template_shape':  return { ...prev, classifierTemplateShape: parseJsonMaybe(raw) };
     case 'classifier/window':          return { ...prev, classifierWindow: parseJsonMaybe(raw) };
+    // One bounded JSON observation per classify cycle (schema
+    // "tezuka.classifier.observation/1": sensor identity, seq/time, frame
+    // grid, RX config with config.bound=false, template hash, decision
+    // evidence, features with units) — see docs/classifier_telemetry.md.
+    case 'classifier/observation':     return { ...prev, classifierObservation: parseJsonMaybe(raw) };
+    // Verdict of the last cmd/classifier/templates upload:
+    // {accepted, installed?, report:{valid,status,error?,sha256?,...}}.
+    case 'classifier/templates_status': return { ...prev, classifierTemplatesStatus: parseJsonMaybe(raw) };
     // Per-frame scalar features (experimental) — published every cycle
     // regardless of match outcome, so these populate even while
     // classifierLabel is "unknown". See extract_frame_features() in
@@ -428,4 +436,26 @@ function Checkbox({ checked, onChange, label }) {
 // dev page and an unbranded build fall back to Tezuka.
 const BRAND = (typeof window !== 'undefined' && window.DASHBOARD_BRAND) || 'Tezuka';
 
-Object.assign(window, { BRAND, useLiveData, fmtUptime, Card, Pill, Toggle, Slider, Field, Select, TextInput, TextArea, Checkbox });
+// /waterfall grid helpers — the one place the frame contract is written
+// down for the browser (see docs/classifier_telemetry.md). A frame is
+// float32[fftSize], fftshifted, linear power; float 0 is the sweep/fastlock
+// step word that REPLACES the -fs/2 edge bin, so the usable bins array
+// b = f.slice(1) has fftSize-1 entries but the grid is still span/fftSize,
+// and b[j] is centred on centerHz + (j + 1 - fftSize/2) * span/fftSize
+// (DC at j = fftSize/2 - 1). Earlier code used span/(fftSize-1) with DC at
+// (fftSize-1)/2, half a bin off at the edges.
+function wfBinToHz(j, fftSize, centerHz, spanHz) {
+  return centerHz + (j + 1 - fftSize / 2) * spanHz / fftSize;
+}
+function wfHzPerBin(fftSize, spanHz) { return spanHz / fftSize; }
+// Position fraction px in [0,1] across the usable bins (as drawn: bin 0 at
+// the left edge, bin n-1 at the right edge) -> frequency.
+function wfFracToHz(px, usableBins, centerHz, spanHz) {
+  const fftSize = usableBins + 1;
+  return wfBinToHz(px * (usableBins - 1), fftSize, centerHz, spanHz);
+}
+// Power (linear, as carried) to dB. A receiver-relative level, not dBm.
+function wfPowerToDb(v) { return 10 * Math.log10(v > 0 ? v : 1e-10); }
+
+Object.assign(window, { BRAND, useLiveData, fmtUptime, Card, Pill, Toggle, Slider, Field, Select, TextInput, TextArea, Checkbox,
+                        wfBinToHz, wfHzPerBin, wfFracToHz, wfPowerToDb });

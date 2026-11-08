@@ -155,3 +155,28 @@ with `classifier.c`'s `templates_load()`. Both sides were cross-validated
 directly: a file written by `templates_format.py` was fed to the actual
 on-device C parser (cross-compiled, run under `qemu-arm-static`) and
 correctly classified a matching signal.
+
+## Validation and the frame grid (2026-11)
+
+`templates_format.py` now validates everything it writes and reads (label
+contract, bounds, exact size, finite normalized vectors, finite ranges) and
+reports the same status names as the on-device parser `app/classifier/scft.c`
+(`ok`, `bad_magic`, `unsupported_version`, `bad_header`, `bad_size`,
+`bad_label`, `duplicate_id`, `non_finite_data`, `not_normalized`, `bad_range`,
+`bad_resolution`). Check a bundle from the host or on the sensor:
+
+```bash
+python3 tools/classifier_templates/templates_format.py validate templates.bin
+classifier -V templates.bin      # on the sensor; exit 0 valid, 2 invalid
+```
+
+`app/classifier/tests/test_scft.py` round-trips files between this writer and
+the real C loader, including 28 malformed mutations that must fail with the
+same status on both sides.
+
+The waterfall grid used by `template_from_capture.py`, `capture_from_device.py`
+and `replay/inject_emitter.py` is `span / fft_size` with float 0 replaced by
+the step word (see `waterfall_frame.py` and `docs/classifier_telemetry.md`);
+earlier revisions used `span / (fft_size - 1)`, half a bin off at the edges.
+Labels may contain spaces, `+`, `/` and any printable UTF-8; control
+characters are refused.

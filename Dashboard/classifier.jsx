@@ -29,19 +29,22 @@ const BANDPLAN_COLORS = {
 let bandplanNextId = 1; // client-side scratch id for newly-added, unsaved rows
 
 // Converts the daemon's bin-space match position (state/classifier/freq_offset
-// + bandwidth_bins, both measured against frame_bins — see
-// app/classifier/classifier.c's publish_result) into real Hz, using the same
-// freq math as pages1.jsx's spDrawCursor (freq = centerHz + (binFrac - 0.5) *
-// spanHz), just inverted/widened from a single bin to a bin range.
+// + bandwidth_bins, both measured against frame_bins = fft_size - 1 usable
+// bins — see app/classifier/classifier.c's publish_result) into real Hz on
+// the verified /waterfall grid (data.jsx wfBinToHz: span / fft_size per bin,
+// DC at usable index fft_size/2 - 1). The window covers usable bins
+// [offset, offset + bw), so its centre is at fractional index offset + bw/2 - 0.5.
 function binMatchToHz(freqOffset, bandwidthBins, frameBins, centerHz, spanHz) {
   const offset = Number(freqOffset), bw = Number(bandwidthBins), frame = Number(frameBins);
   if (!frame || !isFinite(offset) || !isFinite(bw)) return null;
-  const centerBinFrac = (offset + bw / 2) / frame;
+  const fftSize = frame + 1;
   return {
-    centerFreqHz: centerHz + (centerBinFrac - 0.5) * spanHz,
-    bandwidthHz: (bw / frame) * spanHz,
+    centerFreqHz: wfBinToHz(offset + bw / 2 - 0.5, fftSize, centerHz, spanHz),
+    bandwidthHz: bw * wfHzPerBin(fftSize, spanHz),
   };
 }
+
+function fmtSha(s) { return (typeof s === 'string' && s.length >= 12) ? s.slice(0, 12) + '…' : '—'; }
 
 function fmtHz(hz) {
   if (hz == null || !isFinite(hz)) return '—';
@@ -398,6 +401,24 @@ function ClassifierPage({ d }) {
           <div><div className="dim" style={{ fontSize: 11 }}>Background age</div><div>{res && res.bg_age_s != null ? res.bg_age_s + ' s' : '\u2014'}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Persistent lines / masked spurs</div><div>{bg ? `${bg.hot} / ${bg.masked}` : '\u2014'}</div></div>
         </div>
+        {/* Provenance from the per-cycle observation (state/classifier/observation).
+            config.bound is false by construction: RX settings are read from
+            retained MQTT topics, not tagged on the frame \u2014 shown, not hidden. */}
+        {obs && (
+          <div className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 5ch', marginTop: 8, fontSize: 12 }}>
+            <div><div className="dim" style={{ fontSize: 11 }}>Observation</div><div>#{obs.seq} {obs.schema ? obs.schema.split('/').pop() ? `v${obs.schema.split('/').pop()}` : '' : ''}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Templates</div><div title={obs.templates && obs.templates.sha256}>{obs.templates ? `${fmtSha(obs.templates.sha256)} (${obs.templates.count} tpl, ${obs.templates.status})` : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Grid</div><div>{obs.input ? `${obs.input.fft_size} pt, ${obs.input.hz_per_bin != null ? fmtHz(obs.input.hz_per_bin) + '/bin' : 'span unknown'}` : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Config binding</div><div title={obs.config && obs.config.bound_reason}>{obs.config ? (obs.config.bound ? 'bound' : `unbound (gen ${obs.config.generation})`) : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Publish errors</div><div>{obs.health ? obs.health.publish_errors : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Features</div><div>{obs.templates ? obs.templates.feature_semantics : '\u2014'}</div></div>
+          </div>
+        )}
+        {tstat && (
+          <div className="mono dim" style={{ marginTop: 6, fontSize: 11 }}>
+            Last template upload: {tstat.accepted ? 'accepted' : 'rejected'}{tstat.report ? ` (${tstat.report.status}${tstat.report.error ? ': ' + tstat.report.error : ''})` : (tstat.error ? ` (${tstat.status}: ${tstat.error})` : '')}
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
           <button className="btn ghost" onClick={() => d.publish('classifier/background', 'learn')}>Relearn background</button>
           <span className="dim" style={{ fontSize: 11, maxWidth: '70ch' }}>

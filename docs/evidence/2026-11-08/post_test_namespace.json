@@ -1,0 +1,41 @@
+{
+ "host": "192.168.50.25",
+ "window_s": 6.0,
+ "topics": [
+  "state/classifier/result",
+  "state/classifier/observation",
+  "test/classifier/#"
+ ],
+ "messages": [
+  {
+   "t": 0.008,
+   "topic": "state/classifier/result",
+   "retain": true,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":1465,\"online\":true}"
+  },
+  {
+   "t": 0.605,
+   "topic": "state/classifier/result",
+   "retain": false,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":1467,\"online\":true}"
+  },
+  {
+   "t": 2.327,
+   "topic": "state/classifier/result",
+   "retain": false,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":1468,\"online\":true}"
+  },
+  {
+   "t": 3.956,
+   "topic": "state/classifier/result",
+   "retain": false,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":1470,\"online\":true}"
+  },
+  {
+   "t": 5.633,
+   "topic": "state/classifier/result",
+   "retain": false,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":1472,\"online\":true}"
+  }
+ ]
+}

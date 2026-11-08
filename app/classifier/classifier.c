@@ -14,28 +14,27 @@
  * and already computing this exact FFT for the Dashboard's own Spectrum
  * and Radio Astronomy pages.
  *
- * Frame format (from maia-httpd, matching Dashboard/radioastro.jsx's
- * parsing): binary WS message = float32[], f[0] is a structural step
- * index (unused here), f[1..] are FFT bins as raw linear amplitude.
+ * Frame format (maia-httpd /waterfall, verified against the pinned
+ * producer source — maia-httpd/src/spectrometer.rs buffer_u64fp_to_f32 —
+ * and a recorded frame, see docs/classifier_telemetry.md): one binary WS
+ * message = float32[fft_size], fftshifted (lowest frequency first, DC at
+ * float index fft_size/2). Each value is LINEAR POWER: the HDL's
+ * integrated |X|^2 scaled by 4e6/(nint*fs) (Average mode) or the peak
+ * |X|^2 scaled by 4e6/fs (Peak-detect mode); an arbitrary unitless level,
+ * NOT dBm. The producer overwrites float index 0 (the -fs/2 edge bin)
+ * with the fastlock profile / sweep step word, so f[1..] are the
+ * fft_size-1 usable bins and hz_per_bin = span / fft_size (NOT span /
+ * (fft_size-1)). Bin j of f[1..] sits at
+ *   f_c + ((j + 1) - fft_size/2) * span / fft_size,
+ * so DC is bins-array index fft_size/2 - 1 (2047 for 4096). All dB
+ * figures here are 10*log10 of power ratios.
  *
- * Template file format (little-endian, shared with the offline
- * tools/classifier_templates generator):
- *   char     magic[4]      = "SCFT"
- *   uint32_t version       = 1 or 2
- *   uint32_t count
- *   uint32_t canonical_n
- *   then `count` entries of:
- *     char     label[32]   (NUL-padded, truncated if longer)
- *     uint32_t template_id
- *     float    data[canonical_n]   (pre-normalized: zero-mean, unit L2 norm)
- *     -- version 2 only, appended per entry --
- *     float    bandwidth_frac_lo, bandwidth_frac_hi
- *     float    papr_db_lo,        papr_db_hi
- *     float    flatness_lo,       flatness_hi
- *     float    peak_count_lo,     peak_count_hi
- *   (a range with hi < lo means "unbounded" — no gate on that feature;
- *   version 1 files are loaded as if every range were unbounded, so old
- *   templates.bin files still classify exactly as before)
+ * Template file format: see scft.h (shared parser scft.c, also used by
+ * `classifier -V FILE` and the host test tool). Versions 1-3; labels are
+ * UTF-8 under the LABEL CONTRACT in scft.h. The loader validates sizes,
+ * finiteness, normalization, duplicate ids and the label contract before
+ * anything is matched; the on-board upload path runs the same loader on
+ * the staged file before it replaces the working one.
  *
  * Beyond the shape-correlation score, each frame's scalar features
  * (occupied bandwidth, peak-to-average ratio, spectral flatness, local
@@ -77,7 +76,26 @@
  * -r FILE   replay raw float32 frames from FILE instead of /waterfall (offline test)
  * -n N      floats per replayed frame (default: 4096)
  * -F FPS    virtual frame rate for replay timing (default: 7.5)
+ * -T PREFIX MQTT topic prefix for the published state (default:
+ *           state/classifier/). A non-default prefix is for a side-by-side
+ *           test instance: it also moves the command topic to
+ *           PREFIX + "cmd/background" and derives a distinct MQTT client id,
+ *           so a test daemon never collides with the production one.
+ * -V FILE   validate FILE as an SCFT template set with the production
+ *           loader, print a one-line JSON report and exit 0 (valid) / 2
+ *           (invalid). No network, no other side effect.
  * -v        verbose (log every publish to stderr too)
+ *
+ * Telemetry: besides the per-field topics and the `result` JSON, every
+ * classify cycle publishes one bounded JSON `observation` (schema
+ * "tezuka.classifier.observation/1", see docs/classifier_telemetry.md)
+ * that carries the sensor identity, producer sequence and clock, the
+ * frame/grid context, the RX configuration as last seen on MQTT with an
+ * explicit config_bound=false (the daemon has no way to bind a frame to
+ * the RX settings in force when it was integrated), the template-set
+ * hash and feature-semantics version, the decision evidence and the frame
+ * and temporal features with units and validity. All JSON goes through
+ * jsonw.c, which escapes labels and refuses to emit a truncated document.
  *
  * Background model: the /waterfall power spectrum is dominated by the
  * receiver's own response (the AD9361 RF filter passband inside the
@@ -133,19 +151,21 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <pthread.h>
+#include <fcntl.h>
 #ifdef __ARM_NEON
 #include <arm_neon.h>
 #endif
 
-static void sanitize_label(char *label, size_t n);
+#include "scft.h"
+#include "jsonw.h"
+#include "features.h"
 
 /* ------------------------------------------------------------------ */
 /* Templates                                                           */
 /* ------------------------------------------------------------------ */
 
 /* A range with hi < lo means "unbounded" (no gate on this feature) — the
- * default for every field on a version-1 template. */
-struct feature_range { float lo, hi; };
+ * default for every field on a version-1 template. (struct scft_range) */
 
 struct template {
     char     label[32];
@@ -162,7 +182,7 @@ struct template {
     /* version 2 only; has_gate is false (all ranges unbounded) for
      * version-1 files, which then behave exactly as before. */
     bool     has_gate;
-    struct feature_range bandwidth_frac, papr_db, flatness, peak_count;
+    struct scft_range bandwidth_frac, papr_db, flatness, peak_count;
 };
 
 struct templates {
@@ -171,6 +191,15 @@ struct templates {
     struct template   *items;
     double            prepared_hz;      /* live hz/bin the items[].live grids were built for */
     uint32_t          prepared_live_n;
+
+    /* Provenance for the observation message: the loaded file's format
+     * version and SHA-256 (all 0 / "" when nothing is loaded), and the
+     * loader's verdict so a subscriber can tell "no file yet" from
+     * "file rejected" without reading the daemon's stderr. */
+    uint32_t          version;
+    char              sha256_hex[65];
+    const char       *load_status;      /* scft_status_name() */
+    char              load_error[160];
 };
 
 static void templates_free(struct templates *t)
@@ -185,86 +214,95 @@ static void templates_free(struct templates *t)
     t->count = 0;
 }
 
-/* Returns 0 on success (t populated), -1 on failure (t left zeroed —
- * caller should treat this as "no templates loaded", not a fatal error,
- * since the file legitimately may not exist yet on a fresh device). */
+/* Returns 0 on success (t populated), -1 on failure (t left with only the
+ * load_status/load_error fields set — caller should treat this as "no
+ * templates loaded", not a fatal error, since the file legitimately may
+ * not exist yet on a fresh device). The whole parse/validate lives in
+ * scft.c, shared with the -V validate mode and the host test tool; this
+ * only moves the validated entries into the daemon's own struct. */
 static int templates_load(const char *path, struct templates *t)
 {
     memset(t, 0, sizeof(*t));
-
-    FILE *f = fopen(path, "rb");
-    if (!f) return -1;
-
-    char magic[4];
-    uint32_t version, count, canonical_n;
-    if (fread(magic, 1, 4, f) != 4 || memcmp(magic, "SCFT", 4) != 0) {
-        fprintf(stderr, "templates: bad magic in %s\n", path);
-        fclose(f);
-        return -1;
-    }
-    if (fread(&version, sizeof(version), 1, f) != 1 || version < 1 || version > 3) {
-        fprintf(stderr, "templates: unsupported version in %s\n", path);
-        fclose(f);
-        return -1;
-    }
-    if (fread(&count, sizeof(count), 1, f) != 1 ||
-        fread(&canonical_n, sizeof(canonical_n), 1, f) != 1 ||
-        count == 0 || canonical_n == 0 || count > 4096 || canonical_n > (1u << 20)) {
-        fprintf(stderr, "templates: bad header in %s\n", path);
-        fclose(f);
+    struct scft_file sf;
+    enum scft_status st = scft_load(path, &sf, t->load_error, sizeof(t->load_error));
+    t->load_status = scft_status_name(st);
+    if (st != SCFT_OK) {
+        fprintf(stderr, "templates: %s rejected (%s): %s\n", path, t->load_status, t->load_error);
         return -1;
     }
 
-    struct template *items = calloc(count, sizeof(*items));
-    if (!items) { fclose(f); return -1; }
-
-    for (uint32_t i = 0; i < count; i++) {
-        if (fread(items[i].label, 1, sizeof(items[i].label), f) != sizeof(items[i].label))
-            goto fail;
-        items[i].label[sizeof(items[i].label) - 1] = '\0';
-        sanitize_label(items[i].label, sizeof(items[i].label));
-        if (fread(&items[i].id, sizeof(items[i].id), 1, f) != 1)
-            goto fail;
-        items[i].data = malloc(canonical_n * sizeof(float));
-        if (!items[i].data) goto fail;
-        if (fread(items[i].data, sizeof(float), canonical_n, f) != canonical_n)
-            goto fail;
-
-        if (version >= 2) {
-            float ranges[8];
-            if (fread(ranges, sizeof(float), 8, f) != 8) goto fail;
-            items[i].has_gate       = true;
-            items[i].bandwidth_frac = (struct feature_range){ ranges[0], ranges[1] };
-            items[i].papr_db        = (struct feature_range){ ranges[2], ranges[3] };
-            items[i].flatness       = (struct feature_range){ ranges[4], ranges[5] };
-            items[i].peak_count     = (struct feature_range){ ranges[6], ranges[7] };
-        } else {
-            items[i].has_gate = false; /* v1: no gate at all, ranges are never consulted */
-        }
-        if (version >= 3) {
-            if (fread(&items[i].hz_per_bin, sizeof(float), 1, f) != 1) goto fail;
-            if (!(items[i].hz_per_bin > 0.0f) || items[i].hz_per_bin > 1e9f) items[i].hz_per_bin = 0.0f;
-        }
+    struct template *items = calloc(sf.count, sizeof(*items));
+    if (!items) {
+        scft_free(&sf);
+        t->load_status = scft_status_name(SCFT_E_NOMEM);
+        snprintf(t->load_error, sizeof(t->load_error), "out of memory");
+        return -1;
+    }
+    for (uint32_t i = 0; i < sf.count; i++) {
+        struct scft_template *s = &sf.items[i];
+        memcpy(items[i].label, s->label, sizeof(items[i].label));
+        items[i].id = s->id;
+        items[i].data = s->data; s->data = NULL;   /* take ownership */
+        items[i].hz_per_bin = s->hz_per_bin;
+        items[i].has_gate = s->has_gate;
+        items[i].bandwidth_frac = s->bandwidth_frac;
+        items[i].papr_db = s->papr_db;
+        items[i].flatness = s->flatness;
+        items[i].peak_count = s->peak_count;
         items[i].live = items[i].data;
-        items[i].live_n = canonical_n;
-        continue;
-fail:
-        fprintf(stderr, "templates: truncated/corrupt %s\n", path);
-        for (uint32_t j = 0; j <= i; j++) free(items[j].data);
-        free(items);
-        fclose(f);
-        return -1;
+        items[i].live_n = sf.canonical_n;
     }
-
-    fclose(f);
-    t->canonical_n = canonical_n;
-    t->prepared_hz = 0.0;
-    t->prepared_live_n = 0;
-    t->count       = count;
+    t->canonical_n = sf.canonical_n;
+    t->count       = sf.count;
     t->items       = items;
-    fprintf(stderr, "templates: loaded %u templates (%u bins each) from %s\n",
-            count, canonical_n, path);
+    t->version     = sf.version;
+    scft_sha256_hex(&sf, t->sha256_hex);
+    t->load_error[0] = '\0';
+    scft_free(&sf);
+    fprintf(stderr, "templates: loaded %u templates (%u bins each, v%u, sha256 %.12s...) from %s\n",
+            t->count, t->canonical_n, t->version, t->sha256_hex, path);
     return 0;
+}
+
+/* -V FILE: run the production loader on FILE and report, one JSON line on
+ * stdout. Exit 0 when valid, 2 when not. Used by api_controller.sh to
+ * validate a staged upload before it replaces the working file, and by
+ * the host tests through the same code path. */
+static int validate_mode(const char *path)
+{
+    struct scft_file sf;
+    char err[160], buf[4096];
+    enum scft_status st = scft_load(path, &sf, err, sizeof(err));
+    struct jw w;
+    jw_init(&w, buf, sizeof(buf));
+    jw_obj_open(&w);
+    jw_kv_bool(&w, "valid", st == SCFT_OK);
+    jw_kv_str(&w, "status", scft_status_name(st));
+    jw_kv_str(&w, "path", path);
+    if (st != SCFT_OK) {
+        jw_kv_str(&w, "error", err);
+    } else {
+        char hex[65];
+        scft_sha256_hex(&sf, hex);
+        jw_kv_uint(&w, "version", sf.version);
+        jw_kv_uint(&w, "count", sf.count);
+        jw_kv_uint(&w, "canonical_n", sf.canonical_n);
+        jw_kv_uint(&w, "size_bytes", sf.size_bytes);
+        jw_kv_str(&w, "sha256", hex);
+        jw_key(&w, "labels");
+        jw_arr_open(&w);
+        for (uint32_t i = 0; i < sf.count && i < 64; i++) jw_str(&w, sf.items[i].label);
+        jw_arr_close(&w);
+        jw_kv_bool(&w, "labels_truncated", sf.count > 64);
+        scft_free(&sf);
+    }
+    jw_obj_close(&w);
+    if (!jw_ok(&w)) {
+        printf("{\"valid\":false,\"status\":\"report_overflow\"}\n");
+        return 2;
+    }
+    printf("%s\n", buf);
+    return st == SCFT_OK ? 0 : 2;
 }
 
 /* ------------------------------------------------------------------ */
@@ -341,32 +379,17 @@ static void templates_prepare(struct templates *t, double live_hz, uint32_t live
     t->prepared_live_n = live_n;
 }
 
-/* Both a and b must already be zero-mean/unit-L2-norm of length n —
- * their dot product is then the cosine similarity, in [-1, 1]. */
-static double cosine_sim(const float *a, const float *b, uint32_t n)
-{
-    double s = 0.0;
-    for (uint32_t i = 0; i < n; i++) s += (double)a[i] * b[i];
-    return s;
-}
-
 /* ------------------------------------------------------------------ */
 /* Frame features — scalar descriptors of a single live frame, computed
  * once per cycle from the linear POWER bins (the /waterfall feed is
  * integrated |X|^2; before normalize() mean-centers them, which would
- * make these power ratios meaningless).
+ * make these power ratios meaningless). The math lives in features.c
+ * (struct frame_features / extract_frame_features(), shared with the
+ * host test tool that proves it agrees with the Python port).
  * Published every cycle regardless of match outcome (see
  * publish_features()) and, for a version-2 template, also used to gate
  * the shape score (see template_gate_factor()). */
 /* ------------------------------------------------------------------ */
-struct frame_features {
-    bool     valid;         /* false if the frame had ~no energy at all */
-    double   bandwidth_frac;/* -10 dB occupied width, as a fraction of the frame */
-    double   papr_db;       /* peak-to-average power ratio */
-    double   flatness;      /* spectral flatness (geomean/mean of power), in (0, 1] */
-    double   peak_count;    /* number of locally-prominent maxima */
-    uint32_t peak_bin;      /* index of the global peak */
-};
 
 /* Cross-cycle features from history_compute() — see the rolling
  * `history[]` ring in struct app. Both fields are "n/a" (valid=false)
@@ -378,71 +401,6 @@ struct temporal_features {
     bool     duty_valid;
     double   duty_cycle_pct;   /* % of recent cycles with a standout peak present */
 };
-
-/* -10 dB occupied bandwidth is found by scanning outward from the peak
- * until power drops below peak/10, not a global threshold count — that
- * stays robust to a stray unrelated noise bin elsewhere in the frame. */
-#define BW_GATE_RATIO      0.1   /* -10 dB */
-/* A candidate peak must be within this ratio of the global peak to count
- * for peak_count — otherwise every noise wiggle would count. */
-#define PEAK_PROMINENCE_RATIO 0.0316 /* -15 dB */
-
-/* `raw` is linear power per bin (what /waterfall carries, and what the
- * residual keeps). An earlier version squared it as if it were amplitude,
- * which doubled every dB figure and squared the flatness. */
-static struct frame_features extract_frame_features(const float *raw, uint32_t n)
-{
-    struct frame_features ff;
-    memset(&ff, 0, sizeof(ff));
-    if (n == 0) return ff;
-
-    uint32_t peak_i = 0;
-    double peak_power = raw[0] > 0 ? raw[0] : 0.0;
-    double sum_power = 0.0, sum_log_power = 0.0;
-    for (uint32_t i = 0; i < n; i++) {
-        double power = raw[i] > 0 ? raw[i] : 0.0;
-        sum_power     += power;
-        sum_log_power += log(power > 1e-20 ? power : 1e-20);
-        if (power > peak_power) { peak_power = power; peak_i = i; }
-    }
-    if (peak_power <= 0.0 || sum_power <= 0.0) return ff; /* leaves valid=false */
-
-    double mean_power = sum_power / n;
-
-    ff.papr_db  = 10.0 * log10(peak_power / (mean_power > 1e-20 ? mean_power : 1e-20));
-    double geomean_power = exp(sum_log_power / n);
-    ff.flatness = geomean_power / (mean_power > 1e-20 ? mean_power : 1e-20);
-    if (ff.flatness > 1.0) ff.flatness = 1.0; /* numerical guard: should be <=1 by AM-GM */
-
-    double bw_gate = peak_power * BW_GATE_RATIO;
-    uint32_t lo = peak_i, hi = peak_i;
-    while (lo > 0     && (double)raw[lo - 1] >= bw_gate) lo--;
-    while (hi + 1 < n && (double)raw[hi + 1] >= bw_gate) hi++;
-    ff.bandwidth_frac = (double)(hi - lo + 1) / (double)n;
-
-    /* Local maxima above a fixed prominence floor, deduped by a minimum
-     * bin separation (n/64, at least 1) — a lightweight heuristic, not a
-     * proper prominence-based peak detector, but enough to tell "one
-     * carrier" from "a comb of several" in a single pass. */
-    double prom_gate = peak_power * PEAK_PROMINENCE_RATIO;
-    uint32_t min_sep = n / 64 > 1 ? n / 64 : 1;
-    uint32_t count = 0, last_peak = 0;
-    bool have_last = false;
-    for (uint32_t i = 1; i + 1 < n; i++) {
-        double p = (double)raw[i];
-        if (p < prom_gate) continue;
-        if (raw[i] <= raw[i - 1] || raw[i] <= raw[i + 1]) continue;
-        if (have_last && (i - last_peak) < min_sep) continue;
-        count++;
-        last_peak = i;
-        have_last = true;
-    }
-    ff.peak_count = (double)count;
-
-    ff.peak_bin = peak_i;
-    ff.valid = true;
-    return ff;
-}
 
 /* Soft penalty in (0, 1] for how well `ff` matches a version-2 template's
  * declared expected ranges. A hard reject at the boundary would be
@@ -460,7 +418,7 @@ static struct frame_features extract_frame_features(const float *raw, uint32_t n
 #define GATE_PENALTY_PER_FEATURE 0.15
 #define GATE_PENALTY_FLOOR       0.4
 
-static double range_miss(double v, struct feature_range r)
+static double range_miss(double v, struct scft_range r)
 {
     if (r.hi < r.lo) return 0.0; /* unbounded: no penalty */
     return (v >= r.lo && v <= r.hi) ? 0.0 : 1.0;
@@ -655,7 +613,20 @@ struct app {
     double      base_width_hz;   /* -w */
     double      spur_db;         /* -x */
     double      span_hz;         /* -S, or state/rx/span / sampling from MQTT */
-    double      live_hz;         /* span_hz / bg_n, 0 when unknown */
+    double      live_hz;         /* span_hz / fft_size, 0 when unknown */
+    uint32_t    fft_size;        /* floats per frame (bins + the step word) */
+    float       first_float;     /* f[0] of the last frame: fastlock profile / sweep step */
+
+    /* Observation bookkeeping (see publish_observation()). */
+    uint64_t    seq;             /* classify cycles since start, 1-based in the message */
+    uint32_t    config_generation; /* bumped on every RX-settings change seen on MQTT */
+    char        hostname[64];
+    char        boot_id[40];     /* /proc/sys/kernel/random/boot_id, "" if unreadable */
+    char        serial_mqtt[80]; /* latest state/main/serial, "" if never seen */
+    char        sweep_activate[8], sweep_engaged[8]; /* latest state/rx/sweep/{activate,engaged}, "" if never seen */
+    char        rfinput_mqtt[8];
+    char        sampling_mqtt[32];
+    double      mono_at_start;   /* CLOCK_MONOTONIC at start, for the session id */
 
     /* Spur map: per bin, how many distinct RX frequencies had it hot at
      * the end of learning (>= 2 means receiver spur) and the frequency
@@ -743,33 +714,62 @@ static double now_s(void)
 static struct mosquitto *g_mosq;
 static bool g_mqtt_verbose;
 
-#define TOPIC_PREFIX "state/classifier/"
+/* -T PREFIX. The default is the Dashboard's state/ namespace; a test
+ * instance uses its own prefix and gets its own command topic and client
+ * id (see mqtt_init) so it can run next to the production daemon. */
+#define TOPIC_PREFIX_DEFAULT "state/classifier/"
+#define BACKGROUND_CMD_DEFAULT "cmd/classifier/background"
+static const char *g_topic_prefix = TOPIC_PREFIX_DEFAULT;
+static char g_background_cmd[160] = BACKGROUND_CMD_DEFAULT;
+
+/* Publish failures are counted (and reported in the observation) rather
+ * than silently dropped. Logging is bounded: the first few, then one in
+ * every PUB_ERR_LOG_EVERY, so a dead broker cannot flood the console. */
+static uint32_t g_pub_errors, g_pub_ok;
+#define PUB_ERR_LOG_FIRST 5
+#define PUB_ERR_LOG_EVERY 1000
 
 static void mqtt_pub(const char *topic, const char *value)
 {
-    if (!g_mosq) { if (A.replay_path) printf("%.1f " TOPIC_PREFIX "%s %s\n", A.replay_t, topic, value); return; }
-    char full[128];
-    snprintf(full, sizeof(full), TOPIC_PREFIX "%s", topic);
+    if (!g_mosq) { if (A.replay_path) printf("%.1f %s%s %s\n", A.replay_t, g_topic_prefix, topic, value); return; }
+    char full[256];
+    int fl = snprintf(full, sizeof(full), "%s%s", g_topic_prefix, topic);
+    if (fl < 0 || (size_t)fl >= sizeof(full)) { g_pub_errors++; return; }
     int rc = mosquitto_publish(g_mosq, NULL, full, (int)strlen(value), value, 0, true);
-    if (rc != MOSQ_ERR_SUCCESS && g_mqtt_verbose)
-        fprintf(stderr, "mqtt: publish %s failed: %s\n", full, mosquitto_strerror(rc));
+    if (rc == MOSQ_ERR_SUCCESS) { g_pub_ok++; return; }
+    g_pub_errors++;
+    if (g_mqtt_verbose || g_pub_errors <= PUB_ERR_LOG_FIRST || g_pub_errors % PUB_ERR_LOG_EVERY == 0)
+        fprintf(stderr, "mqtt: publish %s failed (%u so far): %s\n", full, g_pub_errors, mosquitto_strerror(rc));
 }
 
-/* RX settings whose change invalidates the learned background. These are
- * api_controller.sh's retained state/ topics; the retained value arrives
- * right after subscribing and seeds the table, only a later *different*
- * value counts as a retune. */
-static struct { const char *topic; char value[64]; bool have; } RX_WATCH[] = {
-    { "state/rx/frequency", "", false },
-    { "state/rx/sampling",  "", false },
-    { "state/rx/span",      "", false },
-    { "state/rx/bandwidth", "", false },
-    { "state/rx/gain",      "", false },
-    { "state/rx/gain_mode", "", false },
-    { "state/rx/rfinput",   "", false },
+/* RX settings whose change invalidates the learned background (reset=true),
+ * plus identity/mode topics that are only recorded for the observation.
+ * These are api_controller.sh's retained state/ topics; the retained value
+ * arrives right after subscribing and seeds the table, only a later
+ * *different* value counts as a change. A change of any reset=true topic
+ * also bumps config_generation. */
+static struct { const char *topic; char value[80]; bool have; bool reset; } RX_WATCH[] = {
+    { "state/rx/frequency",      "", false, true },
+    { "state/rx/sampling",       "", false, true },
+    { "state/rx/span",           "", false, true },
+    { "state/rx/bandwidth",      "", false, true },
+    { "state/rx/gain",           "", false, true },
+    { "state/rx/gain_mode",      "", false, true },
+    { "state/rx/rfinput",        "", false, true },
+    { "state/rx/sweep/activate", "", false, true },
+    { "state/rx/sweep/engaged",  "", false, true },
+    { "state/main/serial",       "", false, false },
 };
 #define RX_WATCH_N (sizeof(RX_WATCH) / sizeof(RX_WATCH[0]))
-#define BACKGROUND_CMD "cmd/classifier/background"
+
+/* Bounded copy: truncates silently, always NUL-terminates. */
+static void set_str(char *dst, size_t cap, const char *src)
+{
+    size_t n = strlen(src);
+    if (n >= cap) n = cap - 1;
+    memcpy(dst, src, n);
+    dst[n] = '\0';
+}
 
 static void mqtt_on_connect(struct mosquitto *m, void *ud, int rc)
 {
@@ -777,25 +777,29 @@ static void mqtt_on_connect(struct mosquitto *m, void *ud, int rc)
     if (rc != 0) { fprintf(stderr, "classifier: MQTT connect refused: %s\n", mosquitto_connack_string(rc)); return; }
     fprintf(stderr, "classifier: connected to MQTT broker\n");
     for (size_t i = 0; i < RX_WATCH_N; i++) mosquitto_subscribe(m, NULL, RX_WATCH[i].topic, 0);
-    mosquitto_subscribe(m, NULL, BACKGROUND_CMD, 0);
+    mosquitto_subscribe(m, NULL, g_background_cmd, 0);
 }
 
 static void mqtt_on_message(struct mosquitto *m, void *ud, const struct mosquitto_message *msg)
 {
     (void)m; (void)ud;
     if (!msg->topic) return;
-    char val[64];
+    char val[80];
     int n = msg->payloadlen < (int)sizeof(val) - 1 ? msg->payloadlen : (int)sizeof(val) - 1;
+    if (n < 0) n = 0;
     memcpy(val, msg->payload ? msg->payload : "", n); val[n] = '\0';
 
     pthread_mutex_lock(&A.lock);
-    if (strcmp(msg->topic, BACKGROUND_CMD) == 0) {
+    if (strcmp(msg->topic, g_background_cmd) == 0) {
         if (strcmp(val, "learn") == 0) A.relearn = true;
     } else {
         for (size_t i = 0; i < RX_WATCH_N; i++) {
             if (strcmp(msg->topic, RX_WATCH[i].topic) != 0) continue;
-            if (RX_WATCH[i].have && strcmp(RX_WATCH[i].value, val) != 0) A.tune_changed = true;
-            snprintf(RX_WATCH[i].value, sizeof(RX_WATCH[i].value), "%s", val);
+            if (RX_WATCH[i].have && strcmp(RX_WATCH[i].value, val) != 0 && RX_WATCH[i].reset) {
+                A.tune_changed = true;
+                A.config_generation++;
+            }
+            set_str(RX_WATCH[i].value, sizeof(RX_WATCH[i].value), val);
             RX_WATCH[i].have = true;
             if (strcmp(msg->topic, "state/rx/span") == 0 ||
                 (strcmp(msg->topic, "state/rx/sampling") == 0 && !RX_WATCH[2].have)) {
@@ -803,7 +807,17 @@ static void mqtt_on_message(struct mosquitto *m, void *ud, const struct mosquitt
                 if (v > 0) A.span_hz_mqtt = v;
             }
             if (strcmp(msg->topic, "state/rx/frequency") == 0)
-                snprintf(A.freq_mqtt, sizeof(A.freq_mqtt), "%s", val);
+                set_str(A.freq_mqtt, sizeof(A.freq_mqtt), val);
+            else if (strcmp(msg->topic, "state/rx/sampling") == 0)
+                set_str(A.sampling_mqtt, sizeof(A.sampling_mqtt), val);
+            else if (strcmp(msg->topic, "state/rx/rfinput") == 0)
+                set_str(A.rfinput_mqtt, sizeof(A.rfinput_mqtt), val);
+            else if (strcmp(msg->topic, "state/rx/sweep/activate") == 0)
+                set_str(A.sweep_activate, sizeof(A.sweep_activate), val);
+            else if (strcmp(msg->topic, "state/rx/sweep/engaged") == 0)
+                set_str(A.sweep_engaged, sizeof(A.sweep_engaged), val);
+            else if (strcmp(msg->topic, "state/main/serial") == 0)
+                set_str(A.serial_mqtt, sizeof(A.serial_mqtt), val);
             break;
         }
     }
@@ -820,12 +834,24 @@ static int mqtt_init(const char *host, int port, bool verbose)
 {
     g_mqtt_verbose = verbose;
     mosquitto_lib_init();
-    g_mosq = mosquitto_new("tezuka_classifier", true, NULL);
+    /* Client id: fixed for the production namespace (so a restart takes
+     * over the previous session), derived from the prefix otherwise. */
+    char client_id[96] = "tezuka_classifier";
+    if (strcmp(g_topic_prefix, TOPIC_PREFIX_DEFAULT) != 0) {
+        size_t k = strlen(client_id);
+        client_id[k++] = ':';
+        for (const char *p = g_topic_prefix; *p && k < sizeof(client_id) - 1; p++)
+            client_id[k++] = (*p == '/' || *p == '#' || *p == '+') ? '.' : *p;
+        client_id[k] = '\0';
+    }
+    g_mosq = mosquitto_new(client_id, true, NULL);
     if (!g_mosq) { fprintf(stderr, "classifier: mosquitto_new failed\n"); return -1; }
     mosquitto_connect_callback_set(g_mosq, mqtt_on_connect);
     mosquitto_message_callback_set(g_mosq, mqtt_on_message);
     mosquitto_reconnect_delay_set(g_mosq, 1, 10, true);
-    mosquitto_will_set(g_mosq, TOPIC_PREFIX "result", (int)strlen(OFFLINE_RESULT), OFFLINE_RESULT, 0, true);
+    char will_topic[256];
+    snprintf(will_topic, sizeof(will_topic), "%sresult", g_topic_prefix);
+    mosquitto_will_set(g_mosq, will_topic, (int)strlen(OFFLINE_RESULT), OFFLINE_RESULT, 0, true);
     int rc = mosquitto_connect_async(g_mosq, host, port, 60);
     if (rc != MOSQ_ERR_SUCCESS)
         fprintf(stderr, "classifier: MQTT %s:%d not reachable yet (%s), will keep retrying\n",
@@ -854,16 +880,11 @@ static void mqtt_shutdown(void)
 }
 
 /* Labels come from templates.bin, which cmd/classifier/templates lets any
- * MQTT client replace. They only ever travel as MQTT payload now, but keep
- * them printable ASCII so they are safe to embed in the JSON result and
- * harmless to display. */
-static void sanitize_label(char *label, size_t n)
-{
-    for (size_t i = 0; i < n && label[i]; i++) {
-        unsigned char c = (unsigned char)label[i];
-        if (c < 0x20 || c > 0x7e || c == '"' || c == '\\') label[i] = '?';
-    }
-}
+ * MQTT client replace. The loader (scft.c) enforces the LABEL CONTRACT —
+ * NUL-terminated, non-empty, valid UTF-8, no control bytes — so a label
+ * is arbitrary Unicode text and is carried verbatim; every JSON payload
+ * goes through jsonw.c, which escapes it, so nothing is mangled on the way
+ * out (earlier revisions replaced quotes and backslashes with '?'). */
 
 /* live_n is published alongside bin_offset/bandwidth_bins rather than
  * assumed shared knowledge: it's what those two are measured in units
@@ -877,68 +898,88 @@ static void sanitize_label(char *label, size_t n)
  * while it stays above (threshold - hold_margin); a *different* template
  * only takes over when it beats the held one's score by hold_margin, so
  * two templates trading 0.72/0.75 no longer flip the label every cycle. */
-/* "[v0,v1,...]" with 4 decimals, malloc'd; NULL on allocation failure. */
-static char *json_floats(const float *v, uint32_t n)
+/* Publish a finished jsonw document, or count it as a publish error when
+ * the writer overflowed / is unbalanced (nothing truncated ever leaves). */
+static void mqtt_pub_json(const char *topic, const struct jw *w)
 {
-    char *out = malloc((size_t)n * 12 + 3);
-    if (!out) return NULL;
-    size_t pos = 0;
-    out[pos++] = '[';
-    for (uint32_t i = 0; i < n; i++)
-        pos += sprintf(out + pos, "%s%.4f", i ? "," : "", v[i]);
-    out[pos++] = ']'; out[pos] = '\0';
-    return out;
+    if (!jw_ok(w)) {
+        g_pub_errors++;
+        if (g_pub_errors <= PUB_ERR_LOG_FIRST || g_pub_errors % PUB_ERR_LOG_EVERY == 0)
+            fprintf(stderr, "mqtt: %s%s not published: JSON buffer too small (%zu)\n", g_topic_prefix, topic, w->cap);
+        return;
+    }
+    mqtt_pub(topic, w->buf);
 }
 
 /* The matched template on the live grid (republished when the match or
  * the grid changes) and the normalized live window it matched (every
  * match cycle), so the Dashboard's reference panel can overlay exactly
  * what the daemon compared. Both zero-mean / unit-L2-norm. */
+#define SHAPE_MAX_BINS 1024
 static void publish_shapes(struct app *a, const struct template *tpl, const struct templates *t,
                            const float *resid, const struct match_result *m)
 {
     uint32_t tn = tpl->live_n;
-    if (tn > 1024) return;   /* a whole-span v1 template: too big for the live channel */
+    if (tn > SHAPE_MAX_BINS) return;   /* a whole-span v1 template: too big for the live channel */
+    size_t cap = (size_t)tn * 12 + 256;
+    char *buf = malloc(cap);
+    if (!buf) return;
+    struct jw w;
     if (a->shape_pub_id != tpl->id || a->shape_pub_hz != t->prepared_hz || a->shape_pub_live_n != t->prepared_live_n) {
-        char *data = json_floats(tpl->live, tn);
-        if (data) {
-            size_t len = strlen(data) + 128;
-            char *msg = malloc(len);
-            if (msg) {
-                snprintf(msg, len, "{\"id\":%u,\"label\":\"%s\",\"bins\":%u,\"hz_per_bin\":%.1f,\"data\":%s}",
-                         tpl->id, tpl->label, tn, tpl->hz_per_bin, data);
-                mqtt_pub("template_shape", msg);
-                free(msg);
-            }
-            free(data);
-        }
+        jw_init(&w, buf, cap);
+        jw_obj_open(&w);
+        jw_kv_uint(&w, "id", tpl->id);
+        jw_kv_str(&w, "label", tpl->label);
+        jw_kv_uint(&w, "bins", tn);
+        jw_kv_double(&w, "hz_per_bin", tpl->hz_per_bin, 1);
+        jw_key(&w, "data"); jw_arr_open(&w);
+        for (uint32_t i = 0; i < tn; i++) jw_double(&w, tpl->live[i], 4);
+        jw_arr_close(&w);
+        jw_obj_close(&w);
+        mqtt_pub_json("template_shape", &w);
         a->shape_pub_id = tpl->id; a->shape_pub_hz = t->prepared_hz; a->shape_pub_live_n = t->prepared_live_n;
     }
-    if (!resid || m->bin_offset < 0) return;
-    float *w = malloc(tn * sizeof(float));
-    if (!w) return;
-    memcpy(w, resid + m->bin_offset, tn * sizeof(float));
-    if (normalize(w, tn)) {
-        char *data = json_floats(w, tn);
-        if (data) {
-            size_t len = strlen(data) + 64;
-            char *msg = malloc(len);
-            if (msg) {
-                snprintf(msg, len, "{\"id\":%u,\"bins\":%u,\"data\":%s}", tpl->id, tn, data);
-                mqtt_pub("window", msg);
-                free(msg);
+    if (resid && m->bin_offset >= 0) {
+        float *win = malloc(tn * sizeof(float));
+        if (win) {
+            memcpy(win, resid + m->bin_offset, tn * sizeof(float));
+            if (normalize(win, tn)) {
+                jw_init(&w, buf, cap);
+                jw_obj_open(&w);
+                jw_kv_uint(&w, "id", tpl->id);
+                jw_kv_uint(&w, "bins", tn);
+                jw_key(&w, "data"); jw_arr_open(&w);
+                for (uint32_t i = 0; i < tn; i++) jw_double(&w, win[i], 4);
+                jw_arr_close(&w);
+                jw_obj_close(&w);
+                mqtt_pub_json("window", &w);
             }
-            free(data);
+            free(win);
         }
     }
-    free(w);
+    free(buf);
 }
 
+/* What publish_result() decided, kept for the observation message. */
+struct decision {
+    const struct template     *tpl;      /* accepted template, NULL = unknown */
+    const struct match_result *chosen;   /* its hit */
+    const struct match_result *best;     /* best gated candidate, may be NULL */
+    double margin;                       /* best - second best (or best alone) */
+    bool   held;                         /* the hysteresis hold kept the previous lock */
+    bool   took_over;                    /* a different template displaced the held one */
+    double gate_factor;                  /* template_gate_factor() of the accepted template */
+};
+
 static void publish_result(struct app *a, const struct match_result *hits, const struct templates *t,
-                           uint32_t live_n, const char *state, double bg_age_s, const float *resid)
+                           uint32_t live_n, const char *state, double bg_age_s, const float *resid,
+                           const struct frame_features *ff, struct decision *dec)
 {
-    char buf[256];
+    char buf[512];
+    struct jw w;
     double thr = a->threshold, m = a->hold_margin;
+    memset(dec, 0, sizeof(*dec));
+    dec->gate_factor = 1.0;
 
     /* Rank only the hits that clear the SNR and prominence gates; a
      * template whose best window is a gated-out blip must not shadow
@@ -960,27 +1001,40 @@ static void publish_result(struct app *a, const struct match_result *hits, const
     bool best_ok = best && best->score >= thr;
     if (held_ok) {
         chosen = held;
-        if (best_ok && best != held && best->score >= held->score + m) chosen = best;
+        dec->held = true;
+        if (best_ok && best != held && best->score >= held->score + m) { chosen = best; dec->took_over = true; dec->held = false; }
     } else if (best_ok) {
         chosen = best;
     }
+    dec->best = best;
+    dec->margin = margin;
 
     if (!chosen) {
         a->locked = false;
         mqtt_pub("label", "unknown");
         mqtt_pub("confidence", "0.0");
-        snprintf(buf, sizeof(buf),
-                 "{\"label\":\"unknown\",\"confidence\":0,\"best\":%.3f,\"best_snr_db\":%.1f,\"best_prom_db\":%.1f,"
-                 "\"margin\":%.3f,\"state\":\"%s\",\"bg_age_s\":%.0f,\"online\":true}",
-                 best ? best->score : 0.0, best ? best->snr_db : 0.0, best ? best->prom_db : 0.0,
-                 margin, state, bg_age_s);
-        mqtt_pub("result", buf);
+        jw_init(&w, buf, sizeof(buf));
+        jw_obj_open(&w);
+        jw_kv_str(&w, "label", "unknown");
+        jw_kv_int(&w, "confidence", 0);
+        jw_kv_double(&w, "best", best ? best->score : 0.0, 3);
+        jw_kv_double(&w, "best_snr_db", best ? best->snr_db : 0.0, 1);
+        jw_kv_double(&w, "best_prom_db", best ? best->prom_db : 0.0, 1);
+        jw_kv_double(&w, "margin", margin, 3);
+        jw_kv_str(&w, "state", state);
+        jw_kv_double(&w, "bg_age_s", bg_age_s, 0);
+        jw_kv_bool(&w, "online", true);
+        jw_obj_close(&w);
+        mqtt_pub_json("result", &w);
         if (a->verbose) fprintf(stderr, "classify: unknown (best=%.3f snr=%.1f dB prom=%.1f dB %s)\n",
                                 best ? best->score : 0.0, best ? best->snr_db : 0.0, best ? best->prom_db : 0.0, state);
         return;
     }
 
     const struct template *tpl = &t->items[chosen->template_idx];
+    dec->tpl = tpl;
+    dec->chosen = chosen;
+    dec->gate_factor = ff ? template_gate_factor(tpl, ff) : 1.0;
     a->locked = true;
     a->locked_template_id = tpl->id;
     mqtt_pub("label", tpl->label);
@@ -998,13 +1052,23 @@ static void publish_result(struct app *a, const struct match_result *hits, const
     /* The same fields as one message, so a subscriber sees a result
      * atomically instead of reassembling a burst (the Dashboard currently
      * debounces the per-field topics for exactly that reason). */
-    snprintf(buf, sizeof(buf),
-             "{\"label\":\"%s\",\"confidence\":%.3f,\"freq_offset\":%d,\"bandwidth_bins\":%u,"
-             "\"frame_bins\":%u,\"template_id\":%u,\"snr_db\":%.1f,\"prom_db\":%.1f,\"margin\":%.3f,"
-             "\"hz_per_bin\":%.1f,\"state\":\"%s\",\"bg_age_s\":%.0f,\"online\":true}",
-             tpl->label, chosen->score, chosen->bin_offset, chosen->bandwidth_bins, live_n, tpl->id,
-             chosen->snr_db, chosen->prom_db, margin, a->live_hz, state, bg_age_s);
-    mqtt_pub("result", buf);
+    jw_init(&w, buf, sizeof(buf));
+    jw_obj_open(&w);
+    jw_kv_str(&w, "label", tpl->label);
+    jw_kv_double(&w, "confidence", chosen->score, 3);
+    jw_kv_int(&w, "freq_offset", chosen->bin_offset);
+    jw_kv_uint(&w, "bandwidth_bins", chosen->bandwidth_bins);
+    jw_kv_uint(&w, "frame_bins", live_n);
+    jw_kv_uint(&w, "template_id", tpl->id);
+    jw_kv_double(&w, "snr_db", chosen->snr_db, 1);
+    jw_kv_double(&w, "prom_db", chosen->prom_db, 1);
+    jw_kv_double(&w, "margin", margin, 3);
+    jw_kv_double(&w, "hz_per_bin", a->live_hz, 1);
+    jw_kv_str(&w, "state", state);
+    jw_kv_double(&w, "bg_age_s", bg_age_s, 0);
+    jw_kv_bool(&w, "online", true);
+    jw_obj_close(&w);
+    mqtt_pub_json("result", &w);
     publish_shapes(a, tpl, t, resid, chosen);
 
     if (a->verbose)
@@ -1233,16 +1297,224 @@ static void background_learned(struct app *a, const char *freq)
             a->spur_last_hz[i] = fhz;
         }
         a->mask[i] = (a->spur_count && a->spur_count[i] >= 2) ? 1 : 0;
-        if (i + 2 >= n / 2 && i <= n / 2 + 2) a->mask[i] = 1;   /* DC */
+        /* DC: the fftshifted frame has DC at float index fft_size/2, i.e.
+         * bins-array index fft_size/2 - 1 (the step word took float 0). */
+        uint32_t dc = (n + 1) / 2 - 1;
+        if (i + 2 >= dc && i <= dc + 2) a->mask[i] = 1;
         if (a->mask[i]) masked++;
     }
     a->bg_learned = true;
-    char buf[160];
-    snprintf(buf, sizeof(buf), "{\"frequency\":\"%s\",\"bins\":%u,\"hz_per_bin\":%.1f,\"hot\":%u,\"masked\":%u}",
-             freq[0] ? freq : "", n, a->live_hz, hot, masked);
-    mqtt_pub("background", buf);
+    char buf[256];
+    struct jw w;
+    jw_init(&w, buf, sizeof(buf));
+    jw_obj_open(&w);
+    jw_kv_str(&w, "frequency", freq[0] ? freq : "");
+    jw_kv_uint(&w, "bins", n);
+    jw_kv_uint(&w, "fft_size", n + 1);
+    jw_kv_double(&w, "hz_per_bin", a->live_hz, 1);
+    jw_kv_uint(&w, "hot", hot);
+    jw_kv_uint(&w, "masked", masked);
+    jw_obj_close(&w);
+    mqtt_pub_json("background", &w);
     if (a->verbose) fprintf(stderr, "background: learned (%s), %u hot bins, %u masked\n",
                             freq[0] ? freq : "no frequency", hot, masked);
+}
+
+/* ------------------------------------------------------------------ */
+/* Observation — one bounded JSON message per classify cycle, matched or
+ * not, carrying everything a consumer needs to interpret the result
+ * without guessing: who produced it, when (and by which clock), what
+ * frame/grid it describes, which RX configuration the daemon believes
+ * was in force (and that this belief is NOT bound to the frame), which
+ * template set and feature semantics were used, the decision evidence,
+ * and the features with units, scope and validity. Fields that cannot be
+ * known are explicit nulls with a reason, never defaults.
+ *
+ * Schema: OBSERVATION_SCHEMA. Bump the trailing number on any change that
+ * is not purely additive. Documented in docs/classifier_telemetry.md. */
+/* ------------------------------------------------------------------ */
+#define OBSERVATION_SCHEMA "tezuka.classifier.observation/1"
+#define OBSERVATION_BUF 6144
+
+static void publish_observation(struct app *a, uint32_t live_n, const char *state, double bg_age_s,
+                                const struct frame_features *ff, const struct temporal_features *tf,
+                                const struct decision *dec, const char *freq, bool classified)
+{
+    static char buf[OBSERVATION_BUF];
+    struct jw w;
+    jw_init(&w, buf, sizeof(buf));
+    a->seq++;
+
+    struct timespec rt, mono;
+    clock_gettime(CLOCK_REALTIME, &rt);
+    clock_gettime(CLOCK_MONOTONIC, &mono);
+
+    jw_obj_open(&w);
+    jw_kv_str(&w, "schema", OBSERVATION_SCHEMA);
+    jw_kv_uint(&w, "seq", a->seq);
+
+    jw_key(&w, "time"); jw_obj_open(&w);
+    jw_kv_double(&w, "unix_s", rt.tv_sec + rt.tv_nsec / 1e9, 3);
+    jw_kv_double(&w, "mono_s", mono.tv_sec + mono.tv_nsec / 1e9, 3);
+    jw_kv_str(&w, "source", "CLOCK_REALTIME");
+    /* The daemon cannot see whether chrony/NTP/PPS currently disciplines
+     * the system clock; it reports the clock it used, not its quality. */
+    jw_kv_null(&w, "disciplined");
+    jw_kv_str(&w, "disciplined_reason", "not observed by the daemon; check chronyc on the sensor");
+    jw_kv_bool(&w, "replay", a->replay_path != NULL);
+    jw_obj_close(&w);
+
+    jw_key(&w, "sensor"); jw_obj_open(&w);
+    jw_kv_str(&w, "hostname", a->hostname);
+    if (a->serial_mqtt[0]) jw_kv_str(&w, "serial", a->serial_mqtt);
+    else { jw_kv_null(&w, "serial"); jw_kv_str(&w, "serial_reason", "state/main/serial not seen on MQTT"); }
+    if (a->boot_id[0]) jw_kv_str(&w, "boot_id", a->boot_id);
+    else { jw_kv_null(&w, "boot_id"); jw_kv_str(&w, "boot_id_reason", "/proc/sys/kernel/random/boot_id unreadable"); }
+    char session[96];
+    snprintf(session, sizeof(session), "%.8s-%ld-%.0f", a->boot_id[0] ? a->boot_id : "noboot", (long)getpid(), a->mono_at_start);
+    jw_kv_str(&w, "session_id", session);
+    jw_kv_int(&w, "pid", getpid());
+    jw_obj_close(&w);
+
+    jw_key(&w, "input"); jw_obj_open(&w);
+    jw_kv_str(&w, "source", "maia-httpd /waterfall");
+    jw_kv_str(&w, "units", "linear_power_integrated");
+    jw_kv_str(&w, "units_note", "unitless receiver level, not dBm; dB values are 10*log10 of power ratios");
+    jw_kv_uint(&w, "fft_size", a->fft_size);
+    jw_kv_uint(&w, "bins_used", live_n);
+    jw_kv_uint(&w, "bin0_offset", 1);
+    jw_kv_str(&w, "bin0_note", "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin");
+    jw_kv_double(&w, "first_float", a->first_float, 0);
+    jw_kv_uint(&w, "dc_index", (live_n + 1) / 2 - 1);
+    if (a->live_hz > 0) jw_kv_double(&w, "hz_per_bin", a->live_hz, 3);
+    else { jw_kv_null(&w, "hz_per_bin"); jw_kv_str(&w, "hz_per_bin_reason", "span unknown (no state/rx/span and no -S)"); }
+    jw_obj_close(&w);
+
+    /* RX configuration as last seen on retained MQTT. The frame carries
+     * no tag that ties it to these values, so config_bound is false by
+     * construction; config_generation lets a consumer at least detect
+     * that a change happened between two observations. */
+    jw_key(&w, "config"); jw_obj_open(&w);
+    jw_kv_bool(&w, "bound", false);
+    jw_kv_str(&w, "bound_reason", "RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings");
+    jw_kv_uint(&w, "generation", a->config_generation);
+    if (freq[0]) jw_kv_double(&w, "frequency_hz", atof(freq), 0);
+    else { jw_kv_null(&w, "frequency_hz"); jw_kv_str(&w, "frequency_reason", "state/rx/frequency not seen"); }
+    if (a->span_hz > 0) jw_kv_double(&w, "span_hz", a->span_hz, 0);
+    else jw_kv_null(&w, "span_hz");
+    if (a->sampling_mqtt[0]) jw_kv_double(&w, "sampling_hz", atof(a->sampling_mqtt), 0);
+    else jw_kv_null(&w, "sampling_hz");
+    if (a->rfinput_mqtt[0]) jw_kv_str(&w, "rfinput", a->rfinput_mqtt);
+    else jw_kv_null(&w, "rfinput");
+    jw_key(&w, "sweep"); jw_obj_open(&w);
+    if (a->sweep_activate[0]) jw_kv_bool(&w, "activate", strcmp(a->sweep_activate, "1") == 0);
+    else jw_kv_null(&w, "activate");
+    if (a->sweep_engaged[0]) jw_kv_bool(&w, "engaged", strcmp(a->sweep_engaged, "1") == 0);
+    else jw_kv_null(&w, "engaged");
+    jw_kv_str(&w, "note", "sweep/DDC frames are not interpreted by this daemon; when engaged, span and hz_per_bin describe one step, not the sweep");
+    jw_obj_close(&w);
+    jw_obj_close(&w);
+
+    jw_key(&w, "templates"); jw_obj_open(&w);
+    jw_kv_str(&w, "path", a->templates_path);
+    jw_kv_str(&w, "status", a->templates.load_status ? a->templates.load_status : "not_loaded");
+    if (a->templates.items) {
+        jw_kv_str(&w, "sha256", a->templates.sha256_hex);
+        jw_kv_uint(&w, "version", a->templates.version);
+        jw_kv_uint(&w, "count", a->templates.count);
+        jw_kv_uint(&w, "canonical_n", a->templates.canonical_n);
+    } else {
+        jw_kv_null(&w, "sha256");
+        jw_kv_str(&w, "sha256_reason", a->templates.load_error[0] ? a->templates.load_error : "no template file loaded");
+        jw_kv_uint(&w, "count", 0);
+    }
+    jw_kv_str(&w, "feature_semantics", FEATURE_SEMANTICS);
+    jw_obj_close(&w);
+
+    jw_key(&w, "decision"); jw_obj_open(&w);
+    jw_kv_str(&w, "state", state);
+    jw_kv_bool(&w, "classified", classified);
+    if (dec->tpl) {
+        jw_kv_str(&w, "label", dec->tpl->label);
+        jw_kv_bool(&w, "accepted", true);
+        jw_kv_uint(&w, "template_id", dec->tpl->id);
+        jw_kv_double(&w, "score", dec->chosen->score, 3);
+        jw_kv_double(&w, "snr_db", dec->chosen->snr_db, 1);
+        jw_kv_double(&w, "prom_db", dec->chosen->prom_db, 1);
+        jw_kv_int(&w, "bin_offset", dec->chosen->bin_offset);
+        jw_kv_uint(&w, "bandwidth_bins", dec->chosen->bandwidth_bins);
+        jw_kv_double(&w, "gate_factor", dec->gate_factor, 3);
+    } else {
+        jw_kv_str(&w, "label", "unknown");
+        jw_kv_bool(&w, "accepted", false);
+        jw_kv_null(&w, "template_id");
+    }
+    jw_kv_double(&w, "threshold", a->threshold, 3);
+    jw_kv_double(&w, "hold_margin", a->hold_margin, 3);
+    jw_kv_double(&w, "margin", dec->margin, 3);
+    jw_key(&w, "best");
+    if (dec->best) {
+        jw_obj_open(&w);
+        jw_kv_uint(&w, "template_id", a->templates.items ? a->templates.items[dec->best->template_idx].id : 0);
+        jw_kv_double(&w, "score", dec->best->score, 3);
+        jw_kv_double(&w, "snr_db", dec->best->snr_db, 1);
+        jw_kv_double(&w, "prom_db", dec->best->prom_db, 1);
+        jw_obj_close(&w);
+    } else jw_null(&w);
+    jw_key(&w, "hysteresis"); jw_obj_open(&w);
+    jw_kv_bool(&w, "locked", a->locked);
+    if (a->locked) jw_kv_uint(&w, "locked_template_id", a->locked_template_id); else jw_kv_null(&w, "locked_template_id");
+    jw_kv_bool(&w, "held", dec->held);
+    jw_kv_bool(&w, "took_over", dec->took_over);
+    jw_obj_close(&w);
+    jw_key(&w, "gates"); jw_obj_open(&w);
+    jw_kv_double(&w, "snr_min_db", a->snr_min_db, 1);
+    jw_kv_double(&w, "prom_min_db", a->prom_min_db, 1);
+    jw_kv_str(&w, "scope", "gates describe the matched window of this frame, not the emitter");
+    jw_obj_close(&w);
+    jw_obj_close(&w);
+
+    jw_key(&w, "features"); jw_obj_open(&w);
+    jw_kv_str(&w, "scope", "residual = live power minus learned receiver baseline, spur bins masked");
+    jw_kv_bool(&w, "valid", ff->valid);
+    if (ff->valid) {
+        jw_kv_double(&w, "bandwidth_frac", ff->bandwidth_frac, 6);
+        jw_kv_double(&w, "bandwidth_hz", a->live_hz > 0 ? ff->bandwidth_frac * live_n * a->live_hz : NAN, 1);
+        jw_kv_double(&w, "spectral_papr_db", ff->papr_db, 2);
+        jw_kv_double(&w, "flatness", ff->flatness, 4);
+        jw_kv_uint(&w, "peak_count", (unsigned long long)ff->peak_count);
+        jw_kv_uint(&w, "peak_bin", ff->peak_bin);
+    } else {
+        jw_kv_null(&w, "bandwidth_frac"); jw_kv_null(&w, "bandwidth_hz"); jw_kv_null(&w, "spectral_papr_db");
+        jw_kv_null(&w, "flatness"); jw_kv_null(&w, "peak_count"); jw_kv_null(&w, "peak_bin");
+        jw_kv_str(&w, "invalid_reason", "residual has no energy (empty band or still learning)");
+    }
+    jw_kv_str(&w, "units", "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak");
+    jw_obj_close(&w);
+
+    jw_key(&w, "temporal"); jw_obj_open(&w);
+    jw_kv_uint(&w, "history_samples", a->history_filled);
+    if (tf->drift_valid) jw_kv_double(&w, "drift_bins_per_s", tf->drift_bins_per_s, 3);
+    else { jw_kv_null(&w, "drift_bins_per_s"); jw_kv_str(&w, "drift_reason", "fewer than 4 samples or under 3 s of history"); }
+    if (tf->duty_valid) jw_kv_double(&w, "occupancy_pct", tf->duty_cycle_pct, 1);
+    else { jw_kv_null(&w, "occupancy_pct"); jw_kv_str(&w, "occupancy_reason", "fewer than 4 history samples"); }
+    jw_kv_str(&w, "occupancy_note", "sampled heuristic: share of the last cycles (about 1/s) whose residual PAPR exceeded 14 dB; not a measured duty cycle");
+    jw_obj_close(&w);
+
+    jw_key(&w, "background"); jw_obj_open(&w);
+    jw_kv_bool(&w, "learned", a->bg_learned);
+    jw_kv_double(&w, "age_s", bg_age_s, 1);
+    jw_kv_uint(&w, "frames", a->bg_frames);
+    jw_obj_close(&w);
+
+    jw_key(&w, "health"); jw_obj_open(&w);
+    jw_kv_uint(&w, "publish_errors", g_pub_errors);
+    jw_kv_uint(&w, "publish_ok", g_pub_ok);
+    jw_kv_bool(&w, "waterfall_connected", a->connected);
+    jw_obj_close(&w);
+
+    jw_obj_close(&w);
+    mqtt_pub_json("observation", &w);
 }
 
 static void handle_frame(struct app *a, const float *f, size_t n_floats)
@@ -1250,6 +1522,8 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     if (n_floats < 2) return; /* need at least the step index + 1 bin */
     uint32_t live_n = (uint32_t)(n_floats - 1);
     const float *live = f + 1;
+    a->fft_size = (uint32_t)n_floats;
+    a->first_float = f[0];
 
     /* Retune or explicit relearn requested from the MQTT thread? */
     bool reset = false; const char *why = "";
@@ -1261,7 +1535,9 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     snprintf(freq, sizeof(freq), "%s", a->freq_mqtt);
     pthread_mutex_unlock(&a->lock);
     if (reset) background_reset(a, live_n, why);
-    a->live_hz = a->span_hz > 0 ? a->span_hz / live_n : 0.0;
+    /* The grid is span / fft_size: the producer's FFT has fft_size bins
+     * over the span, and the step word only hides one of them. */
+    a->live_hz = a->span_hz > 0 ? a->span_hz / (double)n_floats : 0.0;
 
     /* The background sees every frame (cheap: one multiply-add per bin);
      * only the correlate+publish cycle below is throttled. */
@@ -1312,10 +1588,12 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     struct temporal_features tf = history_compute(a, live_n);
     publish_temporal(&tf);
 
+    struct decision dec;
     if (learning || !a->templates.items || a->templates.count == 0 || peak <= 0.0f) {
         struct match_result none = { .found = false };
-        publish_result(a, &none, &(struct templates){ .count = 0 }, live_n,
-                       learning ? "learning" : "idle", bg_age, NULL);
+        const char *state = learning ? "learning" : "idle";
+        publish_result(a, &none, &(struct templates){ .count = 0 }, live_n, state, bg_age, NULL, &ff, &dec);
+        publish_observation(a, live_n, state, bg_age, &ff, &tf, &dec, freq, false);
         free(resid); free(lv);
         return;
     }
@@ -1323,7 +1601,8 @@ static void handle_frame(struct app *a, const float *f, size_t n_floats)
     struct match_result *hits = calloc(a->templates.count, sizeof(*hits));
     if (hits) {
         classify_all(resid, lv, a->base, live_n, &a->templates, &ff, a->snr_min_db, hits);
-        publish_result(a, hits, &a->templates, live_n, "ok", bg_age, resid);
+        publish_result(a, hits, &a->templates, live_n, "ok", bg_age, resid, &ff, &dec);
+        publish_observation(a, live_n, "ok", bg_age, &ff, &tf, &dec, freq, true);
         free(hits);
     }
     free(resid); free(lv);
@@ -1429,8 +1708,30 @@ static void usage(const char *prog)
         "  -r FILE   replay raw float32 frames from FILE (offline test)\n"
         "  -n N      floats per replayed frame (default: 4096)\n"
         "  -F FPS    virtual frame rate for replay (default: 7.5)\n"
+        "  -T PREFIX MQTT topic prefix (default: state/classifier/); a non-default\n"
+        "            prefix also moves the command topic to PREFIX cmd/background and\n"
+        "            derives its own MQTT client id, for a side-by-side test instance\n"
+        "  -V FILE   validate FILE as a template set, print a JSON report, exit 0/2\n"
         "  -v        verbose\n"
         "  -h        this help\n", prog);
+}
+
+static void read_identity(struct app *a)
+{
+    if (gethostname(a->hostname, sizeof(a->hostname)) != 0) snprintf(a->hostname, sizeof(a->hostname), "unknown");
+    a->hostname[sizeof(a->hostname) - 1] = '\0';
+    a->boot_id[0] = '\0';
+    FILE *f = fopen("/proc/sys/kernel/random/boot_id", "r");
+    if (f) {
+        if (fgets(a->boot_id, sizeof(a->boot_id), f)) {
+            size_t n = strcspn(a->boot_id, "\r\n");
+            a->boot_id[n] = '\0';
+        } else a->boot_id[0] = '\0';
+        fclose(f);
+    }
+    struct timespec mono;
+    clock_gettime(CLOCK_MONOTONIC, &mono);
+    a->mono_at_start = mono.tv_sec + mono.tv_nsec / 1e9;
 }
 
 int main(int argc, char **argv)
@@ -1456,9 +1757,22 @@ int main(int argc, char **argv)
     A.locked          = false;
     pthread_mutex_init(&A.lock, NULL);
 
+    const char *validate_path = NULL;
     int opt;
-    while ((opt = getopt(argc, argv, "H:p:P:f:B:q:c:m:i:s:g:l:a:r:n:F:S:w:x:vh")) != -1) {
+    while ((opt = getopt(argc, argv, "H:p:P:f:B:q:c:m:i:s:g:l:a:r:n:F:S:w:x:T:V:vh")) != -1) {
         switch (opt) {
+        case 'T': {
+            size_t l = strlen(optarg);
+            if (l == 0 || l > 120 || optarg[l - 1] != '/' || strchr(optarg, '#') || strchr(optarg, '+')) {
+                fprintf(stderr, "classifier: -T PREFIX must end in '/' and contain no wildcards\n");
+                return 1;
+            }
+            g_topic_prefix = optarg;
+            if (strcmp(optarg, TOPIC_PREFIX_DEFAULT) != 0)
+                snprintf(g_background_cmd, sizeof(g_background_cmd), "%scmd/background", optarg);
+            break;
+        }
+        case 'V': validate_path      = optarg;      break;
         case 'H': host              = optarg;      break;
         case 'p': port              = atoi(optarg); break;
         case 'P': path              = optarg;      break;
@@ -1484,17 +1798,20 @@ int main(int argc, char **argv)
         }
     }
 
+    if (validate_path) return validate_mode(validate_path);
+
     signal(SIGINT,  on_signal);
     signal(SIGTERM, on_signal);
 
     A.start_t = now_s();
+    read_identity(&A);
 
     if (strcmp(mqtt_host, "none") != 0 && mqtt_init(mqtt_host, mqtt_port, A.verbose) != 0) return 1;
 
     if (templates_load(A.templates_path, &A.templates) != 0)
-        fprintf(stderr, "classifier: no templates loaded yet (%s) — will publish \"unknown\" until "
-                         "cmd/classifier/templates writes one and the daemon is restarted\n",
-                A.templates_path);
+        fprintf(stderr, "classifier: no templates loaded (%s: %s) — will publish \"unknown\" until "
+                         "cmd/classifier/templates installs a valid set and the daemon is restarted\n",
+                A.templates_path, A.templates.load_status ? A.templates.load_status : "?");
 
     if (A.replay_path) {
         int rc = replay_file(&A);

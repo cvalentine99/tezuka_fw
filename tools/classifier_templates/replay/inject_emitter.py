@@ -10,7 +10,7 @@ what the averaged spectrometer output shows for a steady signal.
     python3 inject_emitter.py frames.raw out.raw templates.bin 0 600 10 30 60 [fps floats span_hz]
 
 A version-3 template is stretched to its real width on the live grid
-(span_hz / (floats - 1) hertz per bin, default 30.72 MHz / 4095).
+(span_hz / floats hertz per bin, default 30.72 MHz / 4096).
 
 Replaying out.raw through the classifier and tallying the result topic
 (tally_results.py) gives a hardware-free true-positive test: the label
@@ -37,7 +37,7 @@ shape -= shape.min()
 shape /= shape.max()
 # a version-3 template covers n * hz_per_bin hertz: stretch it onto the live grid
 if tpl[tpl_idx].hz_per_bin > 0:
-    live_hz = span_hz / (floats - 1)
+    live_hz = span_hz / floats
     n_live = max(8, int(round(n * tpl[tpl_idx].hz_per_bin / live_hz)))
     shape = np.interp(np.linspace(0, n - 1, n_live), np.arange(n), shape)
     n = n_live

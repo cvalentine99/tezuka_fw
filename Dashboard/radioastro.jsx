@@ -323,7 +323,10 @@ function RadioAstronomyPage({ d }) {
     const bins = binsRef.current;
     if (bins && bins.length > 0) {
       const binI = Math.max(0, Math.min(bins.length - 1, Math.round(px * (bins.length - 1))));
-      setMkr({ freq: centerHz + (px - 0.5) * bandwidth, db: bins[binI] });
+      // MKR reads the frequency of the bin under the cursor on the real
+      // /waterfall grid (bins = f.slice(1), fft_size = bins.length + 1), not
+      // a pixel fraction of the span — see data.jsx wfBinToHz.
+      setMkr({ freq: wfBinToHz(binI, bins.length + 1, centerHz, bandwidth), db: bins[binI] });
     }
     redraw();
   };

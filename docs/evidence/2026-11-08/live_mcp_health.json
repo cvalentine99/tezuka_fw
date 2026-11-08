@@ -1,0 +1,1 @@
+{"version": "0.1.0", "event": "snapshot_fpga_waterfall", "time_unix_s": 1794164694.161, "uptime_s": 11.6, "tool_calls": 2, "mqtt": {"host": "192.168.50.25", "port": 1883, "connected": true, "last_error": null}}
