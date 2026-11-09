@@ -2,7 +2,7 @@
  "revisions": {
   "fixed": {
    "path": "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
-   "sha256": "97665cc1be00b6c017078c974320ad2baba59259e65952e6c7c4eeaab451208d"
+   "sha256": "f87a3c467ea2795d187f7ff9c38a16f120de31c3b001dca68abf8183c88859e8"
   }
  },
  "qemu": "/usr/bin/qemu-arm-static",
@@ -16,7 +16,7 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur_retune_sequence.raw",
+     "/tmp/claude-1000/-home-cvalentine-tezuka-fw/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB4/raw/spur_retune_sequence.raw",
      "-f",
      "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
@@ -46,7 +46,7 @@
      "-x",
      "8",
      "-E",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur_retune_sequence.events"
+     "/tmp/claude-1000/-home-cvalentine-tezuka-fw/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB4/raw/spur_retune_sequence.events"
     ],
     "returncode": 0,
     "stderr_tail": [
@@ -61,13 +61,24 @@
      "labels": {
       "unknown": 213
      },
+     "unexpected_accepts": 0,
+     "unexpected_accepts_by_label": {},
+     "confirmed_false_accepts": 0,
+     "suspected_false_accepts": 0,
+     "unverified_accepts": 0,
+     "worst_score_by_disposition": {
+      "confirmed_false": null,
+      "suspected_false": null,
+      "unverified": null
+     },
      "false_accepts": 0,
      "false_accept_labels": {},
      "worst_false_accept_score": null,
      "recognized": null,
      "misses": null,
      "min_correct_score": null,
-     "first_false_accept": null
+     "first_false_accept": null,
+     "first_unexpected_accept": null
     },
     "explain_first_accept": null,
     "background_learned": {
@@ -510,7 +521,7 @@
      "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
      "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/app/classifier/build/arm/classifier",
      "-r",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur433_live_retune.raw",
+     "/tmp/claude-1000/-home-cvalentine-tezuka-fw/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB4/raw/spur433_live_retune.raw",
      "-f",
      "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
      "-n",
@@ -540,7 +551,7 @@
      "-x",
      "8",
      "-E",
-     "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB2/raw/spur433_live_retune.events"
+     "/tmp/claude-1000/-home-cvalentine-tezuka-fw/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/rfB4/raw/spur433_live_retune.events"
     ],
     "returncode": 0,
     "stderr_tail": [
@@ -556,6 +567,25 @@
       "FM Broadcast": 10,
       "unknown": 42
      },
+     "unexpected_accepts": 10,
+     "unexpected_accepts_by_label": {
+      "FM Broadcast": {
+       "decisions": 10,
+       "disposition": "confirmed_false",
+       "basis": "same frames and same basis as spur433_live_realrate: the residual is the receiver's own DC spur",
+       "score_min": 0.643,
+       "score_max": 0.652,
+       "first_t": 13.4
+      }
+     },
+     "confirmed_false_accepts": 10,
+     "suspected_false_accepts": 0,
+     "unverified_accepts": 0,
+     "worst_score_by_disposition": {
+      "confirmed_false": 0.652,
+      "suspected_false": null,
+      "unverified": null
+     },
      "false_accepts": 10,
      "false_accept_labels": {
       "FM Broadcast": 10
@@ -565,6 +595,22 @@
      "misses": null,
      "min_correct_score": null,
      "first_false_accept": {
+      "t": 13.4,
+      "label": "FM Broadcast",
+      "confidence": 0.65,
+      "freq_offset": 1724,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 18.1,
+      "prom_db": 13.4,
+      "margin": 0.255,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "first_unexpected_accept": {
       "t": 13.4,
       "label": "FM Broadcast",
       "confidence": 0.65,

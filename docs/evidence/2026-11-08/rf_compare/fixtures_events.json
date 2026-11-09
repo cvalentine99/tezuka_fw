@@ -51,6 +51,11 @@
   "-x",
   "8"
  ],
+ "accept_dispositions": {
+  "confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+  "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+  "unverified": "nothing is known about what was on air; neither a false accept nor a positive"
+ },
  "fixtures": [
   {
    "name": "spur_retune_sequence",
@@ -73,8 +78,9 @@
    "expected_on": [],
    "expected_off": [],
    "condition": "cold start at 1.09 GHz, then retuned by > span at 60 s (1.095 GHz), 120 s (1.1 GHz) and 180 s (back to 1.09 GHz) through scripted state/rx/frequency events; the same recorded frames throughout",
-   "expected_basis": "nothing is on air but the receiver's own DC spur: any accepted label is a false accept. Each retune relearns the background and the bins hot at a second frequency become receiver spurs, so masked_bins can only grow (the coverage series records how much of the span is left to classify)",
+   "expected_basis": "nothing is on air but the receiver's own DC spur, so no template class is expected; an accepted label is an unexpected accept (unverified unless --accept gives it a disposition, since these are recorded frames). Each retune relearns the background and the bins hot at a second frequency become receiver spurs, so masked_bins can only grow (the coverage series records how much of the span is left to classify)",
    "kind": "recorded frames + scripted events",
+   "software_emitter": false,
    "events": {
     "file": "raw/spur_retune_sequence.events",
     "sha256": "b86e7ed5b150680188f7390875c4921c2fb57a60de960717fa6e109a54f37080",
@@ -158,8 +164,10 @@
    "expected_on": [],
    "expected_off": [],
    "condition": "recorded sequence as captured, replayed at 0.5966 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 433000000, 0 state/rx/span 2500000, 30 state/rx/frequency 438000000, 60 state/rx/frequency 443000000",
-   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as a false accept and the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
    "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
    "daemon_args": [
     "-n",
     "4096",
@@ -193,7 +201,13 @@
     "sha256": "28128de0cb146f5fafa83122e334bdd64a6990d04f26b4f37a895e31b02bbbb8",
     "contents": "# scripted retunes over the recorded 433 MHz spur frames (same frames, new RX frequency announced)\n0 state/rx/frequency 433000000\n0 state/rx/span 2500000\n30 state/rx/frequency 438000000\n60 state/rx/frequency 443000000\n",
     "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
-    "source": "/tmp/claude-1000/-home-cvalentine--claude-spares-spare-CP2HAM/d27debca-4ec3-4b36-b3cf-55a572b20437/scratchpad/ev/spur433_retune.events"
+    "source": "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/docs/evidence/2026-11-08/rf_compare/raw/spur433_retune.events"
+   },
+   "accept_dispositions": {
+    "FM Broadcast": {
+     "disposition": "confirmed_false",
+     "basis": "same frames and same basis as spur433_live_realrate: the residual is the receiver's own DC spur"
+    }
    }
   }
  ]

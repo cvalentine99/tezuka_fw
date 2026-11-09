@@ -99,6 +99,47 @@ def test_malformed_events_rejected(tmp_path, seq90):
     assert p.returncode != 0 and "line 1" in p.stderr
 
 
+def test_time_validation_looks_at_the_time_token_only(tmp_path):
+    """Independent review of a9e7115: the one-dot check ran over the whole
+    line, so '0.5 state/rx/gain 30.5' (fractional time, decimal payload) and
+    '0 state/rx/serial a.b.c' (dotted payload) were rejected. Only the time
+    token may be judged; the payload is the rest of the line, verbatim."""
+    raw = tmp_path / "seq5.raw"
+    make_raw(raw, 5)
+    ev = write_events(tmp_path / "ok.txt", [
+        "0.5 state/rx/gain 30.5",                     # fractional time, decimal payload
+        "1 state/main/serial a.b.c",                  # integer time, dotted payload
+        "1.5 state/rx/frequency 1090000000",          # fractional time, integer payload
+        "2.25 state/main/serial v1.2.3 build 4.5",    # fractional time, several dots and blanks
+        "3. state/rx/span 2500000",                   # trailing dot is still one dot
+    ])
+    p = run(raw, ev, extra=["-v"])
+    assert p.returncode == 0, p.stderr
+    assert "5 events loaded" in p.stderr and "5 of 5 events delivered" in p.stderr
+    delivered = [ln.split("event ", 1)[1] for ln in p.stderr.splitlines() if " event " in ln]
+    assert delivered == ["state/rx/gain 30.5", "state/main/serial a.b.c", "state/rx/frequency 1090000000",
+                         "state/main/serial v1.2.3 build 4.5", "state/rx/span 2500000"]
+    rows = parse(p.stdout)
+    assert rows["observation"][-1][1]["sensor"]["serial"] == "v1.2.3 build 4.5"
+
+
+@pytest.mark.parametrize("line", [
+    "1.2.3 state/rx/frequency 1090000000",   # two dots in the time
+    ".5 state/rx/frequency 1090000000",      # no leading digit
+    "1e1 state/rx/frequency 1090000000",     # exponent
+    "0x10 state/rx/frequency 1090000000",    # hex
+    "+1 state/rx/frequency 1090000000",      # sign
+    "-1 state/rx/frequency 1090000000",      # negative
+    "inf state/rx/frequency 1090000000",     # not a number
+    "1,5 state/rx/frequency 1090000000",     # wrong decimal separator
+    "1.5state/rx/frequency 1090000000",      # no separator after the time
+])
+def test_malformed_times_rejected_whatever_the_payload(tmp_path, seq90, line):
+    ev = write_events(tmp_path / "bad.txt", [line])
+    p = run(seq90, ev)
+    assert p.returncode != 0 and "line 1" in p.stderr and p.stdout == ""
+
+
 def test_missing_events_file_rejected(tmp_path, seq90):
     p = run(seq90, tmp_path / "does_not_exist.txt")
     assert p.returncode != 0 and "does_not_exist.txt" in p.stderr and p.stdout == ""

@@ -1732,9 +1732,13 @@ static int replay_events_load(struct app *a, const char *path)
         char *end = NULL;
         errno = 0;
         /* plain decimal seconds only: digits and at most one '.', no sign,
-         * no hex, no exponent, so a typo cannot pass as a time */
+         * no hex, no exponent, so a typo cannot pass as a time. Only the
+         * time token is inspected: the topic and payload that follow may
+         * contain anything (a payload of 30.5 or a.b.c is valid). */
         size_t tok = strspn(p, "0123456789.");
-        bool plain = tok > 0 && (p[tok] == ' ' || p[tok] == '\t') && strchr(p, '.') == strrchr(p, '.') && strspn(p, ".") == 0;
+        const char *dot = memchr(p, '.', tok);
+        bool plain = tok > 0 && (p[tok] == ' ' || p[tok] == '\t') && p[0] != '.'
+                     && (dot == NULL || memchr(dot + 1, '.', tok - (size_t)(dot + 1 - p)) == NULL);
         double t = plain ? strtod(p, &end) : 0.0;
         if (!plain || end != p + tok || errno != 0 || !isfinite(t) || t < 0.0) {
             fprintf(stderr, "classifier: -E %s: line %d: expected '<t_seconds> <topic> <payload>' "

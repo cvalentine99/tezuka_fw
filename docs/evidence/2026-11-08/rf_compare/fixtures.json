@@ -51,6 +51,11 @@
   "-x",
   "8"
  ],
+ "accept_dispositions": {
+  "confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+  "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+  "unverified": "nothing is known about what was on air; neither a false accept nor a positive"
+ },
  "fixtures": [
   {
    "name": "spur_only_cold",
@@ -74,7 +79,8 @@
    "expected_off": [],
    "condition": "cold start: learning begins on the first frame",
    "expected_basis": "the recorded band holds only the receiver's DC spur (waterfall summary: one segment, contains_dc); no emitter class is correct",
-   "kind": "recorded"
+   "kind": "recorded",
+   "software_emitter": false
   },
   {
    "name": "spur_only_settled",
@@ -98,7 +104,8 @@
    "expected_off": [],
    "condition": "settled: 240 s of the same frames, background adaptation tau 300 s",
    "expected_basis": "as spur_only_cold",
-   "kind": "recorded"
+   "kind": "recorded",
+   "software_emitter": false
   },
   {
    "name": "quiet_no_spur",
@@ -127,7 +134,8 @@
    "expected_off": [],
    "condition": "cold start",
    "expected_basis": "the spur region is replaced by neighbouring-bin samples: nothing is on air",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "fm_offcenter",
@@ -165,7 +173,8 @@
    "expected_off": [],
    "condition": "cold start; emitter on from 20 s",
    "expected_basis": "an emitter with the FM template's own 400 kHz shape at -500 kHz from the LO (positive control derived from the template, not independent RF)",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "fm_near_lo",
@@ -203,7 +212,8 @@
    "expected_off": [],
    "condition": "cold start; emitter on from 20 s, centred on the LO over the spur",
    "expected_basis": "a legitimate signal AT the LO must stay recognisable: a blanket DC exclusion would remove it (positive control derived from the template)",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "dab_fullspan",
@@ -241,7 +251,8 @@
    "expected_off": [],
    "condition": "cold start; emitter on from 20 s, fills the whole span",
    "expected_basis": "the DAB+ template is 2.5 MHz wide, the whole span at this grid (positive control derived from the template)",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "cw_offcenter",
@@ -279,7 +290,8 @@
    "expected_off": [],
    "condition": "cold start; emitter on from 20 s",
    "expected_basis": "a 30 kHz carrier-like shape at +580 kHz (positive control derived from the template)",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "unknown_block_1mhz",
@@ -315,7 +327,8 @@
    "expected_off": [],
    "condition": "cold start; emitter on from 20 s",
    "expected_basis": "a 1 MHz flat-top block is in no template: any accepted label is a false accept; 'unknown' is correct",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "overlap_fm_cw",
@@ -355,7 +368,8 @@
    "expected_off": [],
    "condition": "cold start; two emitters on from 20 s, the carrier inside the FM window",
    "expected_basis": "both emitters are present, so either label is defensible; DAB+ would be false",
-   "kind": "software fixture"
+   "kind": "software fixture",
+   "software_emitter": true
   },
   {
    "name": "spur433_live_realrate",
@@ -433,8 +447,10 @@
    "expected_on": [],
    "expected_off": [],
    "condition": "recorded sequence as captured, replayed at 0.5966 frames/s: cold start, learning begins on the first frame",
-   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as a false accept and the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
    "kind": "recorded",
+   "recorded_capture": true,
+   "software_emitter": false,
    "daemon_args": [
     "-n",
     "4096",
@@ -462,7 +478,13 @@
     "4e6",
     "-x",
     "8"
-   ]
+   ],
+   "accept_dispositions": {
+    "FM Broadcast": {
+     "disposition": "confirmed_false",
+     "basis": "the matched residual sits on the LO (peak at DC+3, 17 kHz wide) with the receiver DC-spur shape seen identically at 433 MHz and 1.09 GHz, so it follows the LO and is the receiver's own spur, not an emission; nothing else was in the 2.5 MHz band and 433 MHz has no FM broadcast allocation"
+    }
+   }
   },
   {
    "name": "ism2400_live_realrate",
@@ -540,8 +562,10 @@
    "expected_on": [],
    "expected_off": [],
    "condition": "recorded sequence as captured, replayed at 7.3314 frames/s: cold start, learning begins on the first frame",
-   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as a false accept and the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
    "kind": "recorded",
+   "recorded_capture": true,
+   "software_emitter": false,
    "daemon_args": [
     "-n",
     "4096",
@@ -569,7 +593,17 @@
     "4e6",
     "-x",
     "8"
-   ]
+   ],
+   "accept_dispositions": {
+    "DAB+": {
+     "disposition": "suspected_false",
+     "basis": "Wi-Fi-like spectrum (wide intermittent bursts, 5 MHz flat residual) and no DAB+ allocation near 2.4 GHz point to a wrong label; protocol ground truth pending, the waveform was not identified independently"
+    },
+    "CW / Beacon": {
+     "disposition": "unverified",
+     "basis": "persistent 30 kHz spike at about 2391.99 MHz in every frame; receiver artefact or emission not established"
+    }
+   }
   }
  ]
 }

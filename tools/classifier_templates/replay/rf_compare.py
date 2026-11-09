@@ -39,6 +39,24 @@ observation messages, sampled at most once per 5 s, with the final mask
 coverage and the peak masked count; results.md gains coverage columns
 when any fixture in the run has events. A revision that predates the
 coverage fields reports them as null.
+
+Accept dispositions: an accepted label that is not in a fixture's expected
+set is "unexpected". Whether it is a FALSE accept depends on what was
+really on air, which the spectrum alone does not establish, so every
+unexpected accept carries a disposition: "confirmed_false" (known to be
+wrong: a software fixture's emitter is synthetic and known, so its
+off-label accepts are confirmed by construction; for a recorded capture
+only when independent evidence says so), "suspected_false" (shape and
+allocation point to a wrong label, protocol ground truth pending) or
+"unverified" (nothing is known either way). Recorded captures default to
+"unverified"; --accept NAME=DISPOSITION=LABEL[::basis] sets one label's
+disposition and records the basis in the manifest (labels are checked
+against the template set). --expect NAME=LABEL declares a recorded capture a
+trusted positive (the label is expected throughout; recognised and misses
+are then reported); it combines with --events. results.json reports
+the three counts separately and results.md shows them as
+confirmed / suspected / unverified; "false_accepts" counts confirmed ones
+only.
 """
 import argparse
 import concurrent.futures
@@ -51,6 +69,8 @@ import sys
 from collections import Counter
 
 import numpy as np
+
+DISPOSITIONS = ("confirmed_false", "suspected_false", "unverified")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
@@ -179,7 +199,8 @@ def build_fixtures(base, templates, out_raw):
                       "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled" + (", then modified as `detail` says" if detail else ""),
                       "detail": detail, "on_window_s": [t_on, t_off] if t_on is not None else None,
                       "expected_on": sorted(expected_on), "expected_off": sorted(expected_off),
-                      "condition": condition, "expected_basis": basis, "kind": "recorded" if not detail else "software fixture"})
+                      "condition": condition, "expected_basis": basis, "kind": "recorded" if not detail else "software fixture",
+                      "software_emitter": bool(detail)})
 
     nothing = set()
     add("spur_only_cold", 60, nothing, nothing, "cold start: learning begins on the first frame",
@@ -208,7 +229,7 @@ def build_fixtures(base, templates, out_raw):
         lambda a, rng: (inject(a, fm_shape, 1000, 20.0, 20.0, 60.0, rng), inject(a, cw_shape, 1300, 25.0, 20.0, 60.0, rng))[0] | {"second": "CW at 1300"}, 20.0, 60.0)
     add("spur_retune_sequence", 240, nothing, nothing,
         "cold start at 1.09 GHz, then retuned by > span at 60 s (1.095 GHz), 120 s (1.1 GHz) and 180 s (back to 1.09 GHz) through scripted state/rx/frequency events; the same recorded frames throughout",
-        "nothing is on air but the receiver's own DC spur: any accepted label is a false accept. Each retune relearns the background and the bins hot at a second frequency become receiver spurs, so masked_bins can only grow (the coverage series records how much of the span is left to classify)", None)
+        "nothing is on air but the receiver's own DC spur, so no template class is expected; an accepted label is an unexpected accept (unverified unless --accept gives it a disposition, since these are recorded frames). Each retune relearns the background and the bins hot at a second frequency become receiver spurs, so masked_bins can only grow (the coverage series records how much of the span is left to classify)", None)
     specs[-1]["events"] = write_events(out_raw, "spur_retune_sequence", [
         "# spur_retune_sequence: the LO moves by more than the 2.5 MHz span at each step,",
         "# so a bin hot at two of these frequencies is counted as a receiver spur",
@@ -242,6 +263,60 @@ def attach_events(specs, spec_arg, out_raw):
     steps = [ln.strip() for ln in spec["events"]["contents"].splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
     spec["condition"] += "; scripted replay events on the virtual clock: " + ", ".join(steps)
     spec["kind"] = spec.get("kind", "fixture") + " + scripted events"
+
+
+def check_label(label, known, flag):
+    if known is not None and label not in known:
+        raise SystemExit(f"{flag}: label {label!r} is not in the template set {sorted(known)}; the daemon can never produce it")
+
+
+def attach_accept(specs, spec_arg, known_labels=None):
+    """--accept NAME=DISPOSITION=LABEL[::basis]: disposition of an unexpected
+    accepted LABEL on fixture NAME (see DISPOSITIONS), with the evidence it
+    rests on; both go into the manifest."""
+    parts = spec_arg.split("=", 2)
+    if len(parts) != 3:
+        raise SystemExit(f"--accept expects NAME=DISPOSITION=LABEL[::basis], got {spec_arg!r}")
+    name, disp, rest = parts
+    label, _, basis = rest.partition("::")
+    label, basis = label.strip(), basis.strip()
+    if disp not in DISPOSITIONS:
+        raise SystemExit(f"--accept: disposition {disp!r} is not one of {DISPOSITIONS}")
+    if not label:
+        raise SystemExit(f"--accept: empty label in {spec_arg!r}")
+    spec = next((s for s in specs if s["name"] == name), None)
+    if spec is None:
+        raise SystemExit(f"--accept: fixture {name!r} not found (have: {sorted(s['name'] for s in specs)})")
+    check_label(label, known_labels, "--accept")
+    spec.setdefault("accept_dispositions", {})[label] = {"disposition": disp, "basis": basis or "(no basis given)"}
+
+
+def attach_expect(specs, spec_arg, known_labels=None):
+    """--expect NAME=LABEL[,LABEL]: labels expected throughout a recorded
+    capture (a trusted positive, on air for the whole sequence). Any of
+    them counts as recognised; anything else accepted is unexpected."""
+    name, sep, labels = spec_arg.partition("=")
+    if not sep or not labels.strip():
+        raise SystemExit(f"--expect expects NAME=LABEL[,LABEL], got {spec_arg!r}")
+    spec = next((s for s in specs if s["name"] == name), None)
+    if spec is None:
+        raise SystemExit(f"--expect: fixture {name!r} not found (have: {sorted(s['name'] for s in specs)})")
+    if not spec.get("recorded_capture"):
+        raise SystemExit(f"--expect: {name!r} is not a recorded capture (--recorded)")
+    spec["expected_off"] = [l.strip() for l in labels.split(",") if l.strip()]
+    for l in spec["expected_off"]:
+        check_label(l, known_labels, "--expect")
+    spec["expected_basis"] = "trusted positive: the label was established independently of the spectrum (see the capture's notes); the emission is on air for the whole sequence"
+
+
+def disposition_of(spec, label):
+    """Disposition and basis of an unexpected accept of LABEL on SPEC."""
+    given = (spec.get("accept_dispositions") or {}).get(label)
+    if given:
+        return given["disposition"], given["basis"]
+    if spec.get("software_emitter"):
+        return "confirmed_false", "software fixture: the injected emitter is synthetic and known, any other label is wrong by construction"
+    return "unverified", "recorded frames: what was on air is not established by the spectrum alone"
 
 
 def daemon_args_for(fps, span_hz=None):
@@ -289,9 +364,11 @@ def add_recorded(specs, spec_arg, out_raw):
                   "condition": f"recorded sequence as captured, replayed at {fps:g} frames/s: cold start, learning begins on the first frame",
                   "expected_basis": meta.get("on_air") or (
                       "no emitter class of the template set is expected in this band; every accepted label is tallied "
-                      "as a false accept and the report next to the capture says which of them could be correct "
-                      "(the meta file records the receiver settings, not what was on air)"),
-                  "kind": "recorded", "daemon_args": daemon_args_for(fps, rx.get("sampling_frequency"))})
+                      "as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report "
+                      "next to the capture says which of them could be correct (the meta file records the receiver "
+                      "settings, not what was on air)"),
+                  "kind": "recorded", "recorded_capture": True, "software_emitter": False,
+                  "daemon_args": daemon_args_for(fps, rx.get("sampling_frequency"))})
 
 
 def run_daemon(qemu, sysroot, binary, raw, templates, out_path, daemon_args=DAEMON_ARGS, events=None):
@@ -378,16 +455,35 @@ def tally(spec, rows):
     def summarize(decs, allowed):
         labels = Counter(r["label"] for _, r in decs)
         accepted = [(t, r) for t, r in decs if r["label"] != "unknown"]
-        false_acc = [(t, r) for t, r in accepted if r["label"] not in allowed]
+        unexpected = [(t, r) for t, r in accepted if r["label"] not in allowed]
         correct = [(t, r) for t, r in accepted if r["label"] in allowed]
         misses = [(t, r) for t, r in decs if allowed and r["label"] not in allowed]
-        worst_false = max((r.get("confidence", 0) for _, r in false_acc), default=None)
         min_correct = min((r.get("confidence", 0) for _, r in correct), default=None)
-        return {"decisions": len(decs), "labels": dict(labels), "false_accepts": len(false_acc),
-                "false_accept_labels": dict(Counter(r["label"] for _, r in false_acc)),
-                "worst_false_accept_score": worst_false, "recognized": len(correct) if allowed else None,
+        by_label = {}
+        for t, r in unexpected:
+            disp, basis = disposition_of(spec, r["label"])
+            e = by_label.setdefault(r["label"], {"decisions": 0, "disposition": disp, "basis": basis,
+                                                 "score_min": None, "score_max": None, "first_t": t})
+            e["decisions"] += 1
+            c = r.get("confidence", 0)
+            e["score_min"] = c if e["score_min"] is None else min(e["score_min"], c)
+            e["score_max"] = c if e["score_max"] is None else max(e["score_max"], c)
+        by_disp = {d: [(t, r) for t, r in unexpected if by_label[r["label"]]["disposition"] == d] for d in DISPOSITIONS}
+        worst = {d: max((r.get("confidence", 0) for _, r in v), default=None) for d, v in by_disp.items()}
+        confirmed = by_disp["confirmed_false"]
+        return {"decisions": len(decs), "labels": dict(labels),
+                "unexpected_accepts": len(unexpected), "unexpected_accepts_by_label": by_label,
+                "confirmed_false_accepts": len(confirmed), "suspected_false_accepts": len(by_disp["suspected_false"]),
+                "unverified_accepts": len(by_disp["unverified"]),
+                "worst_score_by_disposition": worst,
+                # kept for readers of the first-pass results: confirmed false accepts only
+                "false_accepts": len(confirmed),
+                "false_accept_labels": dict(Counter(r["label"] for _, r in confirmed)),
+                "worst_false_accept_score": worst["confirmed_false"],
+                "recognized": len(correct) if allowed else None,
                 "misses": len(misses) if allowed else None, "min_correct_score": min_correct,
-                "first_false_accept": {"t": false_acc[0][0], **false_acc[0][1]} if false_acc else None}
+                "first_false_accept": {"t": confirmed[0][0], **confirmed[0][1]} if confirmed else None,
+                "first_unexpected_accept": {"t": unexpected[0][0], **unexpected[0][1]} if unexpected else None}
 
     out = {"on": summarize(dec_on, exp_on) if on else None, "off": summarize(dec_off, exp_off)}
     # explanatory record for the first accepted decision, from the observation
@@ -421,6 +517,11 @@ def main():
     ap.add_argument("--only", default="", help="comma-separated fixture names to run (default: all)")
     ap.add_argument("--events", action="append", default=[],
                     help="NAME=PATH: deliver the replay events file PATH (daemon -E) to fixture NAME (repeat)")
+    ap.add_argument("--expect", action="append", default=[],
+                    help="NAME=LABEL[,LABEL]: labels expected throughout recorded capture NAME (a trusted positive; repeat)")
+    ap.add_argument("--accept", action="append", default=[],
+                    help="NAME=DISPOSITION=LABEL[::basis]: disposition (%s) of an unexpected accepted LABEL on fixture NAME, "
+                         "with the evidence it rests on (repeat); recorded captures default to unverified" % "|".join(DISPOSITIONS))
     args = ap.parse_args()
 
     os.makedirs(os.path.join(args.out, "raw"), exist_ok=True)
@@ -432,6 +533,11 @@ def main():
         add_recorded(specs, rec, os.path.join(args.out, "raw"))
     for ev in args.events:
         attach_events(specs, ev, os.path.join(args.out, "raw"))
+    known = {t.label for t in templates[1]}
+    for ex in args.expect:
+        attach_expect(specs, ex, known)
+    for acc in args.accept:
+        attach_accept(specs, acc, known)
     if args.only:
         wanted = set(args.only.split(","))
         missing = wanted - {s["name"] for s in specs}
@@ -441,7 +547,11 @@ def main():
     manifest = {"recorded_frames": [{"file": f"wf_avg4096_frame{i}.bin", "sha256": sha256(os.path.join(args.fixtures, f"wf_avg4096_frame{i}.bin"))} for i in range(3)],
                 "templates": {"file": args.templates, "sha256": sha256(args.templates),
                               "labels": [t.label for t in templates[1]], "canonical_n": templates[0]},
-                "daemon_args": DAEMON_ARGS, "fixtures": specs}
+                "daemon_args": DAEMON_ARGS,
+                "accept_dispositions": {d: {"confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+                                            "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+                                            "unverified": "nothing is known about what was on air; neither a false accept nor a positive"}[d] for d in DISPOSITIONS},
+                "fixtures": specs}
     with open(os.path.join(args.out, "fixtures.json"), "w") as f:
         json.dump(manifest, f, indent=1)
 
@@ -474,7 +584,7 @@ def main():
     # events, so a run without them keeps the previous layout)
     has_events = any(s.get("events") for s in specs)
     cov_head = " coverage: final masked / valid bins (max masked) | spur bins | learns |" if has_events else ""
-    lines = ["| fixture | expected (ON / OFF) | revision | ON: accepted / decisions | OFF: accepted / decisions | false accepts (worst score) | misses | condition |" + cov_head,
+    lines = ["| fixture | expected (ON / OFF) | revision | ON: accepted / decisions | OFF: accepted / decisions | unexpected accepts: confirmed false / suspected false / unverified (worst score) | misses | condition |" + cov_head,
              "|---|---|---|---|---|---|---|---|" + ("---|---|---|" if has_events else "")]
     for spec in specs:
         exp = f"{' or '.join(spec['expected_on']) or 'unknown'} / {' or '.join(spec['expected_off']) or 'unknown'}"
@@ -483,11 +593,18 @@ def main():
             on, off = r["on"], r["off"]
             on_s = f"{on['recognized'] if on['recognized'] is not None else sum(v for k, v in on['labels'].items() if k != 'unknown')}/{on['decisions']} {on['labels']}" if on else "-"
             off_s = f"{sum(v for k, v in off['labels'].items() if k != 'unknown')}/{off['decisions']} {off['labels']}"
-            fa = (on["false_accepts"] if on else 0) + off["false_accepts"]
-            worst = max([x for x in ((on or {}).get("worst_false_accept_score"), off.get("worst_false_accept_score")) if x is not None], default=None)
-            misses = on["misses"] if on and on["misses"] is not None else "-"
+            if off.get("recognized") is not None:          # a recorded trusted positive (--expect): on air throughout
+                off_s += f"; recognised {off['recognized']}/{off['decisions']} (min {off['min_correct_score']})"
+            cells = []
+            for d in DISPOSITIONS:
+                k = d.replace("_false", "_false_accepts") if d != "unverified" else "unverified_accepts"
+                n_ = (on[k] if on else 0) + off[k]
+                worst = max([x for x in ((on or {}).get("worst_score_by_disposition", {}).get(d), off["worst_score_by_disposition"].get(d)) if x is not None], default=None)
+                cells.append(f"{n_}{f' ({worst})' if worst is not None else ''}")
+            fa = " / ".join(cells)
+            misses = on["misses"] if on and on["misses"] is not None else (off["misses"] if off.get("misses") is not None else "-")
             cov_s = (" " + " | ".join(coverage_cells(r)) + " |") if has_events else ""
-            lines.append(f"| {spec['name']} | {exp} | {name} | {on_s} | {off_s} | {fa}{f' ({worst})' if worst is not None else ''} | {misses} | {spec['condition']} |" + cov_s)
+            lines.append(f"| {spec['name']} | {exp} | {name} | {on_s} | {off_s} | {fa} | {misses} | {spec['condition']} |" + cov_s)
     with open(os.path.join(args.out, "results.md"), "w") as f:
         f.write("\n".join(lines) + "\n")
     print("\n".join(lines))

@@ -145,7 +145,21 @@ real width for a version-3 template) during a chosen time window, and
 `replay/tally_results.py` summarizes the daemon's result topic. The daemon
 replays a recording with `-r FILE -F FPS -S SPAN_HZ -B none`; run the
 cross-compiled binary under `qemu-arm-static` with the board sysroot as
-`-L`. See the main README's classifier section for the numbers this gave
+`-L`.
+
+`replay/capture_waterfall.py` is the capture tool for evidence: it records
+the same raw frames and, next to them, a meta file with the receiver and
+spectrometer settings before and after, the capture boundaries and measured
+frame rate, the SHA-256 of the file and a log of every setting change seen
+while capturing (it polls `/api`), plus a replay events file
+(`<out>.raw.events`, the daemon's `-E`) that places the retunes on the
+replay clock. `replay/rf_compare.py` runs several daemon revisions on a
+frozen fixture set (generated fixtures plus `--recorded` captures with
+optional `--events`), tallies decisions, and reports unexpected accepts
+split into confirmed false, suspected false and unverified
+(`--accept NAME=DISPOSITION=LABEL::basis`); `--expect NAME=LABEL` declares
+a recorded trusted positive. `replay/tests/` exercises the capture tool
+against a fake sensor (`python -m pytest -q tools/classifier_templates/replay/tests`). See the main README's classifier section for the numbers this gave
 on real outdoor captures.
 
 ## File format
