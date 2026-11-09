@@ -385,7 +385,7 @@ function ClassifierPage({ d }) {
 
   return (
     <>
-      <Card title="Signal Classifier" sub="Onboard PSD spectral-shape matching" className="span-12"
+      <Card title="Signal Classifier" sub="Experimental spectral-template matching; RF acceptance pending." className="span-12"
         right={<Pill tone={wsState === 'connected' ? 'ok' : 'warn'} dot>{wsState}</Pill>}>
         <Field label="Enabled">
           <Toggle on={enabled} onChange={(on) => { setEnabled(on); d.publish('classifier/enabled', on ? 'on' : 'off'); }} />
@@ -394,12 +394,15 @@ function ClassifierPage({ d }) {
           <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', cursor: bandPlan.length ? 'pointer' : 'default' }}
             onClick={onCanvasClick} />
         </div>
+        <div className="dim" style={{ fontSize: 11, marginTop: 6 }}>
+          Spectrum power is shown relative to the producer's scale (maia-httpd /waterfall integrated power, 10*log10), not calibrated dBm.
+        </div>
       </Card>
 
-      <Card title="Decision" sub="What the daemon is doing right now" className="span-12"
+      <Card title="Decision" sub="What the daemon is doing right now. Match score is spectral similarity, not calibrated identification confidence." className="span-12"
         right={<Pill tone={stateTone} dot>{stateText}</Pill>}>
         <div className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 5ch' }}>
-          <div><div className="dim" style={{ fontSize: 11 }}>Best score</div><div>{res ? Math.round((Number(res.label === 'unknown' ? res.best : res.confidence) || 0) * 100) + '%' : '\u2014'}</div></div>
+          <div><div className="dim" style={{ fontSize: 11 }} title="Spectral similarity, not calibrated identification confidence">Best score</div><div>{res ? Math.round((Number(res.label === 'unknown' ? res.best : res.confidence) || 0) * 100) + '%' : '\u2014'}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Window SNR</div><div>{fmtDb(res ? (res.label === 'unknown' ? res.best_snr_db : res.snr_db) : null)}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Prominence</div><div>{fmtDb(res ? (res.label === 'unknown' ? res.best_prom_db : res.prom_db) : null)}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Margin to runner-up</div><div>{res && res.margin != null ? Math.round(Number(res.margin) * 100) + ' pts' : '\u2014'}</div></div>
@@ -418,6 +421,11 @@ function ClassifierPage({ d }) {
             <div><div className="dim" style={{ fontSize: 11 }}>Config binding</div><div title={obs.config && obs.config.bound_reason}>{obs.config ? (obs.config.bound ? 'bound' : `unbound (gen ${obs.config.generation})`) : '\u2014'}</div></div>
             <div><div className="dim" style={{ fontSize: 11 }}>Publish errors</div><div>{obs.health ? obs.health.publish_errors : '\u2014'}</div></div>
             <div><div className="dim" style={{ fontSize: 11 }}>Features</div><div>{obs.templates ? obs.templates.feature_semantics : '\u2014'}</div></div>
+          </div>
+        )}
+        {obs && obs.config && !obs.config.bound && (
+          <div className="mono dim" style={{ marginTop: 6, fontSize: 11, maxWidth: '90ch' }}>
+            Config binding unbound: {obs.config.bound_reason || 'the RX settings attached to this observation are not tagged on the waterfall frame'}
           </div>
         )}
         {tstat && (
