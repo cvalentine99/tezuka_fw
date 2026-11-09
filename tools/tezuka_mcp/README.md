@@ -78,9 +78,11 @@ The SDK returns a plain-dict tool result as `structuredContent: {"result":
 * `classifier.frequency_view` separates the *matched window* (the range of
   the template window the daemon scored and accepted, from
   `decision.bin_offset`/`bandwidth_bins`, accepted matches only) from the
-  *whole-span peak* (the strongest residual bin over the entire span, from
-  `features.peak_bin`). They are different measurements and often differ;
-  `peak_inside_matched_window` says whether they coincide. Both are derived
+  *whole-span peak* (the strongest residual bin, spectrum over the learned
+  background, anywhere in the span, from `features.peak_bin`). They are
+  different measurements and often differ; `peak_inside_matched_window`
+  says whether they coincide, and `false` alone does not mean the window
+  is wrong. Both are derived
   from the observation's own grid and are presentation, not scoring.
 * `classifier.best_effort: true` means the sensor runs a daemon without the
   `observation` message; sequence, boot id, template hash and feature

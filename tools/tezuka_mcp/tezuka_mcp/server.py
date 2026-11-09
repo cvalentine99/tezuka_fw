@@ -31,8 +31,9 @@ INSTRUCTIONS = (
     "Levels are relative to the producer's power scale, never dBm. Neither tool changes anything on the sensor. "
     "When explaining a classifier observation keep two frequencies apart: classifier.frequency_view.matched_window is "
     "the range of the template window the daemon scored and accepted (decision.bin_offset/bandwidth_bins), while "
-    "classifier.frequency_view.whole_span_peak is the strongest residual bin over the entire span (features.peak_bin). "
-    "They are independent and often differ; never present one as the other."
+    "classifier.frequency_view.whole_span_peak is the strongest bin of the residual (spectrum over the learned background) "
+    "anywhere in the span (features.peak_bin). They are independent and often differ; never present one as the other, and "
+    "do not treat a peak outside the window as proof the window is wrong."
 )
 
 

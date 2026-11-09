@@ -253,7 +253,7 @@ function ClassifierPage({ d }) {
       ctx.fillStyle = 'rgba(255,205,70,0.9)';
       ctx.beginPath(); ctx.moveTo(xp, yp - 2); ctx.lineTo(xp - 4, yp - 9); ctx.lineTo(xp + 4, yp - 9); ctx.closePath(); ctx.fill();
       ctx.font = '11px system-ui, sans-serif';
-      const ptext = 'span peak ' + fmtHz(fv.peak.hz);
+      const ptext = 'residual peak ' + fmtHz(fv.peak.hz);
       const ptw = ctx.measureText(ptext).width;
       ctx.fillStyle = 'rgba(40,30,10,0.8)';
       const plx = Math.max(2, Math.min(w - ptw - 8, xp - ptw / 2 - 4));
@@ -490,16 +490,16 @@ function ClassifierPage({ d }) {
                   <div style={{ color: '#9fe3ff' }}>{win ? `${fmtHz(win.startHz)} \u2013 ${fmtHz(win.endHz)} (centre ${fmtHz(win.centerHz)}, ${fmtHz(win.widthHz)} wide)` : (obs && obs.decision && obs.decision.accepted === false ? 'none (no accepted match)' : '\u2014')}</div>
                 </div>
                 <div>
-                  <div className="dim" style={{ fontSize: 11 }} title="Strongest residual bin over the entire span (features.peak_bin); independent of any match">Whole-span peak</div>
+                  <div className="dim" style={{ fontSize: 11 }} title="Strongest bin of the residual (spectrum over the learned background) anywhere in the span (features.peak_bin); independent of any match">Whole-span residual peak</div>
                   <div style={{ color: '#ffe9a8' }}>{peak ? `${fmtHz(peak.hz)} (bin ${peak.bin})` : '\u2014'}</div>
                 </div>
                 <div>
                   <div className="dim" style={{ fontSize: 11 }}>Peak inside window</div>
-                  <div>{fv.peakInsideWindow == null ? '\u2014' : fv.peakInsideWindow ? 'yes' : 'no: the window matched something other than the span\u2019s strongest emission'}</div>
+                  <div>{fv.peakInsideWindow == null ? '\u2014' : fv.peakInsideWindow ? 'yes' : 'no: the strongest residual bin lies outside the matched window'}</div>
                 </div>
               </div>
               <div className="dim" style={{ fontSize: 11, marginTop: 4, maxWidth: '90ch' }}>
-                Matched window (blue bracket on the spectrum) = where the accepted template fit. Whole-span peak (amber dashed marker) = the strongest bin anywhere in the span. They are different measurements and need not agree.
+                Matched window (blue bracket on the spectrum) = where the accepted template fit. Whole-span residual peak (amber dashed marker) = the strongest bin of the residual (spectrum over the learned background) anywhere in the span. They are different measurements and need not agree; disagreement alone does not mean the window is wrong.
                 {fv.gridFromObservation ? '' : ' Grid taken from the live RX settings because the observation carried none.'}
               </div>
             </div>

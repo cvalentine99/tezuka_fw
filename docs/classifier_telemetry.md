@@ -231,16 +231,21 @@ neither is a scoring input:
   accepted match this cycle (the daemon does not report a window for a
   rejected candidate) or the grid is not derivable.
 * `whole_span_peak` — the centre frequency of the strongest residual bin
-  over the **entire span** (`features.peak_bin`), independent of any match;
+  (spectrum over the learned background) over the **entire span** (`features.peak_bin`), independent of any match;
   `available: false` with the daemon's `invalid_reason` when the features
   are invalid.
 * `peak_inside_matched_window` — `true`/`false` when both are available,
-  else `null`. `false` means the window matched an emission other than the
-  span's strongest one; it is not an error.
+  else `null`. `false` means the strongest residual bin lies outside the
+  window: either the window matched an emission other than the one with the
+  strongest residual, or the residual's strongest bin is not the strongest
+  emission at all (for example something that changed since the background
+  was learned). It does not by itself mean the window is wrong; the
+  2026-11-09 positive check saw both cases with the window correctly on
+  the station.
 
 The console's Decision panel shows the same two values under their own
 labels (blue bracket = matched window, amber dashed marker = whole-span
-peak on the spectrum).
+residual peak on the spectrum).
 
 ### `snapshot_fpga_waterfall` → `tezuka.mcp.waterfall_snapshot/1`
 

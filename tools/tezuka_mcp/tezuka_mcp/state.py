@@ -361,9 +361,11 @@ class StateCache:
     FREQUENCY_VIEW_NOTE = (
         "Two different things, deliberately kept apart. matched_window is the frequency range of the template "
         "window the daemon scored and accepted (decision.bin_offset / bandwidth_bins): the matched emission, in the "
-        "daemon's own words. whole_span_peak is where the strongest bin of the residual sits across the ENTIRE span "
-        "(features.peak_bin), whatever it is. They need not coincide: the window can match a weaker emission while the "
+        "daemon's own words. whole_span_peak is where the strongest bin of the residual (spectrum over the learned background) sits across "
+        "the ENTIRE span (features.peak_bin), whatever it is. They need not coincide: the window can match a weaker emission while the "
         "span's strongest bin belongs to something else, and the window is only reported on an accepted match. "
+        "peak_inside_matched_window false does not by itself mean the window is wrong: the strongest residual bin need not be "
+        "the strongest emission (it can be a change since the background was learned). "
         "Neither value is a scoring input; both are presentation derived from the observation with the grid rule."
     )
 
@@ -422,7 +424,7 @@ class StateCache:
         if feat.get("valid") is True and isinstance(pk, int) and not isinstance(pk, bool) and pk >= 0:
             view["whole_span_peak"] = {
                 "available": True, "bin": pk, "hz": round(centre(pk), 1),
-                "meaning": "centre of the strongest residual bin over the whole span (features.peak_bin); independent of any match",
+                "meaning": "centre of the strongest residual bin (spectrum over the learned background) over the whole span (features.peak_bin); independent of any match",
             }
         else:
             view["whole_span_peak"] = {"available": False,
