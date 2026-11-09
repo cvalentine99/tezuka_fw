@@ -1,0 +1,240 @@
+{
+ "recorded_frames": [
+  {
+   "file": "wf_avg4096_frame0.bin",
+   "sha256": "1b26b04cab3406beb5f2f50f87bc3804a4d05cb46230f9c3c088f680a1c4ec4d"
+  },
+  {
+   "file": "wf_avg4096_frame1.bin",
+   "sha256": "5acadf69568e60cd611e09b1a2bb2c59c44a2d87c58307350feff3435d2b8835"
+  },
+  {
+   "file": "wf_avg4096_frame2.bin",
+   "sha256": "602c0489845d5b4d698337197c3e2c4c155af318c79cb0b0cb4dfad09419021c"
+  }
+ ],
+ "templates": {
+  "file": "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+  "sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+  "labels": [
+   "FM Broadcast",
+   "DAB+",
+   "CW / Beacon"
+  ],
+  "canonical_n": 512
+ },
+ "daemon_args": [
+  "-n",
+  "4096",
+  "-F",
+  "7.5",
+  "-S",
+  "2500000",
+  "-B",
+  "none",
+  "-c",
+  "0.6",
+  "-m",
+  "0.15",
+  "-i",
+  "1.0",
+  "-s",
+  "6",
+  "-g",
+  "4",
+  "-l",
+  "10",
+  "-a",
+  "300",
+  "-w",
+  "4e6",
+  "-x",
+  "8"
+ ],
+ "accept_dispositions": {
+  "confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+  "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+  "unverified": "nothing is known about what was on air; neither a false accept nor a positive"
+ },
+ "fixtures": [
+  {
+   "name": "P0_kigl",
+   "file": "raw/P0_kigl.raw",
+   "sha256": "b18e6f45e8929149f939aa19071ed0bbfb28edfc1ff20e6e185e6d3312282db0",
+   "frames": 150,
+   "duration_s": 149.9136,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 92674998,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794228769.311613 (unix s): rx_lo 92674998 Hz, fs 2500000 Hz, gain 71.0 dB Manual, Average x610, 4096-point; capture sha256 b18e6f45e8929149f939aa19071ed0bbfb28edfc1ff20e6e185e6d3312282db0",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "P0 short positive check: LO 92674998 Hz, span 2.5 MHz, RF bw 2.5 MHz, manual 71 dB, rfinput 2; on air: FM carrier 93.3 MHz at +625 kHz (strongest in the 30.72 MHz survey); identity to be established by RDS decode of a simultaneous 10 s IQ recording and the FCC listing; operator: Claude for the owner Chase Valentine (owner instructed the session, not present)",
+     "captured_unix_s": 1794228769.311613,
+     "started_unix_s": 1794228769.3116138,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 92674998,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 150,
+     "frames": 150,
+     "frame_sizes": {
+      "16384": 150
+     },
+     "settings_log": [],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794228769.4287887,
+     "last_frame_unix_s": 1794228918.444275,
+     "measured_fps": 0.9998960763020162,
+     "frame_gap_s": {
+      "min": 0.8872759342193604,
+      "median": 0.9998667240142822,
+      "max": 1.1115684509277344
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 92674998,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 71.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 92674998,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": false,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794228918.4640725,
+     "raw_bytes": 2457600,
+     "sha256": "b18e6f45e8929149f939aa19071ed0bbfb28edfc1ff20e6e185e6d3312282db0",
+     "events_file": "P0_positive_check.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [
+    "FM Broadcast"
+   ],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 92674998, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 71, 0 state/rx/gain_mode Manual",
+   "expected_basis": "trusted positive: the label was established independently of the spectrum (see the capture's notes); the emission is on air for the whole sequence",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/P0_kigl.events",
+    "sha256": "eabb36c414918e65c48145084140ee6c87eb97de0591f227100decf86a1afadb",
+    "contents": "# replay events for P0_positive_check.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 92674998\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 71\n0 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/P0_positive_check.raw.events"
+   },
+   "accept_dispositions": {
+    "CW / Beacon": {
+     "disposition": "suspected_false",
+     "basis": "window on 92.100 MHz, the published KQSM 92.1 FM channel; IQ shows only a weak line there and no CW beacon is known; not independently confirmed"
+    }
+   }
+  }
+ ]
+}

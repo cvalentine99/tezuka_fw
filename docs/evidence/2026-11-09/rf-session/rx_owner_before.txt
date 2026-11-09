@@ -1,0 +1,26 @@
+state/rx/active 0
+state/rx/ant A_BALANCED
+state/rx/bandwidth 2500000
+state/rx/bb_dc_tracking n/a
+state/rx/buffer_size 4096
+state/rx/dma_transfer 0
+state/rx/fir_enable 0
+state/rx/frequency 70000000
+state/rx/gain 41.000000 dB
+state/rx/gain_mode manual
+state/rx/loopback 0
+state/rx/overload 0
+state/rx/quad_tracking n/a
+state/rx/rate 3251
+state/rx/rate 46
+state/rx/rf_dc_tracking n/a
+state/rx/rfinput 2
+state/rx/rssi 96.75 dB
+state/rx/sampling 2500000
+state/rx/span 2500000
+state/rx/sweep/activate 0
+state/rx/sweep/engaged 0
+state/rx/sweep/frequency 280000000
+state/rx/sweep/span 2500000
+state/rx/underflow 0
+280000000

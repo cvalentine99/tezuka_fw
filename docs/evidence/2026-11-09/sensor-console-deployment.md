@@ -333,3 +333,56 @@ not restored, since that is a retune and outside this milestone; the owner
 sets the operating LO, gain and input before the next session as section 12
 already requires. The controller's sweep-centre default (280 MHz) is also
 back, as it is at every boot.
+
+## 14. Console page updates during the 2026-11-09 RF session
+
+The owner's next instruction (2026-11-09) asked for the matched frequency
+window and the whole-span feature peak to be made clearly distinguishable in
+the console and in the agent's explanations, without changing scoring. Only
+the console page changed on the sensor; the classifier (f87a3c46...), the
+controller (4ddc8927...), the templates (cb6f4580...), thresholds, gates,
+bandplan and boot artifacts are unchanged. Each page was built from a clean
+detached checkout of the commit with `bundle.py --brand 'Valentine RF'`
+(`MQTT_DEV_HOST=null` checked), installed live first and then into the boot
+store, every step hash-checked. The first two were installed by hand with
+these steps (artifacts and hashes in `deploy-0b423eb/artifacts-1cc4cc5/`
+and `artifacts-a05324c/`); the last two by `deploy-0b423eb/deploy_page.sh`,
+written after them, with its output in `deploy-0b423eb/page_deploys.log`.
+
+| Time (UTC) | Commit | Served page | Boot copy (index.html.xz) | Change |
+|---|---|---|---|---|
+| 12:45 | 1cc4cc5 | 643a48ed... | a6f41ffc... | Matched window and whole-span peak as separate labelled fields and markers; MCP `frequency_view` |
+| 13:00 | a05324c | bf068e83... | 363c8868... | Peak worded as the residual peak; "outside the window" no longer read as a wrong window |
+| 13:01 | 8d61d18 | 049c8182... | 61827b70... | Window bracket and residual-peak marker kept on the canvas when the trace clips |
+| 13:03 | 4b969b1 | 02129eda... | 7d20d893... | Spectrum repainted from current state (stale-closure fix); current page |
+
+Store incident at 12:44: the first staged write of the new `index.html.xz`
+next to the old one ran out of JFFS2 space after 152 KB (`df` reported 196 KB
+free, but JFFS2 keeps erase blocks in reserve for garbage collection). The
+hash check stopped the step before anything was renamed, so the old page and
+`SHA256SUMS` stayed intact. The store is now updated by removing the old
+compressed page first; during the few seconds that file is missing, a boot
+would fail the store's hash check and leave the stock files in place (the
+fail-safe path of `autorun.sh`). JFFS2 after the last update: 696 KB used,
+200 KB available.
+
+The MCP server is the editable install from the release checkout, which now
+sits at 4b969b1, so the agent's `get_sensor_snapshot` carries
+`classifier.frequency_view` (matched window range and centre, whole-span
+residual peak, `peak_inside_matched_window`). Rollback is unchanged:
+`restore.sh` puts back the firmware's original page, classifier and
+controller; the e38b340 page of section 3 (771fa173...) remains in
+`deploy-0b423eb/artifacts/`.
+
+## 15. Classifier restart after the RF session (2026-11-09 14:27:38 UTC)
+
+The RF session (`rf-session/README.md`) retuned the receiver across 92.7,
+93.3, 433, 70 and 2400 MHz. The daemon's spur map persists across retunes at
+one FFT size and only grows, so at the end it masked 1589 of 4095 bins at
+the owner's 70 MHz setting (98 there before the session), enough to stop it
+recognising a verified FM station. After the owner's receiver settings were
+restored (14:17:07, identical to `api_owner_before.json`), the classifier
+service alone was restarted (`/etc/init.d/S61classifier restart`, the same
+start a boot does): one instance, pid 21149, `/proc/pid/exe` hash f87a3c46...,
+templates cb6f4580... ok, masked bins 5 (DC), `classifier_enabled` still 1,
+publish errors 0. Nothing else was restarted or changed.

@@ -1,0 +1,18 @@
+{
+  "annotations": [],
+  "captures": [
+    {
+      "core:datetime": "2026-11-09T14:05:54.155Z",
+      "core:frequency": 433299998.0,
+      "core:sample_start": 0
+    }
+  ],
+  "global": {
+    "core:author": "rf session 2026-11-09",
+    "core:datatype": "ci16_le",
+    "core:description": "433 MHz two-LO test, LO 433300000 Hz, manual 70 dB",
+    "core:recorder": "Maia SDR v0.6.0",
+    "core:sample_rate": 2500000.0,
+    "core:version": "1.2.3"
+  }
+}

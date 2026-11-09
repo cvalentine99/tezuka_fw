@@ -1,0 +1,107 @@
+{
+ "S1c_kigl_lowgain": {
+  "capture": {
+   "frames": 600,
+   "measured_fps": 1.0005667964556844,
+   "first_frame_unix_s": 1794233211.9211085,
+   "last_frame_unix_s": 1794233810.5817897,
+   "sha256": "7a566fde7d2d5625e079fe347222cf3587e97c6a231bc97fe2e361fa8da51137",
+   "aborted": null,
+   "interrupted": false,
+   "settings_changed_during_capture": false
+  },
+  "settings_at_start": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 92674996,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 65.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "settings_log": [],
+  "live": {
+   "observations": 365,
+   "seq": [
+    5330,
+    5694
+   ],
+   "labels": {
+    "CW / Beacon": 362,
+    "unknown": 3
+   },
+   "accepted_windows_khz": [
+    [
+     "CW / Beacon",
+     92152,
+     92182,
+     215
+    ],
+    [
+     "CW / Beacon",
+     92151,
+     92181,
+     81
+    ],
+    [
+     "CW / Beacon",
+     92153,
+     92183,
+     33
+    ],
+    [
+     "CW / Beacon",
+     92150,
+     92180,
+     21
+    ],
+    [
+     "CW / Beacon",
+     93623,
+     93652,
+     7
+    ],
+    [
+     "CW / Beacon",
+     92085,
+     92115,
+     3
+    ],
+    [
+     "CW / Beacon",
+     92084,
+     92114,
+     2
+    ]
+   ],
+   "distinct_accepted_windows": 7,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ],
+   "template_status": [
+    "ok"
+   ],
+   "config_generations": [
+    204
+   ],
+   "learn_count": [
+    30
+   ],
+   "unlearned_cycles": 0,
+   "masked_bins": {
+    "first": 1589,
+    "last": 1589,
+    "min": 1589,
+    "max": 1589
+   },
+   "spur_bins": {
+    "first": 1589,
+    "last": 1589
+   },
+   "valid_bins_last": 2506,
+   "publish_errors_last": 0
+  },
+  "rx_topic_changes_during": []
+ }
+}

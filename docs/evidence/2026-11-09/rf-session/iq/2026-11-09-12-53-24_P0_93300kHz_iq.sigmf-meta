@@ -1,0 +1,18 @@
+{
+  "annotations": [],
+  "captures": [
+    {
+      "core:datetime": "2026-11-09T12:53:24.014Z",
+      "core:frequency": 92674998.0,
+      "core:sample_start": 0
+    }
+  ],
+  "global": {
+    "core:author": "rf session 2026-11-09",
+    "core:datatype": "ci16_le",
+    "core:description": "P0 positive check: 93.3 MHz FM at +625 kHz from LO 92674998 Hz; for RDS identification",
+    "core:recorder": "Maia SDR v0.6.0",
+    "core:sample_rate": 2500000.0,
+    "core:version": "1.2.3"
+  }
+}

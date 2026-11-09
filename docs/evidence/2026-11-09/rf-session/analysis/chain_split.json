@@ -1,0 +1,242 @@
+{
+ "P0_positive_check": {
+  "decisions": 76,
+  "labels": {
+   "unknown": 7,
+   "FM Broadcast": 45,
+   "CW / Beacon": 24
+  },
+  "top_windows_khz": [
+   [
+    "FM Broadcast",
+    93102,
+    93502,
+    16
+   ],
+   [
+    "FM Broadcast",
+    93103,
+    93502,
+    14
+   ],
+   [
+    "FM Broadcast",
+    93101,
+    93501,
+    7
+   ],
+   [
+    "CW / Beacon",
+    92163,
+    92193,
+    7
+   ],
+   [
+    "FM Broadcast",
+    93104,
+    93504,
+    5
+   ],
+   [
+    "CW / Beacon",
+    92162,
+    92192,
+    5
+   ]
+  ],
+  "masked_bins_last": 5,
+  "spur_bins_last": 0,
+  "learn_count_last": 1
+ },
+ "S0_check": {
+  "decisions": 5,
+  "labels": {
+   "FM Broadcast": 5
+  },
+  "top_windows_khz": [
+   [
+    "FM Broadcast",
+    93103,
+    93502,
+    2
+   ],
+   [
+    "FM Broadcast",
+    93102,
+    93502,
+    1
+   ],
+   [
+    "FM Broadcast",
+    93099,
+    93499,
+    1
+   ],
+   [
+    "FM Broadcast",
+    93101,
+    93501,
+    1
+   ]
+  ],
+  "masked_bins_last": 5,
+  "spur_bins_last": 0,
+  "learn_count_last": 1
+ },
+ "S1_kigl_offset": {
+  "decisions": 300,
+  "labels": {
+   "FM Broadcast": 160,
+   "CW / Beacon": 136,
+   "unknown": 4
+  },
+  "top_windows_khz": [
+   [
+    "FM Broadcast",
+    93103,
+    93502,
+    48
+   ],
+   [
+    "FM Broadcast",
+    93102,
+    93502,
+    43
+   ],
+   [
+    "FM Broadcast",
+    93103,
+    93503,
+    29
+   ],
+   [
+    "CW / Beacon",
+    92161,
+    92191,
+    25
+   ],
+   [
+    "CW / Beacon",
+    92086,
+    92116,
+    21
+   ],
+   [
+    "CW / Beacon",
+    92160,
+    92189,
+    18
+   ]
+  ],
+  "masked_bins_last": 5,
+  "spur_bins_last": 0,
+  "learn_count_last": 1
+ },
+ "S1b_kigl_on_lo": {
+  "decisions": 150,
+  "labels": {
+   "unknown": 5,
+   "FM Broadcast": 144,
+   "CW / Beacon": 1
+  },
+  "top_windows_khz": [
+   [
+    "FM Broadcast",
+    93102,
+    93502,
+    25
+   ],
+   [
+    "FM Broadcast",
+    93101,
+    93501,
+    23
+   ],
+   [
+    "FM Broadcast",
+    94097,
+    94497,
+    22
+   ],
+   [
+    "FM Broadcast",
+    94098,
+    94498,
+    16
+   ],
+   [
+    "FM Broadcast",
+    94094,
+    94494,
+    15
+   ],
+   [
+    "FM Broadcast",
+    94096,
+    94496,
+    11
+   ]
+  ],
+  "masked_bins_last": 5,
+  "spur_bins_last": 0,
+  "learn_count_last": 2
+ },
+ "S2_433": {
+  "decisions": 300,
+  "labels": {
+   "unknown": 40,
+   "FM Broadcast": 260
+  },
+  "top_windows_khz": [
+   [
+    "FM Broadcast",
+    433621,
+    434021,
+    79
+   ],
+   [
+    "FM Broadcast",
+    433625,
+    434024,
+    52
+   ],
+   [
+    "FM Broadcast",
+    433623,
+    434023,
+    27
+   ],
+   [
+    "FM Broadcast",
+    433624,
+    434024,
+    27
+   ],
+   [
+    "FM Broadcast",
+    433620,
+    434020,
+    21
+   ],
+   [
+    "FM Broadcast",
+    433625,
+    434025,
+    14
+   ]
+  ],
+  "masked_bins_last": 870,
+  "spur_bins_last": 865,
+  "learn_count_last": 3
+ },
+ "S3_70": {
+  "decisions": 300,
+  "labels": {
+   "unknown": 300
+  },
+  "top_windows_khz": [],
+  "masked_bins_last": 870,
+  "spur_bins_last": 868,
+  "learn_count_last": 4
+ }
+}

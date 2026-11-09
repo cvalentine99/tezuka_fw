@@ -1,0 +1,3292 @@
+{
+ "revisions": {
+  "deployed": {
+   "path": "/home/cvalentine/tezuka-live-audit/deploy-0b423eb/artifacts/classifier",
+   "sha256": "f87a3c467ea2795d187f7ff9c38a16f120de31c3b001dca68abf8183c88859e8"
+  }
+ },
+ "qemu": "/usr/bin/qemu-arm-static",
+ "sysroot": "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+ "results": {
+  "CHAIN_P0_S3": {
+   "deployed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka-live-audit/deploy-0b423eb/artifacts/classifier",
+     "-r",
+     "/home/cvalentine/tezuka-live-audit/rf-session-20261109/replay/chain/raw/CHAIN_P0_S3.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "1.0005763319672132",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8",
+     "-E",
+     "/home/cvalentine/tezuka-live-audit/rf-session-20261109/replay/chain/raw/CHAIN_P0_S3.events"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 2260 frames processed",
+     "replay: 36 of 36 events delivered"
+    ],
+    "result_lines": 1131,
+    "on": null,
+    "off": {
+     "decisions": 1124,
+     "labels": {
+      "FM Broadcast": 613,
+      "unknown": 350,
+      "CW / Beacon": 161
+     },
+     "unexpected_accepts": 774,
+     "unexpected_accepts_by_label": {
+      "FM Broadcast": {
+       "decisions": 613,
+       "disposition": "unverified",
+       "basis": "recorded frames: what was on air is not established by the spectrum alone",
+       "score_min": 0.478,
+       "score_max": 0.998,
+       "first_t": 13.0
+      },
+      "CW / Beacon": {
+       "decisions": 161,
+       "disposition": "unverified",
+       "basis": "recorded frames: what was on air is not established by the spectrum alone",
+       "score_min": 0.803,
+       "score_max": 0.993,
+       "first_t": 55.0
+      }
+     },
+     "confirmed_false_accepts": 0,
+     "suspected_false_accepts": 0,
+     "unverified_accepts": 774,
+     "worst_score_by_disposition": {
+      "confirmed_false": null,
+      "suspected_false": null,
+      "unverified": 0.998
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": null,
+     "misses": null,
+     "min_correct_score": null,
+     "first_false_accept": null,
+     "first_unexpected_accept": {
+      "t": 13.0,
+      "label": "FM Broadcast",
+      "confidence": 0.983,
+      "freq_offset": 2747,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 51.5,
+      "prom_db": 33.3,
+      "margin": 0.053,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 13.0,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.983,
+      "freq_offset": 2747,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 51.5,
+      "prom_db": 33.3,
+      "margin": 0.053,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.983,
+       "snr_db": 51.5,
+       "prom_db": 33.3,
+       "bin_offset": 2747,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.053,
+       "best": {
+        "template_id": 1,
+        "score": 0.983,
+        "snr_db": 51.5,
+        "prom_db": 33.3
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": true,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.043712,
+       "bandwidth_hz": 109252.9,
+       "spectral_papr_db": 15.84,
+       "flatness": 0.003,
+       "peak_count": 6,
+       "peak_bin": 3066,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 13.0,
+       "frames": 14,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 717,
+       "learn_count": 1
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 1,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "92674998",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 717,
+      "masked": 5
+     }
+    },
+    "coverage": {
+     "columns": [
+      "t",
+      "masked_bins",
+      "valid_bins",
+      "spur_bins",
+      "learn_count",
+      "label"
+     ],
+     "sample_interval_s": 5.0,
+     "series": [
+      [
+       0.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       5.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       11.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       17.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       23.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       29.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       35.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       41.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       47.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       53.0,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       59.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       65.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       71.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       77.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       83.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       88.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       94.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       100.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       106.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       112.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       118.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       124.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       130.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       136.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       142.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       148.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       154.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       160.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       166.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       172.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       178.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       184.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       190.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       196.9,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       202.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       208.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       214.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       220.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       226.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       232.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       238.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       244.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       250.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       256.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       262.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       268.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       274.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       280.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       286.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       292.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       298.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       304.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       310.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       316.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       322.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       328.8,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       334.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       340.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       346.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       352.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       358.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       364.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       370.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       376.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       382.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       388.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       394.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       400.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       406.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       412.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       418.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       424.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       430.8,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       436.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       442.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       448.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       454.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       460.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       466.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       472.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       478.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       484.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       490.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       496.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       502.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       508.7,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       514.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       520.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       526.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       532.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       538.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       544.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       550.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       556.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       562.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       568.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       574.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       580.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       586.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       592.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       598.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       604.7,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       610.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       616.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       622.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       628.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       634.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       640.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       646.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       652.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       658.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       664.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       670.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       676.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       682.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       688.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       694.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       700.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       706.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       712.6,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       718.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       724.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       730.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       736.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       742.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       748.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       754.6,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       760.6,
+       0,
+       4095,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       766.6,
+       0,
+       4095,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       772.6,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       778.6,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       784.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       790.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       796.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       802.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       808.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       814.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       820.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       826.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       832.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       838.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       844.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       850.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       856.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       862.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       868.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       874.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       880.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       886.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       892.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       898.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       904.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       910.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       916.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       922.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       928.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       934.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       940.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       946.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       952.5,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       958.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       964.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       970.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       976.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       982.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       988.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       994.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1000.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1006.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1012.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1018.4,
+       5,
+       4090,
+       0,
+       2,
+       "CW / Beacon"
+      ],
+      [
+       1024.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1030.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1036.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1042.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1048.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1054.4,
+       5,
+       4090,
+       0,
+       2,
+       "FM Broadcast"
+      ],
+      [
+       1060.4,
+       0,
+       4095,
+       0,
+       2,
+       "unknown"
+      ],
+      [
+       1066.4,
+       0,
+       4095,
+       0,
+       2,
+       "unknown"
+      ],
+      [
+       1072.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1078.4,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1084.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1090.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1096.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1102.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1108.4,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1114.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1120.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1126.4,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1132.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1138.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1144.3,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1150.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1156.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1162.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1168.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1174.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1180.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1186.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1192.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1198.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1204.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1210.3,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1216.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1222.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1228.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1234.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1240.3,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1246.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1252.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1258.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1264.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1270.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1276.3,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1282.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1288.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1294.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1300.3,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1306.2,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1312.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1318.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1324.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1330.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1336.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1342.2,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1348.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1354.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1360.2,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1366.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1372.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1378.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1384.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1390.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1396.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1402.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1408.2,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1414.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1420.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1426.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1432.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1438.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1444.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1450.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1456.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1462.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1468.2,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1474.2,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1480.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1486.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1492.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1498.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1504.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1510.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1516.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1522.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1528.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1534.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1540.1,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1546.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1552.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1558.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1564.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1570.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1576.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1582.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1588.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1594.1,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1600.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1606.1,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1612.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1618.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1624.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1630.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1636.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1642.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1648.1,
+       870,
+       3225,
+       865,
+       3,
+       "FM Broadcast"
+      ],
+      [
+       1654.0,
+       870,
+       3225,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1660.0,
+       0,
+       4095,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1666.0,
+       0,
+       4095,
+       865,
+       3,
+       "unknown"
+      ],
+      [
+       1672.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1678.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1684.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1690.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1696.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1702.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1708.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1714.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1720.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1726.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1732.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1738.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1744.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1750.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1756.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1762.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1768.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1774.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1780.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1786.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1792.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1798.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1804.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1810.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1816.0,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1821.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1827.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1833.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1839.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1845.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1851.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1857.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1863.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1869.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1875.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1881.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1887.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1893.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1899.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1905.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1911.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1917.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1923.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1929.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1935.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1941.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1947.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1953.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1959.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1965.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1971.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1977.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1983.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1989.9,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       1995.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2001.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2007.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2013.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2019.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2025.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2031.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2037.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2043.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2049.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2055.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2061.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2067.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2073.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2079.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2085.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2091.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2097.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2103.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2109.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2115.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2121.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2127.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2133.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2139.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2145.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2151.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2157.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2163.8,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2169.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2175.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2181.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2187.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2193.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2199.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2205.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2211.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2217.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2223.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2229.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2235.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2241.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2247.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ],
+      [
+       2253.7,
+       870,
+       3225,
+       868,
+       4,
+       "unknown"
+      ]
+     ],
+     "final": [
+      2257.7,
+      870,
+      3225,
+      868,
+      4,
+      "unknown"
+     ],
+     "final_mask_coverage": 0.21245421245421245,
+     "max_masked_bins": 870,
+     "bins_used": 4095,
+     "backgrounds": [
+      {
+       "t": 11.0,
+       "frequency": "92674998",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 717,
+       "masked": 5
+      },
+      {
+       "t": 770.6,
+       "frequency": "93299998",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 825,
+       "masked": 5
+      },
+      {
+       "t": 1070.4,
+       "frequency": "433000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 1618,
+       "masked": 870
+      },
+      {
+       "t": 1670.0,
+       "frequency": "70000000",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 3,
+       "masked": 870
+      }
+     ]
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "title": "Valentine RF Dashboard",
+ "reads": [
+  {
+   "t_utc": "13:03:43Z",
+   "Matched window": "none (no accepted match)",
+   "Whole-span residual peak": "93.161 MHz (bin 2844)",
+   "Peak inside window": "\u2014",
+   "Best score": "42%",
+   "Observation": "#2808 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Config binding": "unbound (gen 143)",
+   "pill": [
+    "connected",
+    "no match",
+    "experimental",
+    "17 entries"
+   ],
+   "has_legend": true
+  },
+  {
+   "t_utc": "13:03:46Z",
+   "Matched window": "93.284 MHz \u2013 93.314 MHz (centre 93.299 MHz, 29.9 kHz wide)",
+   "Whole-span residual peak": "93.298 MHz (bin 3067)",
+   "Peak inside window": "yes",
+   "Best score": "90%",
+   "Observation": "#2811 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Config binding": "unbound (gen 143)",
+   "pill": [
+    "connected",
+    "match",
+    "experimental",
+    "17 entries"
+   ],
+   "has_legend": true
+  },
+  {
+   "t_utc": "13:03:49Z",
+   "Matched window": "92.948 MHz \u2013 92.977 MHz (centre 92.962 MHz, 29.9 kHz wide)",
+   "Whole-span residual peak": "93.299 MHz (bin 3069)",
+   "Peak inside window": "no: the strongest residual bin lies outside the matched window",
+   "Best score": "84%",
+   "Observation": "#2813 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Config binding": "unbound (gen 143)",
+   "pill": [
+    "connected",
+    "match",
+    "experimental",
+    "17 entries"
+   ],
+   "has_legend": true
+  },
+  {
+   "t_utc": "13:03:52Z",
+   "Matched window": "93.285 MHz \u2013 93.315 MHz (centre 93.300 MHz, 29.9 kHz wide)",
+   "Whole-span residual peak": "93.301 MHz (bin 3073)",
+   "Peak inside window": "yes",
+   "Best score": "99%",
+   "Observation": "#2815 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Config binding": "unbound (gen 143)",
+   "pill": [
+    "connected",
+    "match",
+    "experimental",
+    "17 entries"
+   ],
+   "has_legend": true
+  }
+ ]
+}

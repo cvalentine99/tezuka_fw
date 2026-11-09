@@ -1,0 +1,9 @@
+before: pid 1498 exe /usr/bin/classifier
+Stopping classifier: OK
+Starting classifier: OK
+after: pid 21149 count sha f87a3c467ea2795d
+2026-11-09T14:27:38Z classifier restarted to clear the session-induced spur map (1589 masked bins at 70 MHz before)
+seq 16 session fac5273b-21149-9577 freq 70000000 label unknown templates cb6f4580360c ok bg {'learned': True, 'masked_bins': 5, 'spur_bins': 0, 'valid_bins': 4090, 'learn_count': 1} pub_err 0 wf True
+instances: 1
+on
+1

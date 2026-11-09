@@ -1,0 +1,42 @@
+{
+ "fps": 1.0005763319672132,
+ "segments": [
+  {
+   "segment": "P0_positive_check",
+   "first_frame": 0,
+   "frames": 150,
+   "t_start_s": 0.0
+  },
+  {
+   "segment": "S0_check",
+   "first_frame": 150,
+   "frames": 10,
+   "t_start_s": 149.914
+  },
+  {
+   "segment": "S1_kigl_offset",
+   "first_frame": 160,
+   "frames": 600,
+   "t_start_s": 159.908
+  },
+  {
+   "segment": "S1b_kigl_on_lo",
+   "first_frame": 760,
+   "frames": 300,
+   "t_start_s": 759.562
+  },
+  {
+   "segment": "S2_433",
+   "first_frame": 1060,
+   "frames": 600,
+   "t_start_s": 1059.389
+  },
+  {
+   "segment": "S3_70",
+   "first_frame": 1660,
+   "frames": 600,
+   "t_start_s": 1659.044
+  }
+ ],
+ "frames": 2260
+}

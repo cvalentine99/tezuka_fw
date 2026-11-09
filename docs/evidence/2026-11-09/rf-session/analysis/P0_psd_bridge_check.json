@@ -1,0 +1,49 @@
+{
+ "iq_frames": 10,
+ "nint": 610,
+ "rect": {
+  "window": "rect",
+  "frame_offset": 35,
+  "mean_corr_db": 0.95762,
+  "min_corr_db": 0.89001,
+  "scale_db_median": -45.276,
+  "residual_db_std": 3.661,
+  "residual_db_p95_abs": 8.103
+ },
+ "hann": {
+  "window": "hann",
+  "frame_offset": 35,
+  "mean_corr_db": 0.98498,
+  "min_corr_db": 0.91441,
+  "scale_db_median": -39.393,
+  "residual_db_std": 2.615,
+  "residual_db_p95_abs": 5.032
+ },
+ "blackman": {
+  "window": "blackman",
+  "frame_offset": 35,
+  "mean_corr_db": 0.98501,
+  "min_corr_db": 0.91435,
+  "scale_db_median": -38.495,
+  "residual_db_std": 2.615,
+  "residual_db_p95_abs": 5.025
+ },
+ "blackmanharris": {
+  "window": "blackmanharris",
+  "frame_offset": 35,
+  "mean_corr_db": 0.98501,
+  "min_corr_db": 0.91429,
+  "scale_db_median": -37.784,
+  "residual_db_std": 2.615,
+  "residual_db_p95_abs": 5.017
+ },
+ "best": {
+  "window": "blackman",
+  "frame_offset": 35,
+  "mean_corr_db": 0.98501,
+  "min_corr_db": 0.91435,
+  "scale_db_median": -38.495,
+  "residual_db_std": 2.615,
+  "residual_db_p95_abs": 5.025
+ }
+}

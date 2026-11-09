@@ -1,0 +1,125 @@
+{
+ "recorded_frames": [
+  {
+   "file": "wf_avg4096_frame0.bin",
+   "sha256": "1b26b04cab3406beb5f2f50f87bc3804a4d05cb46230f9c3c088f680a1c4ec4d"
+  },
+  {
+   "file": "wf_avg4096_frame1.bin",
+   "sha256": "5acadf69568e60cd611e09b1a2bb2c59c44a2d87c58307350feff3435d2b8835"
+  },
+  {
+   "file": "wf_avg4096_frame2.bin",
+   "sha256": "602c0489845d5b4d698337197c3e2c4c155af318c79cb0b0cb4dfad09419021c"
+  }
+ ],
+ "templates": {
+  "file": "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+  "sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+  "labels": [
+   "FM Broadcast",
+   "DAB+",
+   "CW / Beacon"
+  ],
+  "canonical_n": 512
+ },
+ "daemon_args": [
+  "-n",
+  "4096",
+  "-F",
+  "7.5",
+  "-S",
+  "2500000",
+  "-B",
+  "none",
+  "-c",
+  "0.6",
+  "-m",
+  "0.15",
+  "-i",
+  "1.0",
+  "-s",
+  "6",
+  "-g",
+  "4",
+  "-l",
+  "10",
+  "-a",
+  "300",
+  "-w",
+  "4e6",
+  "-x",
+  "8"
+ ],
+ "accept_dispositions": {
+  "confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+  "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+  "unverified": "nothing is known about what was on air; neither a false accept nor a positive"
+ },
+ "fixtures": [
+  {
+   "name": "CHAIN_P0_S3",
+   "file": "raw/CHAIN_P0_S3.raw",
+   "sha256": "cc2d326028b6d984954b99a187454b1a38913cd7aff8614dfdb498a9d188824c",
+   "frames": 2260,
+   "duration_s": 2258.6982399999997,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": null,
+    "span_hz": null,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from ? at None (unix s): rx_lo None Hz, fs None Hz, gain None dB None, None xNone, None-point; capture sha256 None",
+   "detail": {
+    "meta": {},
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0.000000 state/rx/frequency 92674998, 0.000000 state/rx/sampling 2500000, 0.000000 state/rx/span 2500000, 0.000000 state/rx/bandwidth 2500000, 0.000000 state/rx/gain 71, 0.000000 state/rx/gain_mode Manual, 149.413888 state/rx/frequency 92674998, 149.413888 state/rx/sampling 2500000, 149.413888 state/rx/span 2500000, 149.413888 state/rx/bandwidth 2500000, 149.413888 state/rx/gain 71, 149.413888 state/rx/gain_mode Manual, 159.408128 state/rx/frequency 92674998, 159.408128 state/rx/sampling 2500000, 159.408128 state/rx/span 2500000, 159.408128 state/rx/bandwidth 2500000, 159.408128 state/rx/gain 71, 159.408128 state/rx/gain_mode Manual, 759.062528 state/rx/frequency 93299998, 759.062528 state/rx/sampling 2500000, 759.062528 state/rx/span 2500000, 759.062528 state/rx/bandwidth 2500000, 759.062528 state/rx/gain 71, 759.062528 state/rx/gain_mode Manual, 1058.889728 state/rx/frequency 433000000, 1058.889728 state/rx/sampling 2500000, 1058.889728 state/rx/span 2500000, 1058.889728 state/rx/bandwidth 2500000, 1058.889728 state/rx/gain 70, 1058.889728 state/rx/gain_mode Manual, 1658.544128 state/rx/frequency 70000000, 1658.544128 state/rx/sampling 2500000, 1658.544128 state/rx/span 2500000, 1658.544128 state/rx/bandwidth 2500000, 1658.544128 state/rx/gain 41, 1658.544128 state/rx/gain_mode Manual",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/CHAIN_P0_S3.events",
+    "sha256": "adc7dc92f9dfddaff20131682e9168551a43803f5b7376ae2c440a897a6e7237",
+    "contents": "# chained replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/CHAIN_P0_S3.raw: segments P0_positive_check S0_check S1_kigl_offset S1b_kigl_on_lo S2_433 S3_70 at 1.0005763319672132 frames/s\n0.000000 state/rx/frequency 92674998\n0.000000 state/rx/sampling 2500000\n0.000000 state/rx/span 2500000\n0.000000 state/rx/bandwidth 2500000\n0.000000 state/rx/gain 71\n0.000000 state/rx/gain_mode Manual\n149.413888 state/rx/frequency 92674998\n149.413888 state/rx/sampling 2500000\n149.413888 state/rx/span 2500000\n149.413888 state/rx/bandwidth 2500000\n149.413888 state/rx/gain 71\n149.413888 state/rx/gain_mode Manual\n159.408128 state/rx/frequency 92674998\n159.408128 state/rx/sampling 2500000\n159.408128 state/rx/span 2500000\n159.408128 state/rx/bandwidth 2500000\n159.408128 state/rx/gain 71\n159.408128 state/rx/gain_mode Manual\n759.062528 state/rx/frequency 93299998\n759.062528 state/rx/sampling 2500000\n759.062528 state/rx/span 2500000\n759.062528 state/rx/bandwidth 2500000\n759.062528 state/rx/gain 71\n759.062528 state/rx/gain_mode Manual\n1058.889728 state/rx/frequency 433000000\n1058.889728 state/rx/sampling 2500000\n1058.889728 state/rx/span 2500000\n1058.889728 state/rx/bandwidth 2500000\n1058.889728 state/rx/gain 70\n1058.889728 state/rx/gain_mode Manual\n1658.544128 state/rx/frequency 70000000\n1658.544128 state/rx/sampling 2500000\n1658.544128 state/rx/span 2500000\n1658.544128 state/rx/bandwidth 2500000\n1658.544128 state/rx/gain 41\n1658.544128 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/CHAIN_P0_S3.raw.events"
+   }
+  }
+ ]
+}

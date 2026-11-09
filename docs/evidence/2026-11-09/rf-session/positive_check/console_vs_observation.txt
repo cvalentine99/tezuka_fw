@@ -1,0 +1,13 @@
+Console reads kept here (console_positive_check.json, console_read0-3.png)
+against the live observation with the same sequence number
+(live/mqtt_session.jsonl.xz), window and residual peak recomputed from the
+observation's bins with the grid rule:
+
+13:03:43Z #2808 | console: none (no accepted match)  | 93.161 MHz (bin 2844) || observation: none                  | 93.161 MHz (bin 2844)
+13:03:46Z #2811 | console: 93.284 MHz - 93.314 MHz    | 93.298 MHz (bin 3067) || observation: 93.284 MHz - 93.314 MHz | 93.298 MHz (bin 3067)
+13:03:49Z #2813 | console: 92.948 MHz - 92.977 MHz    | 93.299 MHz (bin 3069) || observation: 92.948 MHz - 92.977 MHz | 93.299 MHz (bin 3069)
+13:03:52Z #2815 | console: 93.285 MHz - 93.315 MHz    | 93.301 MHz (bin 3073) || observation: 93.285 MHz - 93.315 MHz | 93.301 MHz (bin 3073)
+
+MCP snapshot (mcp_get_sensor_snapshot.json, 13:00:48Z, seq 2703):
+frequency_view.matched_window 93101938.9 - 93501719.2 Hz from bin_offset 2747,
+bandwidth_bins 655 of the same observation.

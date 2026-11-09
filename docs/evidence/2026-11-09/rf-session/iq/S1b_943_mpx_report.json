@@ -1,0 +1,11 @@
+{
+ "samples": 25000000,
+ "duration_s": 10.0,
+ "offset_hz": 1000000.0,
+ "adc_full_scale_fraction": 0.0,
+ "peak_deviation_hz_p999": 67815.61494768289,
+ "pilot_19k_db": 50.167336616568306,
+ "pilot_floor_db": 10.30940769678621,
+ "rds_57k_db": 23.106040451398606,
+ "rds_floor_db": 19.6720110156759
+}

@@ -1,0 +1,139 @@
+{
+ "S1b_kigl_on_lo": {
+  "capture": {
+   "frames": 300,
+   "measured_fps": 1.000677267327892,
+   "first_frame_unix_s": 1794230193.62881,
+   "last_frame_unix_s": 1794230492.426444,
+   "sha256": "4222950c610adc0d97b330a5217b93e70775df1a9a7ed088e8c3fb28d9fb1299",
+   "aborted": null,
+   "interrupted": false,
+   "settings_changed_during_capture": false
+  },
+  "settings_at_start": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 93299998,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 71.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "settings_log": [],
+  "live": {
+   "observations": 186,
+   "seq": [
+    3278,
+    3463
+   ],
+   "labels": {
+    "unknown": 8,
+    "CW / Beacon": 176,
+    "FM Broadcast": 2
+   },
+   "accepted_windows_khz": [
+    [
+     "CW / Beacon",
+     93372,
+     93402,
+     67
+    ],
+    [
+     "CW / Beacon",
+     93183,
+     93213,
+     35
+    ],
+    [
+     "CW / Beacon",
+     94251,
+     94281,
+     23
+    ],
+    [
+     "CW / Beacon",
+     93183,
+     93212,
+     19
+    ],
+    [
+     "CW / Beacon",
+     93184,
+     93214,
+     11
+    ],
+    [
+     "CW / Beacon",
+     94250,
+     94280,
+     6
+    ],
+    [
+     "CW / Beacon",
+     93373,
+     93403,
+     5
+    ],
+    [
+     "CW / Beacon",
+     93371,
+     93401,
+     3
+    ],
+    [
+     "CW / Beacon",
+     93182,
+     93212,
+     2
+    ],
+    [
+     "CW / Beacon",
+     92485,
+     92515,
+     2
+    ],
+    [
+     "CW / Beacon",
+     93181,
+     93211,
+     1
+    ],
+    [
+     "CW / Beacon",
+     94249,
+     94279,
+     1
+    ]
+   ],
+   "distinct_accepted_windows": 15,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ],
+   "template_status": [
+    "ok"
+   ],
+   "config_generations": [
+    144
+   ],
+   "learn_count": [
+    10,
+    11
+   ],
+   "unlearned_cycles": 3,
+   "masked_bins": {
+    "first": 0,
+    "last": 608,
+    "min": 0,
+    "max": 608
+   },
+   "spur_bins": {
+    "first": 286,
+    "last": 608
+   },
+   "valid_bins_last": 3487,
+   "publish_errors_last": 0
+  },
+  "rx_topic_changes_during": []
+ }
+}
