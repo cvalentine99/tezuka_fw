@@ -1,0 +1,53 @@
+{
+ "observations": 88,
+ "seq_first": 2421,
+ "seq_last": 2508,
+ "labels": {
+  "FM Broadcast": 84,
+  "unknown": 2,
+  "CW / Beacon": 2
+ },
+ "template_sha256": [
+  "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+ ],
+ "config_generations": [
+  143
+ ],
+ "learned_false_cycles": 0,
+ "masked_bins": {
+  "min": 286,
+  "max": 286,
+  "last": 286
+ },
+ "valid_bins": {
+  "min": 3809,
+  "max": 3809,
+  "last": 3809
+ },
+ "spur_bins_last": 286,
+ "accepted_FM Broadcast": 84,
+ "window_overlaps_channel": 84,
+ "window_contains_channel_centre": 84,
+ "whole_span_peak_inside_window": 80,
+ "window_centre_hz": {
+  "min": 93299998,
+  "max": 93305491,
+  "mean": 93302352
+ },
+ "window_last_hz": [
+  93103160,
+  93502940
+ ],
+ "score": {
+  "min": 0.849,
+  "max": 0.994
+ },
+ "whole_span_peak_hz": {
+  "min": 93160838,
+  "max": 93637522
+ },
+ "channel_hz": [
+  93200000.0,
+  93400000.0
+ ]
+}

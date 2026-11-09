@@ -29,19 +29,55 @@ const BANDPLAN_COLORS = {
 let bandplanNextId = 1; // client-side scratch id for newly-added, unsaved rows
 
 // Converts the daemon's bin-space match position (state/classifier/freq_offset
-// + bandwidth_bins, both measured against frame_bins — see
-// app/classifier/classifier.c's publish_result) into real Hz, using the same
-// freq math as pages1.jsx's spDrawCursor (freq = centerHz + (binFrac - 0.5) *
-// spanHz), just inverted/widened from a single bin to a bin range.
+// + bandwidth_bins, both measured against frame_bins = fft_size - 1 usable
+// bins — see app/classifier/classifier.c's publish_result) into real Hz on
+// the verified /waterfall grid (data.jsx wfBinToHz: span / fft_size per bin,
+// DC at usable index fft_size/2 - 1). The window covers usable bins
+// [offset, offset + bw), so its centre is at fractional index offset + bw/2 - 0.5.
 function binMatchToHz(freqOffset, bandwidthBins, frameBins, centerHz, spanHz) {
   const offset = Number(freqOffset), bw = Number(bandwidthBins), frame = Number(frameBins);
   if (!frame || !isFinite(offset) || !isFinite(bw)) return null;
-  const centerBinFrac = (offset + bw / 2) / frame;
+  const fftSize = frame + 1;
   return {
-    centerFreqHz: centerHz + (centerBinFrac - 0.5) * spanHz,
-    bandwidthHz: (bw / frame) * spanHz,
+    centerFreqHz: wfBinToHz(offset + bw / 2 - 0.5, fftSize, centerHz, spanHz),
+    bandwidthHz: bw * wfHzPerBin(fftSize, spanHz),
   };
 }
+
+// Two different frequencies from one observation (state/classifier/observation),
+// kept apart on purpose:
+//  * the MATCHED WINDOW is the template window the daemon scored and accepted
+//    (decision.bin_offset / bandwidth_bins; only present on an accepted match);
+//  * the WHOLE-SPAN PEAK is the strongest residual bin over the entire span
+//    (features.peak_bin), whatever emission that is.
+// The window can match a weaker emission while the span's strongest bin
+// belongs to something else, so showing one as the other misleads. Both use
+// the observation's own grid (config.frequency_hz / span_hz, input.fft_size)
+// and the same bin rule as binMatchToHz; nothing here feeds the scoring.
+function obsFrequencyView(obs, fallbackCenterHz, fallbackSpanHz) {
+  if (!obs || typeof obs !== 'object') return null;
+  const inp = obs.input || {}, cfg = obs.config || {}, dec = obs.decision || {}, feat = obs.features || {};
+  const fftSize = Number(inp.fft_size);
+  const centerHz = Number(cfg.frequency_hz) > 0 ? Number(cfg.frequency_hz) : fallbackCenterHz;
+  const spanHz = Number(cfg.span_hz) > 0 ? Number(cfg.span_hz) : fallbackSpanHz;
+  if (!(fftSize > 0) || !(centerHz > 0) || !(spanHz > 0)) return { window: null, peak: null, gridFromObservation: false };
+  const hzPerBin = wfHzPerBin(fftSize, spanHz);
+  let win = null;
+  if (dec.accepted === true && Number.isInteger(dec.bin_offset) && Number.isInteger(dec.bandwidth_bins) && dec.bandwidth_bins > 0) {
+    const startHz = wfBinToHz(dec.bin_offset, fftSize, centerHz, spanHz) - hzPerBin / 2;
+    win = { binOffset: dec.bin_offset, bandwidthBins: dec.bandwidth_bins, startHz, endHz: startHz + dec.bandwidth_bins * hzPerBin,
+            centerHz: wfBinToHz(dec.bin_offset + dec.bandwidth_bins / 2 - 0.5, fftSize, centerHz, spanHz),
+            widthHz: dec.bandwidth_bins * hzPerBin, label: dec.label };
+  }
+  let peak = null;
+  if (feat.valid === true && Number.isInteger(feat.peak_bin) && feat.peak_bin >= 0) {
+    peak = { bin: feat.peak_bin, hz: wfBinToHz(feat.peak_bin, fftSize, centerHz, spanHz), binsUsed: Number(inp.bins_used) || (fftSize - 1) };
+  }
+  const inside = (win && peak) ? (peak.bin >= win.binOffset && peak.bin < win.binOffset + win.bandwidthBins) : null;
+  return { window: win, peak, peakInsideWindow: inside, gridFromObservation: Number(cfg.frequency_hz) > 0 && Number(cfg.span_hz) > 0 };
+}
+
+function fmtSha(s) { return (typeof s === 'string' && s.length >= 12) ? s.slice(0, 12) + '…' : '—'; }
 
 function fmtHz(hz) {
   if (hz == null || !isFinite(hz)) return '—';
@@ -165,7 +201,9 @@ function ClassifierPage({ d }) {
       for (let i = Math.max(0, Math.floor(offset)); i < Math.min(n, Math.ceil(offset + width)); i++) if (bins[i] > peakDb) peakDb = bins[i];
       if (!isFinite(peakDb)) peakDb = bins[Math.max(0, Math.min(n - 1, Math.round(offset)))];
       const top = refDb, bot = refDb - range;
-      const y = h - Math.max(0, Math.min(h, ((peakDb - bot) / (top - bot)) * h));
+      // Keep the marker, bracket and chip on the canvas even when the
+      // emission's peak is above the plot's reference level (clipped trace).
+      const y = Math.max(48, h - Math.max(0, Math.min(h, ((peakDb - bot) / (top - bot)) * h)));
 
       ctx.save();
       ctx.strokeStyle = 'rgba(120,220,255,0.85)';
@@ -195,6 +233,37 @@ function ClassifierPage({ d }) {
       ctx.restore();
     }
 
+    // Whole-span residual peak (observation features.peak_bin): a separate,
+    // deliberately different-looking marker (amber, dashed, labelled) so it
+    // is never read as the matched window above. Index space is the
+    // daemon's usable bins (bins_used), mapped onto this canvas's own frame.
+    const fv = obsFrequencyView(d.classifierObservation, centerHz, spanHz);
+    if (bins && bins.length > 1 && fv && fv.peak) {
+      const n = bins.length;
+      const scale = n / (fv.peak.binsUsed || n);
+      const px = fv.peak.bin * scale;
+      const xp = Math.max(0, Math.min(w, (px / (n - 1)) * w));
+      // Full-height dashed amber line with its label at the bottom (above
+      // the band-plan strip), so it never collides with the window chip at
+      // the top and stays visible when the trace is clipped.
+      const labelY = h - 14 - 22;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,205,70,0.85)';
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(xp, 0); ctx.lineTo(xp, labelY); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = '11px system-ui, sans-serif';
+      const ptext = 'residual peak ' + fmtHz(fv.peak.hz);
+      const ptw = ctx.measureText(ptext).width;
+      ctx.fillStyle = 'rgba(40,30,10,0.85)';
+      const plx = Math.max(2, Math.min(w - ptw - 8, xp - ptw / 2 - 4));
+      ctx.fillRect(plx, labelY, ptw + 8, 15);
+      ctx.fillStyle = '#ffe9a8';
+      ctx.fillText(ptext, plx + 4, labelY + 11);
+      ctx.restore();
+    }
+
     // Band-plan strip along the bottom — independent of whatever the
     // classifier has (or hasn't) matched. Segment placement inverts
     // pages1.jsx's spDrawCursor freq math: freq = centerHz + (binFrac -
@@ -211,6 +280,13 @@ function ClassifierPage({ d }) {
     }
     ctx.restore();
   }
+
+  // The spectrum WebSocket and the ResizeObserver are set up once, so they
+  // must call the redraw of the CURRENT render (current d, band plan,
+  // centre/span) rather than the one captured at mount; otherwise every
+  // spectrum frame repaints the chip and markers from stale state.
+  const redrawRef = useRCl(redraw);
+  redrawRef.current = redraw;
 
   // Hit-test the band-plan strip on click and tune to the matched entry —
   // same mechanism radioastro.jsx's pubCenter / rftest.jsx's presets use.
@@ -235,7 +311,7 @@ function ClassifierPage({ d }) {
   useECl(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ro = new ResizeObserver(() => redraw());
+    const ro = new ResizeObserver(() => redrawRef.current());
     ro.observe(canvas);
     redraw();
     return () => ro.disconnect();
@@ -244,7 +320,7 @@ function ClassifierPage({ d }) {
   // Re-render whenever a new classification arrives, so the chip tracks
   // the latest label/offset even between spectrum frames. Also on band
   // plan / center / span changes, since those affect the strip's layout.
-  useECl(() => { redraw(); }, [d.classifierResult, d.classifierLabel, d.classifierConfidence, d.classifierFreqOffset, bandPlan, centerHz, spanHz]);
+  useECl(() => { redraw(); }, [d.classifierResult, d.classifierLabel, d.classifierConfidence, d.classifierFreqOffset, d.classifierObservation, bandPlan, centerHz, spanHz]);
 
   // Append to the scrolling log on genuine change only. The daemon publishes
   // the whole decision as one JSON message on state/classifier/result (so
@@ -299,7 +375,7 @@ function ClassifierPage({ d }) {
         const db = new Float32Array(f.length - 1);
         for (let i = 0; i < db.length; i++) db[i] = toDB(f[i + 1]);
         binsRef.current = db;
-        redraw();
+        redrawRef.current();
       };
     }
     connect();
@@ -366,6 +442,12 @@ function ClassifierPage({ d }) {
 
   // Status readout from the atomic result + background summary.
   const bg = (d.classifierBackground && typeof d.classifierBackground === 'object') ? d.classifierBackground : null;
+  // Per-cycle observation (state/classifier/observation) and the retained
+  // verdict of the last template upload (state/classifier/templates_status);
+  // both are parsed JSON or null in data.jsx, and both are optional: a
+  // daemon that predates them simply never populates these fields.
+  const obs = (d.classifierObservation && typeof d.classifierObservation === 'object') ? d.classifierObservation : null;
+  const tstat = (d.classifierTemplatesStatus && typeof d.classifierTemplatesStatus === 'object') ? d.classifierTemplatesStatus : null;
   const stateText = !res ? '\u2014'
     : res.online === false ? 'offline'
     : res.state === 'learning' ? `learning background (${res.bg_age_s ?? 0} s)`
@@ -376,7 +458,7 @@ function ClassifierPage({ d }) {
 
   return (
     <>
-      <Card title="Signal Classifier" sub="Onboard PSD spectral-shape matching" className="span-12"
+      <Card title="Signal Classifier" sub="Experimental spectral-template matching; RF acceptance pending." className="span-12"
         right={<Pill tone={wsState === 'connected' ? 'ok' : 'warn'} dot>{wsState}</Pill>}>
         <Field label="Enabled">
           <Toggle on={enabled} onChange={(on) => { setEnabled(on); d.publish('classifier/enabled', on ? 'on' : 'off'); }} />
@@ -385,12 +467,15 @@ function ClassifierPage({ d }) {
           <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', cursor: bandPlan.length ? 'pointer' : 'default' }}
             onClick={onCanvasClick} />
         </div>
+        <div className="dim" style={{ fontSize: 11, marginTop: 6 }}>
+          Spectrum power is shown relative to the producer's scale (maia-httpd /waterfall integrated power, 10*log10), not calibrated dBm.
+        </div>
       </Card>
 
-      <Card title="Decision" sub="What the daemon is doing right now" className="span-12"
+      <Card title="Decision" sub="What the daemon is doing right now. Match score is spectral similarity, not calibrated identification confidence." className="span-12"
         right={<Pill tone={stateTone} dot>{stateText}</Pill>}>
         <div className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 5ch' }}>
-          <div><div className="dim" style={{ fontSize: 11 }}>Best score</div><div>{res ? Math.round((Number(res.label === 'unknown' ? res.best : res.confidence) || 0) * 100) + '%' : '\u2014'}</div></div>
+          <div><div className="dim" style={{ fontSize: 11 }} title="Spectral similarity, not calibrated identification confidence">Best score</div><div>{res ? Math.round((Number(res.label === 'unknown' ? res.best : res.confidence) || 0) * 100) + '%' : '\u2014'}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Window SNR</div><div>{fmtDb(res ? (res.label === 'unknown' ? res.best_snr_db : res.snr_db) : null)}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Prominence</div><div>{fmtDb(res ? (res.label === 'unknown' ? res.best_prom_db : res.prom_db) : null)}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Margin to runner-up</div><div>{res && res.margin != null ? Math.round(Number(res.margin) * 100) + ' pts' : '\u2014'}</div></div>
@@ -398,6 +483,59 @@ function ClassifierPage({ d }) {
           <div><div className="dim" style={{ fontSize: 11 }}>Background age</div><div>{res && res.bg_age_s != null ? res.bg_age_s + ' s' : '\u2014'}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Persistent lines / masked spurs</div><div>{bg ? `${bg.hot} / ${bg.masked}` : '\u2014'}</div></div>
         </div>
+        {/* Matched window vs whole-span peak: two different frequencies, shown
+            side by side with their own labels so neither is mistaken for the
+            other (see obsFrequencyView). Presentation only; scoring unchanged. */}
+        {(() => {
+          const fv = obsFrequencyView(obs, centerHz, spanHz);
+          if (!fv) return null;
+          const win = fv.window, peak = fv.peak;
+          return (
+            <div style={{ marginTop: 8 }}>
+              <div className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 5ch', fontSize: 12 }}>
+                <div>
+                  <div className="dim" style={{ fontSize: 11 }} title="Frequency range of the template window the daemon scored and accepted (decision.bin_offset / bandwidth_bins)">Matched window</div>
+                  <div style={{ color: '#9fe3ff' }}>{win ? `${fmtHz(win.startHz)} \u2013 ${fmtHz(win.endHz)} (centre ${fmtHz(win.centerHz)}, ${fmtHz(win.widthHz)} wide)` : (obs && obs.decision && obs.decision.accepted === false ? 'none (no accepted match)' : '\u2014')}</div>
+                </div>
+                <div>
+                  <div className="dim" style={{ fontSize: 11 }} title="Strongest bin of the residual (spectrum over the learned background) anywhere in the span (features.peak_bin); independent of any match">Whole-span residual peak</div>
+                  <div style={{ color: '#ffe9a8' }}>{peak ? `${fmtHz(peak.hz)} (bin ${peak.bin})` : '\u2014'}</div>
+                </div>
+                <div>
+                  <div className="dim" style={{ fontSize: 11 }}>Peak inside window</div>
+                  <div>{fv.peakInsideWindow == null ? '\u2014' : fv.peakInsideWindow ? 'yes' : 'no: the strongest residual bin lies outside the matched window'}</div>
+                </div>
+              </div>
+              <div className="dim" style={{ fontSize: 11, marginTop: 4, maxWidth: '90ch' }}>
+                Matched window (blue bracket on the spectrum) = where the accepted template fit. Whole-span residual peak (amber dashed marker) = the strongest bin of the residual (spectrum over the learned background) anywhere in the span. They are different measurements and need not agree; disagreement alone does not mean the window is wrong.
+                {fv.gridFromObservation ? '' : ' Grid taken from the live RX settings because the observation carried none.'}
+              </div>
+            </div>
+          );
+        })()}
+        {/* Provenance from the per-cycle observation (state/classifier/observation).
+            config.bound is false by construction: RX settings are read from
+            retained MQTT topics, not tagged on the frame \u2014 shown, not hidden. */}
+        {obs && (
+          <div className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 5ch', marginTop: 8, fontSize: 12 }}>
+            <div><div className="dim" style={{ fontSize: 11 }}>Observation</div><div>#{obs.seq} {obs.schema ? obs.schema.split('/').pop() ? `v${obs.schema.split('/').pop()}` : '' : ''}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Templates</div><div title={obs.templates && obs.templates.sha256}>{obs.templates ? `${fmtSha(obs.templates.sha256)} (${obs.templates.count} tpl, ${obs.templates.status})` : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Grid</div><div>{obs.input ? `${obs.input.fft_size} pt, ${obs.input.hz_per_bin != null ? fmtHz(obs.input.hz_per_bin) + '/bin' : 'span unknown'}` : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Config binding</div><div title={obs.config && obs.config.bound_reason}>{obs.config ? (obs.config.bound ? 'bound' : `unbound (gen ${obs.config.generation})`) : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Publish errors</div><div>{obs.health ? obs.health.publish_errors : '\u2014'}</div></div>
+            <div><div className="dim" style={{ fontSize: 11 }}>Features</div><div>{obs.templates ? obs.templates.feature_semantics : '\u2014'}</div></div>
+          </div>
+        )}
+        {obs && obs.config && !obs.config.bound && (
+          <div className="mono dim" style={{ marginTop: 6, fontSize: 11, maxWidth: '90ch' }}>
+            Config binding unbound: {obs.config.bound_reason || 'the RX settings attached to this observation are not tagged on the waterfall frame'}
+          </div>
+        )}
+        {tstat && (
+          <div className="mono dim" style={{ marginTop: 6, fontSize: 11 }}>
+            Last template upload: {tstat.accepted ? 'accepted' : 'rejected'}{tstat.report ? ` (${tstat.report.status}${tstat.report.error ? ': ' + tstat.report.error : ''})` : (tstat.error ? ` (${tstat.status}: ${tstat.error})` : '')}
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
           <button className="btn ghost" onClick={() => d.publish('classifier/background', 'learn')}>Relearn background</button>
           <span className="dim" style={{ fontSize: 11, maxWidth: '70ch' }}>

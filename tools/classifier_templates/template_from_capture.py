@@ -45,12 +45,14 @@ def main():
 
     a = np.fromfile(args.raw, dtype="<f4").reshape(-1, args.floats)[:, 1:].astype(np.float64)
     n = a.shape[1]
-    hz = args.span_hz / n
+    # Grid: span / fft_size (the floats per frame), not span / usable bins;
+    # DC sits at usable-bins index fft_size/2 - 1. See waterfall_frame.py.
+    hz = args.span_hz / args.floats
     env = np.percentile(a, 10, axis=0)
     base = opening(env, max(1, int(args.base_width_hz / hz / 2 + 0.5)))
     resid = np.maximum(a - base, 0).mean(0)
 
-    c = (args.center_hz - args.fc_hz) / hz + n / 2
+    c = (args.center_hz - args.fc_hz) / hz + args.floats / 2 - 1
     w = args.width_hz / hz
     lo, hi = int(round(c - w / 2)), int(round(c + w / 2))
     if lo < 0 or hi > n:

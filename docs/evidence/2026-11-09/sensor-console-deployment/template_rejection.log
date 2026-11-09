@@ -1,0 +1,25 @@
+== before
+cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263  /mnt/jffs2/classifier/templates.bin
+total 13
+drwxr-xr-x    2 root     root             0 Nov  6 16:42 .
+drwxr-xr-x    6 root     root             0 Nov  9 11:27 ..
+-rw-r--r--    1 root     root          6376 Nov  6 16:42 templates.bin
+-rw-------    1 root     root          6268 Nov  6 16:42 templates.v1.bin
+Timed out
+(no retained templates_status yet)
+== publish invalid upload 1: random bytes (valid base64, bad magic)
+status: {"accepted":false,"report":{"valid":false,"status":"bad_magic","path":"/mnt/jffs2/classifier/.templates.bin.staged.3899","error":"bad magic"}}
+== publish invalid upload 2: not base64
+status: {"accepted":false,"report":{"valid":false,"status":"bad_magic","path":"/mnt/jffs2/classifier/.templates.bin.staged.3899","error":"bad magic"}}
+== after
+cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263  /mnt/jffs2/classifier/templates.bin
+total 13
+drwxr-xr-x    2 root     root             0 Nov  9 11:35 .
+drwxr-xr-x    6 root     root             0 Nov  9 11:27 ..
+-rw-r--r--    1 root     root          6376 Nov  6 16:42 templates.bin
+-rw-------    1 root     root          6268 Nov  6 16:42 templates.v1.bin
+== classifier still running, same pid?
+3877
+3877
+== observation templates field
+{"path":"/mnt/jffs2/classifier/templates.bin","status":"ok","sha256":"cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263","version":3,"count":3,"canonical_n":512,"feature_semantics":"power-v1"}

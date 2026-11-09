@@ -1,0 +1,4290 @@
+{
+ "recorded_frames": [
+  {
+   "file": "wf_avg4096_frame0.bin",
+   "sha256": "1b26b04cab3406beb5f2f50f87bc3804a4d05cb46230f9c3c088f680a1c4ec4d"
+  },
+  {
+   "file": "wf_avg4096_frame1.bin",
+   "sha256": "5acadf69568e60cd611e09b1a2bb2c59c44a2d87c58307350feff3435d2b8835"
+  },
+  {
+   "file": "wf_avg4096_frame2.bin",
+   "sha256": "602c0489845d5b4d698337197c3e2c4c155af318c79cb0b0cb4dfad09419021c"
+  }
+ ],
+ "templates": {
+  "file": "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+  "sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+  "labels": [
+   "FM Broadcast",
+   "DAB+",
+   "CW / Beacon"
+  ],
+  "canonical_n": 512
+ },
+ "daemon_args": [
+  "-n",
+  "4096",
+  "-F",
+  "7.5",
+  "-S",
+  "2500000",
+  "-B",
+  "none",
+  "-c",
+  "0.6",
+  "-m",
+  "0.15",
+  "-i",
+  "1.0",
+  "-s",
+  "6",
+  "-g",
+  "4",
+  "-l",
+  "10",
+  "-a",
+  "300",
+  "-w",
+  "4e6",
+  "-x",
+  "8"
+ ],
+ "accept_dispositions": {
+  "confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+  "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+  "unverified": "nothing is known about what was on air; neither a false accept nor a positive"
+ },
+ "fixtures": [
+  {
+   "name": "S1_kigl_offset",
+   "file": "raw/S1_kigl_offset.raw",
+   "sha256": "7ff7c18b7cd03d1f39f882dcadb42e3257122f9890da175dec82973c00607f7a",
+   "frames": 600,
+   "duration_s": 599.6544,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 92674998,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794229577.1349776 (unix s): rx_lo 92674998 Hz, fs 2500000 Hz, gain 71.0 dB Manual, Average x610, 4096-point; capture sha256 7ff7c18b7cd03d1f39f882dcadb42e3257122f9890da175dec82973c00607f7a",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S1 trusted positive: LO 92674998 (KIGL at +625 kHz), 2.5 MS/s, bw 2.5 MHz, manual 71 dB, rfinput 2; on air: KIGL 93.3 MHz FM (verified: RDS PI 0x25C7 = KIGL, PS 93.3 The Eagle, FCC facility 35014); evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794229577.1349776,
+     "started_unix_s": 1794229577.1349776,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 92674998,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 600,
+     "frames": 600,
+     "frame_sizes": {
+      "16384": 600
+     },
+     "settings_log": [],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794229577.9627655,
+     "last_frame_unix_s": 1794230176.614044,
+     "measured_fps": 1.000582511917602,
+     "frame_gap_s": {
+      "min": 0.8178427219390869,
+      "median": 0.9995636940002441,
+      "max": 1.1428334712982178
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 92674998,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 71.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 92674998,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": false,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794230176.6284878,
+     "raw_bytes": 9830400,
+     "sha256": "7ff7c18b7cd03d1f39f882dcadb42e3257122f9890da175dec82973c00607f7a",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1_kigl_offset.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [
+    "FM Broadcast"
+   ],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 92674998, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 71, 0 state/rx/gain_mode Manual",
+   "expected_basis": "trusted positive: the label was established independently of the spectrum (see the capture's notes); the emission is on air for the whole sequence",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S1_kigl_offset.events",
+    "sha256": "0d917c24c4ed5b7e55a93487cf84d64d659ff5eb19bb1b05a61468f4722c1058",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1_kigl_offset.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 92674998\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 71\n0 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1_kigl_offset.raw.events"
+   },
+   "accept_dispositions": {
+    "CW / Beacon": {
+     "disposition": "suspected_false",
+     "basis": "windows on KIGL 93.3 (RDS PI 0x25C7 decoded from the segment's own mid-segment IQ) or on unidentified narrow lines in the 88-108 MHz FM broadcast allocation, where no CW beacon is published; off-channel windows not independently confirmed"
+    }
+   }
+  },
+  {
+   "name": "S1b_kigl_on_lo",
+   "file": "raw/S1b_kigl_on_lo.raw",
+   "sha256": "4222950c610adc0d97b330a5217b93e70775df1a9a7ed088e8c3fb28d9fb1299",
+   "frames": 300,
+   "duration_s": 299.8272,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 93299998,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794230193.431719 (unix s): rx_lo 93299998 Hz, fs 2500000 Hz, gain 71.0 dB Manual, Average x610, 4096-point; capture sha256 4222950c610adc0d97b330a5217b93e70775df1a9a7ed088e8c3fb28d9fb1299",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S1b: LO 93.3 MHz (KIGL on the DC spur), 2.5 MS/s, bw 2.5 MHz, manual 71 dB; on air: KIGL 93.3 MHz FM (verified: RDS PI 0x25C7 = KIGL, PS 93.3 The Eagle, FCC facility 35014); evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794230193.431719,
+     "started_unix_s": 1794230193.4317195,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 93299998,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 300,
+     "frames": 300,
+     "frame_sizes": {
+      "16384": 300
+     },
+     "settings_log": [],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794230193.62881,
+     "last_frame_unix_s": 1794230492.426444,
+     "measured_fps": 1.000677267327892,
+     "frame_gap_s": {
+      "min": 0.896512508392334,
+      "median": 0.9997906684875488,
+      "max": 1.1037895679473877
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 93299998,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 71.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 93299998,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": false,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794230492.442825,
+     "raw_bytes": 4915200,
+     "sha256": "4222950c610adc0d97b330a5217b93e70775df1a9a7ed088e8c3fb28d9fb1299",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1b_kigl_on_lo.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [
+    "FM Broadcast"
+   ],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 93299998, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 71, 0 state/rx/gain_mode Manual",
+   "expected_basis": "trusted positive: the label was established independently of the spectrum (see the capture's notes); the emission is on air for the whole sequence",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S1b_kigl_on_lo.events",
+    "sha256": "a7c9967ed5a1fa2ed7766a99a09e6e905af500bee891be4cae9e0f50e1a9e68f",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1b_kigl_on_lo.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 93299998\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 71\n0 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1b_kigl_on_lo.raw.events"
+   },
+   "accept_dispositions": {
+    "CW / Beacon": {
+     "disposition": "confirmed_false",
+     "basis": "the only CW / Beacon window of this replay (94.284-94.314 MHz) lies inside the channel of KAMO 94.3, an FM broadcast identified by RDS (PI 0x1146, PS 94.3 Nash Icon) in the S1b IQ recorded during the segment at 13:19 UTC"
+    }
+   }
+  },
+  {
+   "name": "S1c_kigl_lowgain",
+   "file": "raw/S1c_kigl_lowgain.raw",
+   "sha256": "7a566fde7d2d5625e079fe347222cf3587e97c6a231bc97fe2e361fa8da51137",
+   "frames": 600,
+   "duration_s": 599.6544,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 92674996,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794233211.2211077 (unix s): rx_lo 92674996 Hz, fs 2500000 Hz, gain 65.0 dB Manual, Average x610, 4096-point; capture sha256 7a566fde7d2d5625e079fe347222cf3587e97c6a231bc97fe2e361fa8da51137",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S1c: LO 92674998 (KIGL at +625 kHz), 2.5 MS/s, bw 2.5 MHz, manual 65.0 dB (highest of 65/60/55/50/45 with no full-scale IQ sample); on air: KIGL 93.3 MHz FM (verified: RDS PI 0x25C7 = KIGL, PS 93.3 The Eagle, FCC facility 35014); evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794233211.2211077,
+     "started_unix_s": 1794233211.221108,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 92674996,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 65.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 600,
+     "frames": 600,
+     "frame_sizes": {
+      "16384": 600
+     },
+     "settings_log": [],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794233211.9211085,
+     "last_frame_unix_s": 1794233810.5817897,
+     "measured_fps": 1.0005667964556844,
+     "frame_gap_s": {
+      "min": 0.8368029594421387,
+      "median": 0.9997961521148682,
+      "max": 1.1953234672546387
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 92674996,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 65.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 92674996,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 65.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": false,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794233810.5997548,
+     "raw_bytes": 9830400,
+     "sha256": "7a566fde7d2d5625e079fe347222cf3587e97c6a231bc97fe2e361fa8da51137",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1c_kigl_lowgain.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [
+    "FM Broadcast"
+   ],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 92674996, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 65, 0 state/rx/gain_mode Manual",
+   "expected_basis": "trusted positive: the label was established independently of the spectrum (see the capture's notes); the emission is on air for the whole sequence",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S1c_kigl_lowgain.events",
+    "sha256": "1eab8f118f4dd81083e42bed278c06b0ed95982955563e073317d25004043bd5",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1c_kigl_lowgain.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 92674996\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 65\n0 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1c_kigl_lowgain.raw.events"
+   },
+   "accept_dispositions": {
+    "CW / Beacon": {
+     "disposition": "suspected_false",
+     "basis": "windows on KIGL 93.3 (RDS PI 0x25C7 decoded from the segment's own mid-segment IQ) or on unidentified narrow lines in the 88-108 MHz FM broadcast allocation, where no CW beacon is published; off-channel windows not independently confirmed"
+    }
+   }
+  },
+  {
+   "name": "S2_433",
+   "file": "raw/S2_433.raw",
+   "sha256": "d93224ea006f6569b5b3433820057ac229ce122100d222a93443f67b27e99e08",
+   "frames": 600,
+   "duration_s": 599.6544,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 433000000,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794230509.3192382 (unix s): rx_lo 433000000 Hz, fs 2500000 Hz, gain 70.0 dB Manual, Average x610, 4096-point; capture sha256 d93224ea006f6569b5b3433820057ac229ce122100d222a93443f67b27e99e08",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S2: LO 433 MHz, 2.5 MS/s, bw 2.5 MHz, manual 70 dB (2026-11-08 433 MHz setting); on air: unknown ISM, no ground truth; evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794230509.3192382,
+     "started_unix_s": 1794230509.3192387,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 600,
+     "frames": 600,
+     "frame_sizes": {
+      "16384": 600
+     },
+     "settings_log": [],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794230509.4203105,
+     "last_frame_unix_s": 1794231108.0568187,
+     "measured_fps": 1.0006071994751577,
+     "frame_gap_s": {
+      "min": 0.845073938369751,
+      "median": 0.9997196197509766,
+      "max": 1.1511242389678955
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 433000000,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 70.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": false,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794231108.080706,
+     "raw_bytes": 9830400,
+     "sha256": "d93224ea006f6569b5b3433820057ac229ce122100d222a93443f67b27e99e08",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S2_433.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 433000000, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 70, 0 state/rx/gain_mode Manual",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S2_433.events",
+    "sha256": "86727b3747deb2074b1d7c199a35f59ab62e00d25086a982af78c8f2232536d5",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S2_433.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 433000000\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 70\n0 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S2_433.raw.events"
+   },
+   "accept_dispositions": {
+    "FM Broadcast": {
+     "disposition": "suspected_false",
+     "basis": "FM broadcast is allocated 88-108 MHz; a 10 s a 10 s IQ at this setting 34 min after S2 puts the window median within 0.1 dB of the span noise median (no 400 kHz emission, analysis/T433_two_lo.json), and the chained replay reproduces the accept only with the accumulated spur mask"
+    },
+    "DAB+": {
+     "disposition": "suspected_false",
+     "basis": "DAB+ is allocated 174-240 MHz (Band III); allocation only"
+    }
+   }
+  },
+  {
+   "name": "S3_70",
+   "file": "raw/S3_70.raw",
+   "sha256": "521bd743adaa15ada57ba3d7d170dcaf9d343f5a0f16bd3953c51ee94a2f6927",
+   "frames": 600,
+   "duration_s": 599.6544,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 70000000,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794231116.256681 (unix s): rx_lo 70000000 Hz, fs 2500000 Hz, gain 41.0 dB Manual, Average x610, 4096-point; capture sha256 521bd743adaa15ada57ba3d7d170dcaf9d343f5a0f16bd3953c51ee94a2f6927",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S3: LO 70 MHz, 2.5 MS/s, bw 2.5 MHz, manual 41 dB (owner setting today); on air: unknown, no ground truth; evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794231116.256681,
+     "started_unix_s": 1794231116.2566812,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 70000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 41.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 600,
+     "frames": 600,
+     "frame_sizes": {
+      "16384": 600
+     },
+     "settings_log": [],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794231117.0548954,
+     "last_frame_unix_s": 1794231715.700336,
+     "measured_fps": 1.0005922694762308,
+     "frame_gap_s": {
+      "min": 0.8838541507720947,
+      "median": 0.9996128082275391,
+      "max": 1.111337423324585
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 70000000,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 41.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 70000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 41.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": false,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794231715.7160108,
+     "raw_bytes": 9830400,
+     "sha256": "521bd743adaa15ada57ba3d7d170dcaf9d343f5a0f16bd3953c51ee94a2f6927",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S3_70.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 70000000, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 41, 0 state/rx/gain_mode Manual",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S3_70.events",
+    "sha256": "027c095a3d73216200de2421717e0cc3ab85b1458df477f922b5f21ca0902280",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S3_70.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 70000000\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 41\n0 state/rx/gain_mode Manual\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S3_70.raw.events"
+   }
+  },
+  {
+   "name": "S4_2400_agc",
+   "file": "raw/S4_2400_agc.raw",
+   "sha256": "04dacf8abf95a87d62d8c1a20671d9eac9c1661df21472aa1b0b352b10f18743",
+   "frames": 7377,
+   "duration_s": 599.996,
+   "fps": 12.295081967213115,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 2400000000,
+    "span_hz": 30720000,
+    "fft_size": 4096,
+    "hz_per_bin": 7500.0,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794231723.967896 (unix s): rx_lo 2400000000 Hz, fs 30720000 Hz, gain 71.0 dB SlowAttack, Average x610, 4096-point; capture sha256 04dacf8abf95a87d62d8c1a20671d9eac9c1661df21472aa1b0b352b10f18743",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S4: LO 2.4 GHz, 30.72 MS/s, bw 18 MHz, SlowAttack AGC (boot defaults); on air: unknown 2.4 GHz ISM, no ground truth; doubles as AGC segment S6; evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794231723.967896,
+     "started_unix_s": 1794231723.9678962,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 30720000,
+       "rx_rf_bandwidth": 18000000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 2400000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "SlowAttack",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 30720000.0,
+       "output_sampling_frequency": 12.295081967213115,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 30720000.0,
+       "output_sampling_frequency": 1536000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 12.295081967213115,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 30720000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 7377,
+     "frames": 7377,
+     "frame_sizes": {
+      "16384": 7377
+     },
+     "settings_log": [
+      {
+       "t_unix_s": 1794231743.2021072,
+       "t_rel_s": 19.234210968017578,
+       "frames_received": 236,
+       "t_replay_s": 19.194666666666667,
+       "t_event_s": 19.154,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231744.2122326,
+       "t_rel_s": 20.2443368434906,
+       "frames_received": 248,
+       "t_replay_s": 20.170666666666666,
+       "t_event_s": 20.13,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231751.2983823,
+       "t_rel_s": 27.330486059188843,
+       "frames_received": 336,
+       "t_replay_s": 27.328,
+       "t_event_s": 27.287333333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231752.3081713,
+       "t_rel_s": 28.340275049209595,
+       "frames_received": 348,
+       "t_replay_s": 28.304,
+       "t_event_s": 28.263333333333332,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231759.382297,
+       "t_rel_s": 35.414401054382324,
+       "frames_received": 435,
+       "t_replay_s": 35.38,
+       "t_event_s": 35.339333333333336,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231760.3963647,
+       "t_rel_s": 36.428468465805054,
+       "frames_received": 447,
+       "t_replay_s": 36.356,
+       "t_event_s": 36.315333333333335,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231780.6725252,
+       "t_rel_s": 56.70462894439697,
+       "frames_received": 697,
+       "t_replay_s": 56.68933333333334,
+       "t_event_s": 56.64866666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231781.6886215,
+       "t_rel_s": 57.720725536346436,
+       "frames_received": 709,
+       "t_replay_s": 57.665333333333336,
+       "t_event_s": 57.62466666666667,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231793.860984,
+       "t_rel_s": 69.8930881023407,
+       "frames_received": 859,
+       "t_replay_s": 69.86533333333334,
+       "t_event_s": 69.82466666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231794.8734837,
+       "t_rel_s": 70.90558791160583,
+       "frames_received": 871,
+       "t_replay_s": 70.84133333333334,
+       "t_event_s": 70.80066666666667,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231806.0135329,
+       "t_rel_s": 82.04563689231873,
+       "frames_received": 1008,
+       "t_replay_s": 81.984,
+       "t_event_s": 81.94333333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231807.022898,
+       "t_rel_s": 83.05500197410583,
+       "frames_received": 1021,
+       "t_replay_s": 83.04133333333334,
+       "t_event_s": 83.00066666666666,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231844.5101361,
+       "t_rel_s": 120.54224038124084,
+       "frames_received": 1482,
+       "t_replay_s": 120.536,
+       "t_event_s": 120.49533333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231845.5239096,
+       "t_rel_s": 121.55601358413696,
+       "frames_received": 1494,
+       "t_replay_s": 121.512,
+       "t_event_s": 121.47133333333333,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231846.537865,
+       "t_rel_s": 122.56996893882751,
+       "frames_received": 1507,
+       "t_replay_s": 122.56933333333333,
+       "t_event_s": 122.52866666666667,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231847.5473568,
+       "t_rel_s": 123.57946062088013,
+       "frames_received": 1519,
+       "t_replay_s": 123.54533333333333,
+       "t_event_s": 123.50466666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231848.5599844,
+       "t_rel_s": 124.59208846092224,
+       "frames_received": 1531,
+       "t_replay_s": 124.52133333333333,
+       "t_event_s": 124.48066666666666,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231855.638148,
+       "t_rel_s": 131.6702527999878,
+       "frames_received": 1618,
+       "t_replay_s": 131.59733333333332,
+       "t_event_s": 131.55666666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231856.6474588,
+       "t_rel_s": 132.67956256866455,
+       "frames_received": 1631,
+       "t_replay_s": 132.65466666666666,
+       "t_event_s": 132.614,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231874.8901691,
+       "t_rel_s": 150.92227339744568,
+       "frames_received": 1855,
+       "t_replay_s": 150.87333333333333,
+       "t_event_s": 150.83266666666665,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231875.9062521,
+       "t_rel_s": 151.93835616111755,
+       "frames_received": 1868,
+       "t_replay_s": 151.93066666666667,
+       "t_event_s": 151.89000000000001,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231876.9158342,
+       "t_rel_s": 152.94793820381165,
+       "frames_received": 1880,
+       "t_replay_s": 152.90666666666667,
+       "t_event_s": 152.866,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231877.9304225,
+       "t_rel_s": 153.9625267982483,
+       "frames_received": 1893,
+       "t_replay_s": 153.964,
+       "t_event_s": 153.92333333333335,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231884.0042372,
+       "t_rel_s": 160.0363414287567,
+       "frames_received": 1967,
+       "t_replay_s": 159.98266666666666,
+       "t_event_s": 159.942,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231885.0237997,
+       "t_rel_s": 161.055903673172,
+       "frames_received": 1980,
+       "t_replay_s": 161.04,
+       "t_event_s": 160.99933333333334,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231894.1419597,
+       "t_rel_s": 170.17406344413757,
+       "frames_received": 2092,
+       "t_replay_s": 170.14933333333335,
+       "t_event_s": 170.10866666666666,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231895.152432,
+       "t_rel_s": 171.1845359802246,
+       "frames_received": 2104,
+       "t_replay_s": 171.12533333333334,
+       "t_event_s": 171.08466666666666,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231922.506808,
+       "t_rel_s": 198.5389120578766,
+       "frames_received": 2441,
+       "t_replay_s": 198.53466666666668,
+       "t_event_s": 198.494,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231923.51651,
+       "t_rel_s": 199.54861402511597,
+       "frames_received": 2453,
+       "t_replay_s": 199.51066666666668,
+       "t_event_s": 199.47,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231931.6143885,
+       "t_rel_s": 207.6464924812317,
+       "frames_received": 2553,
+       "t_replay_s": 207.644,
+       "t_event_s": 207.60333333333332,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231932.624682,
+       "t_rel_s": 208.65678596496582,
+       "frames_received": 2565,
+       "t_replay_s": 208.62,
+       "t_event_s": 208.57933333333332,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231974.2469244,
+       "t_rel_s": 250.27902841567993,
+       "frames_received": 3077,
+       "t_replay_s": 250.26266666666666,
+       "t_event_s": 250.222,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231975.259484,
+       "t_rel_s": 251.29158854484558,
+       "frames_received": 3089,
+       "t_replay_s": 251.23866666666666,
+       "t_event_s": 251.198,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231982.3454225,
+       "t_rel_s": 258.37752652168274,
+       "frames_received": 3176,
+       "t_replay_s": 258.31466666666665,
+       "t_event_s": 258.274,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         61.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 61.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231983.3609781,
+       "t_rel_s": 259.3930821418762,
+       "frames_received": 3189,
+       "t_replay_s": 259.372,
+       "t_event_s": 259.33133333333336,
+       "changed": {
+        "rx_gain": [
+         61.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231996.5156128,
+       "t_rel_s": 272.54771733283997,
+       "frames_received": 3351,
+       "t_replay_s": 272.548,
+       "t_event_s": 272.50733333333335,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794231997.5312996,
+       "t_rel_s": 273.5634033679962,
+       "frames_received": 3363,
+       "t_replay_s": 273.524,
+       "t_event_s": 273.48333333333335,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232007.7037039,
+       "t_rel_s": 283.7358078956604,
+       "frames_received": 3488,
+       "t_replay_s": 283.6906666666667,
+       "t_event_s": 283.65,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232008.715764,
+       "t_rel_s": 284.74786829948425,
+       "frames_received": 3501,
+       "t_replay_s": 284.748,
+       "t_event_s": 284.70733333333334,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232009.7252717,
+       "t_rel_s": 285.75737595558167,
+       "frames_received": 3513,
+       "t_replay_s": 285.724,
+       "t_event_s": 285.68333333333334,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232012.757983,
+       "t_rel_s": 288.790087223053,
+       "frames_received": 3550,
+       "t_replay_s": 288.73333333333335,
+       "t_event_s": 288.6926666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232013.7694244,
+       "t_rel_s": 289.8015284538269,
+       "frames_received": 3563,
+       "t_replay_s": 289.79066666666665,
+       "t_event_s": 289.75,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232015.7917655,
+       "t_rel_s": 291.8238694667816,
+       "frames_received": 3588,
+       "t_replay_s": 291.824,
+       "t_event_s": 291.78333333333336,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232016.803486,
+       "t_rel_s": 292.83558988571167,
+       "frames_received": 3600,
+       "t_replay_s": 292.8,
+       "t_event_s": 292.75933333333336,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232026.9237397,
+       "t_rel_s": 302.9558436870575,
+       "frames_received": 3724,
+       "t_replay_s": 302.88533333333334,
+       "t_event_s": 302.8446666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232027.9335237,
+       "t_rel_s": 303.9656276702881,
+       "frames_received": 3737,
+       "t_replay_s": 303.9426666666667,
+       "t_event_s": 303.902,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232038.0680025,
+       "t_rel_s": 314.1001064777374,
+       "frames_received": 3861,
+       "t_replay_s": 314.028,
+       "t_event_s": 313.9873333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232039.0776744,
+       "t_rel_s": 315.10977816581726,
+       "frames_received": 3874,
+       "t_replay_s": 315.0853333333333,
+       "t_event_s": 315.04466666666667,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232042.1121066,
+       "t_rel_s": 318.1442105770111,
+       "frames_received": 3911,
+       "t_replay_s": 318.0946666666667,
+       "t_event_s": 318.05400000000003,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232043.1242433,
+       "t_rel_s": 319.15634775161743,
+       "frames_received": 3924,
+       "t_replay_s": 319.152,
+       "t_event_s": 319.11133333333333,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232052.2478154,
+       "t_rel_s": 328.2799198627472,
+       "frames_received": 4036,
+       "t_replay_s": 328.2613333333333,
+       "t_event_s": 328.22066666666666,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232053.2599158,
+       "t_rel_s": 329.2920196056366,
+       "frames_received": 4048,
+       "t_replay_s": 329.2373333333333,
+       "t_event_s": 329.19666666666666,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232065.4140613,
+       "t_rel_s": 341.44616532325745,
+       "frames_received": 4198,
+       "t_replay_s": 341.43733333333336,
+       "t_event_s": 341.39666666666665,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232066.4284484,
+       "t_rel_s": 342.46055245399475,
+       "frames_received": 4210,
+       "t_replay_s": 342.41333333333336,
+       "t_event_s": 342.37266666666665,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232072.504186,
+       "t_rel_s": 348.53628969192505,
+       "frames_received": 4285,
+       "t_replay_s": 348.5133333333333,
+       "t_event_s": 348.47266666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232073.5142827,
+       "t_rel_s": 349.54638671875,
+       "frames_received": 4297,
+       "t_replay_s": 349.4893333333333,
+       "t_event_s": 349.44866666666667,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232097.825141,
+       "t_rel_s": 373.8572449684143,
+       "frames_received": 4596,
+       "t_replay_s": 373.808,
+       "t_event_s": 373.76733333333334,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         63.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 63.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232099.852878,
+       "t_rel_s": 375.8849823474884,
+       "frames_received": 4621,
+       "t_replay_s": 375.84133333333335,
+       "t_event_s": 375.80066666666664,
+       "changed": {
+        "rx_gain": [
+         63.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232107.952816,
+       "t_rel_s": 383.9849202632904,
+       "frames_received": 4721,
+       "t_replay_s": 383.9746666666667,
+       "t_event_s": 383.934,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         63.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 63.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232108.965078,
+       "t_rel_s": 384.9971823692322,
+       "frames_received": 4733,
+       "t_replay_s": 384.9506666666667,
+       "t_event_s": 384.91,
+       "changed": {
+        "rx_gain": [
+         63.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232124.1506598,
+       "t_rel_s": 400.18276357650757,
+       "frames_received": 4920,
+       "t_replay_s": 400.16,
+       "t_event_s": 400.1193333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232125.1606472,
+       "t_rel_s": 401.19275093078613,
+       "frames_received": 4932,
+       "t_replay_s": 401.136,
+       "t_event_s": 401.0953333333333,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232135.2886238,
+       "t_rel_s": 411.3207278251648,
+       "frames_received": 5057,
+       "t_replay_s": 411.30266666666665,
+       "t_event_s": 411.262,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232136.3031402,
+       "t_rel_s": 412.33524441719055,
+       "frames_received": 5069,
+       "t_replay_s": 412.27866666666665,
+       "t_event_s": 412.238,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232150.5090258,
+       "t_rel_s": 426.5411295890808,
+       "frames_received": 5244,
+       "t_replay_s": 426.512,
+       "t_event_s": 426.47133333333335,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232151.531933,
+       "t_rel_s": 427.5640375614166,
+       "frames_received": 5256,
+       "t_replay_s": 427.488,
+       "t_event_s": 427.44733333333335,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232153.5592756,
+       "t_rel_s": 429.5913796424866,
+       "frames_received": 5281,
+       "t_replay_s": 429.52133333333336,
+       "t_event_s": 429.48066666666665,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232154.569036,
+       "t_rel_s": 430.60114002227783,
+       "frames_received": 5294,
+       "t_replay_s": 430.57866666666666,
+       "t_event_s": 430.538,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232156.5911775,
+       "t_rel_s": 432.62328147888184,
+       "frames_received": 5319,
+       "t_replay_s": 432.612,
+       "t_event_s": 432.5713333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         67.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 67.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232157.6033437,
+       "t_rel_s": 433.6354477405548,
+       "frames_received": 5331,
+       "t_replay_s": 433.588,
+       "t_event_s": 433.5473333333333,
+       "changed": {
+        "rx_gain": [
+         67.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232172.7975702,
+       "t_rel_s": 448.829674243927,
+       "frames_received": 5518,
+       "t_replay_s": 448.7973333333333,
+       "t_event_s": 448.75666666666666,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         53.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 53.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232173.819276,
+       "t_rel_s": 449.851380109787,
+       "frames_received": 5531,
+       "t_replay_s": 449.8546666666667,
+       "t_event_s": 449.814,
+       "changed": {
+        "rx_gain": [
+         53.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232222.4445035,
+       "t_rel_s": 498.47660732269287,
+       "frames_received": 6128,
+       "t_replay_s": 498.41066666666666,
+       "t_event_s": 498.37,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         57.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 57.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232223.4543908,
+       "t_rel_s": 499.48649501800537,
+       "frames_received": 6141,
+       "t_replay_s": 499.468,
+       "t_event_s": 499.42733333333337,
+       "changed": {
+        "rx_gain": [
+         57.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232224.4704325,
+       "t_rel_s": 500.50253653526306,
+       "frames_received": 6153,
+       "t_replay_s": 500.444,
+       "t_event_s": 500.40333333333336,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232226.495812,
+       "t_rel_s": 502.52791571617126,
+       "frames_received": 6178,
+       "t_replay_s": 502.4773333333333,
+       "t_event_s": 502.43666666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232227.5062375,
+       "t_rel_s": 503.5383415222168,
+       "frames_received": 6191,
+       "t_replay_s": 503.5346666666667,
+       "t_event_s": 503.494,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232232.5840878,
+       "t_rel_s": 508.6161918640137,
+       "frames_received": 6253,
+       "t_replay_s": 508.57733333333334,
+       "t_event_s": 508.5366666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232233.5983675,
+       "t_rel_s": 509.6304717063904,
+       "frames_received": 6266,
+       "t_replay_s": 509.63466666666665,
+       "t_event_s": 509.594,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232242.7097983,
+       "t_rel_s": 518.741902589798,
+       "frames_received": 6378,
+       "t_replay_s": 518.744,
+       "t_event_s": 518.7033333333334,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         61.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 61.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232243.720106,
+       "t_rel_s": 519.7522099018097,
+       "frames_received": 6390,
+       "t_replay_s": 519.72,
+       "t_event_s": 519.6793333333334,
+       "changed": {
+        "rx_gain": [
+         61.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232245.7461026,
+       "t_rel_s": 521.7782063484192,
+       "frames_received": 6415,
+       "t_replay_s": 521.7533333333333,
+       "t_event_s": 521.7126666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232246.756119,
+       "t_rel_s": 522.7882227897644,
+       "frames_received": 6427,
+       "t_replay_s": 522.7293333333333,
+       "t_event_s": 522.6886666666667,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232268.0014012,
+       "t_rel_s": 544.0335054397583,
+       "frames_received": 6689,
+       "t_replay_s": 544.0386666666667,
+       "t_event_s": 543.998,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232269.0146675,
+       "t_rel_s": 545.0467715263367,
+       "frames_received": 6701,
+       "t_replay_s": 545.0146666666667,
+       "t_event_s": 544.974,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232277.1124165,
+       "t_rel_s": 553.1445202827454,
+       "frames_received": 6801,
+       "t_replay_s": 553.148,
+       "t_event_s": 553.1073333333334,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232278.126948,
+       "t_rel_s": 554.1590521335602,
+       "frames_received": 6813,
+       "t_replay_s": 554.124,
+       "t_event_s": 554.0833333333334,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232285.2008972,
+       "t_rel_s": 561.2330014705658,
+       "frames_received": 6900,
+       "t_replay_s": 561.2,
+       "t_event_s": 561.1593333333334,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232286.2111495,
+       "t_rel_s": 562.2432537078857,
+       "frames_received": 6912,
+       "t_replay_s": 562.176,
+       "t_event_s": 562.1353333333334,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232291.2728057,
+       "t_rel_s": 567.3049097061157,
+       "frames_received": 6975,
+       "t_replay_s": 567.3,
+       "t_event_s": 567.2593333333333,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         65.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 65.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232292.2828221,
+       "t_rel_s": 568.3149263858795,
+       "frames_received": 6987,
+       "t_replay_s": 568.276,
+       "t_event_s": 568.2353333333333,
+       "changed": {
+        "rx_gain": [
+         65.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232313.564942,
+       "t_rel_s": 589.5970458984375,
+       "frames_received": 7249,
+       "t_replay_s": 589.5853333333333,
+       "t_event_s": 589.5446666666667,
+       "changed": {
+        "rx_gain": [
+         71.0,
+         69.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 69.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232314.5751443,
+       "t_rel_s": 590.6072480678558,
+       "frames_received": 7261,
+       "t_replay_s": 590.5613333333333,
+       "t_event_s": 590.5206666666667,
+       "changed": {
+        "rx_gain": [
+         69.0,
+         71.0
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 30720000,
+        "rx_rf_bandwidth": 18000000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 71.0,
+        "rx_gain_mode": "SlowAttack",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 30720000.0,
+        "output_sampling_frequency": 12.295081967213115,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      }
+     ],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794231724.047838,
+     "last_frame_unix_s": 1794232323.957113,
+     "measured_fps": 12.29519246776874,
+     "frame_gap_s": {
+      "min": 0.00038695335388183594,
+      "median": 0.08169186115264893,
+      "max": 0.19971990585327148
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 30720000,
+      "rx_rf_bandwidth": 18000000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 2400000000,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 71.0,
+      "rx_gain_mode": "SlowAttack",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 30720000,
+       "rx_rf_bandwidth": 18000000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 2400000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 71.0,
+       "rx_gain_mode": "SlowAttack",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 30720000.0,
+       "output_sampling_frequency": 12.295081967213115,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 30720000.0,
+       "output_sampling_frequency": 1536000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": true,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794232323.9770706,
+     "raw_bytes": 120864768,
+     "sha256": "04dacf8abf95a87d62d8c1a20671d9eac9c1661df21472aa1b0b352b10f18743",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S4_2400_agc.raw.events"
+    },
+    "replay_fps": 12.295081967213115
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 12.2951 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 2400000000, 0 state/rx/sampling 30720000, 0 state/rx/span 30720000, 0 state/rx/bandwidth 18000000, 0 state/rx/gain 71, 0 state/rx/gain_mode SlowAttack, 19.154000 state/rx/gain 69, 20.130000 state/rx/gain 71, 27.287333 state/rx/gain 67, 28.263333 state/rx/gain 71, 35.339333 state/rx/gain 67, 36.315333 state/rx/gain 71, 56.648667 state/rx/gain 65, 57.624667 state/rx/gain 71, 69.824667 state/rx/gain 69, 70.800667 state/rx/gain 71, 81.943333 state/rx/gain 69, 83.000667 state/rx/gain 71, 120.495333 state/rx/gain 67, 121.471333 state/rx/gain 69, 122.528667 state/rx/gain 71, 123.504667 state/rx/gain 67, 124.480667 state/rx/gain 71, 131.556667 state/rx/gain 67, 132.614000 state/rx/gain 71, 150.832667 state/rx/gain 69, 151.890000 state/rx/gain 71, 152.866000 state/rx/gain 65, 153.923333 state/rx/gain 71, 159.942000 state/rx/gain 65, 160.999333 state/rx/gain 71, 170.108667 state/rx/gain 67, 171.084667 state/rx/gain 71, 198.494000 state/rx/gain 67, 199.470000 state/rx/gain 71, 207.603333 state/rx/gain 67, 208.579333 state/rx/gain 71, 250.222000 state/rx/gain 69, 251.198000 state/rx/gain 71, 258.274000 state/rx/gain 61, 259.331333 state/rx/gain 71, 272.507333 state/rx/gain 69, 273.483333 state/rx/gain 71, 283.650000 state/rx/gain 67, 284.707333 state/rx/gain 69, 285.683333 state/rx/gain 71, 288.692667 state/rx/gain 67, 289.750000 state/rx/gain 71, 291.783333 state/rx/gain 69, 292.759333 state/rx/gain 71, 302.844667 state/rx/gain 69, 303.902000 state/rx/gain 71, 313.987333 state/rx/gain 69, 315.044667 state/rx/gain 71, 318.054000 state/rx/gain 67, 319.111333 state/rx/gain 71, 328.220667 state/rx/gain 67, 329.196667 state/rx/gain 71, 341.396667 state/rx/gain 65, 342.372667 state/rx/gain 71, 348.472667 state/rx/gain 65, 349.448667 state/rx/gain 71, 373.767333 state/rx/gain 63, 375.800667 state/rx/gain 71, 383.934000 state/rx/gain 63, 384.910000 state/rx/gain 71, 400.119333 state/rx/gain 69, 401.095333 state/rx/gain 71, 411.262000 state/rx/gain 65, 412.238000 state/rx/gain 71, 426.471333 state/rx/gain 69, 427.447333 state/rx/gain 71, 429.480667 state/rx/gain 69, 430.538000 state/rx/gain 71, 432.571333 state/rx/gain 67, 433.547333 state/rx/gain 71, 448.756667 state/rx/gain 53, 449.814000 state/rx/gain 71, 498.370000 state/rx/gain 57, 499.427333 state/rx/gain 69, 500.403333 state/rx/gain 71, 502.436667 state/rx/gain 69, 503.494000 state/rx/gain 71, 508.536667 state/rx/gain 69, 509.594000 state/rx/gain 71, 518.703333 state/rx/gain 61, 519.679333 state/rx/gain 71, 521.712667 state/rx/gain 69, 522.688667 state/rx/gain 71, 543.998000 state/rx/gain 65, 544.974000 state/rx/gain 71, 553.107333 state/rx/gain 65, 554.083333 state/rx/gain 71, 561.159333 state/rx/gain 69, 562.135333 state/rx/gain 71, 567.259333 state/rx/gain 65, 568.235333 state/rx/gain 71, 589.544667 state/rx/gain 69, 590.520667 state/rx/gain 71",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "12.295081967213115",
+    "-S",
+    "30720000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S4_2400_agc.events",
+    "sha256": "6f9b27e9749bd94887132b037bf7f7918997f20fed55175f9968dd512e782916",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S4_2400_agc.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 12.295081967213115 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 2400000000\n0 state/rx/sampling 30720000\n0 state/rx/span 30720000\n0 state/rx/bandwidth 18000000\n0 state/rx/gain 71\n0 state/rx/gain_mode SlowAttack\n# frames_received 236, wall t+19.2 s, rx_gain 71.0 -> 69.0\n19.154000 state/rx/gain 69\n# frames_received 248, wall t+20.2 s, rx_gain 69.0 -> 71.0\n20.130000 state/rx/gain 71\n# frames_received 336, wall t+27.3 s, rx_gain 71.0 -> 67.0\n27.287333 state/rx/gain 67\n# frames_received 348, wall t+28.3 s, rx_gain 67.0 -> 71.0\n28.263333 state/rx/gain 71\n# frames_received 435, wall t+35.4 s, rx_gain 71.0 -> 67.0\n35.339333 state/rx/gain 67\n# frames_received 447, wall t+36.4 s, rx_gain 67.0 -> 71.0\n36.315333 state/rx/gain 71\n# frames_received 697, wall t+56.7 s, rx_gain 71.0 -> 65.0\n56.648667 state/rx/gain 65\n# frames_received 709, wall t+57.7 s, rx_gain 65.0 -> 71.0\n57.624667 state/rx/gain 71\n# frames_received 859, wall t+69.9 s, rx_gain 71.0 -> 69.0\n69.824667 state/rx/gain 69\n# frames_received 871, wall t+70.9 s, rx_gain 69.0 -> 71.0\n70.800667 state/rx/gain 71\n# frames_received 1008, wall t+82.0 s, rx_gain 71.0 -> 69.0\n81.943333 state/rx/gain 69\n# frames_received 1021, wall t+83.1 s, rx_gain 69.0 -> 71.0\n83.000667 state/rx/gain 71\n# frames_received 1482, wall t+120.5 s, rx_gain 71.0 -> 67.0\n120.495333 state/rx/gain 67\n# frames_received 1494, wall t+121.6 s, rx_gain 67.0 -> 69.0\n121.471333 state/rx/gain 69\n# frames_received 1507, wall t+122.6 s, rx_gain 69.0 -> 71.0\n122.528667 state/rx/gain 71\n# frames_received 1519, wall t+123.6 s, rx_gain 71.0 -> 67.0\n123.504667 state/rx/gain 67\n# frames_received 1531, wall t+124.6 s, rx_gain 67.0 -> 71.0\n124.480667 state/rx/gain 71\n# frames_received 1618, wall t+131.7 s, rx_gain 71.0 -> 67.0\n131.556667 state/rx/gain 67\n# frames_received 1631, wall t+132.7 s, rx_gain 67.0 -> 71.0\n132.614000 state/rx/gain 71\n# frames_received 1855, wall t+150.9 s, rx_gain 71.0 -> 69.0\n150.832667 state/rx/gain 69\n# frames_received 1868, wall t+151.9 s, rx_gain 69.0 -> 71.0\n151.890000 state/rx/gain 71\n# frames_received 1880, wall t+152.9 s, rx_gain 71.0 -> 65.0\n152.866000 state/rx/gain 65\n# frames_received 1893, wall t+154.0 s, rx_gain 65.0 -> 71.0\n153.923333 state/rx/gain 71\n# frames_received 1967, wall t+160.0 s, rx_gain 71.0 -> 65.0\n159.942000 state/rx/gain 65\n# frames_received 1980, wall t+161.1 s, rx_gain 65.0 -> 71.0\n160.999333 state/rx/gain 71\n# frames_received 2092, wall t+170.2 s, rx_gain 71.0 -> 67.0\n170.108667 state/rx/gain 67\n# frames_received 2104, wall t+171.2 s, rx_gain 67.0 -> 71.0\n171.084667 state/rx/gain 71\n# frames_received 2441, wall t+198.5 s, rx_gain 71.0 -> 67.0\n198.494000 state/rx/gain 67\n# frames_received 2453, wall t+199.5 s, rx_gain 67.0 -> 71.0\n199.470000 state/rx/gain 71\n# frames_received 2553, wall t+207.6 s, rx_gain 71.0 -> 67.0\n207.603333 state/rx/gain 67\n# frames_received 2565, wall t+208.7 s, rx_gain 67.0 -> 71.0\n208.579333 state/rx/gain 71\n# frames_received 3077, wall t+250.3 s, rx_gain 71.0 -> 69.0\n250.222000 state/rx/gain 69\n# frames_received 3089, wall t+251.3 s, rx_gain 69.0 -> 71.0\n251.198000 state/rx/gain 71\n# frames_received 3176, wall t+258.4 s, rx_gain 71.0 -> 61.0\n258.274000 state/rx/gain 61\n# frames_received 3189, wall t+259.4 s, rx_gain 61.0 -> 71.0\n259.331333 state/rx/gain 71\n# frames_received 3351, wall t+272.5 s, rx_gain 71.0 -> 69.0\n272.507333 state/rx/gain 69\n# frames_received 3363, wall t+273.6 s, rx_gain 69.0 -> 71.0\n273.483333 state/rx/gain 71\n# frames_received 3488, wall t+283.7 s, rx_gain 71.0 -> 67.0\n283.650000 state/rx/gain 67\n# frames_received 3501, wall t+284.7 s, rx_gain 67.0 -> 69.0\n284.707333 state/rx/gain 69\n# frames_received 3513, wall t+285.8 s, rx_gain 69.0 -> 71.0\n285.683333 state/rx/gain 71\n# frames_received 3550, wall t+288.8 s, rx_gain 71.0 -> 67.0\n288.692667 state/rx/gain 67\n# frames_received 3563, wall t+289.8 s, rx_gain 67.0 -> 71.0\n289.750000 state/rx/gain 71\n# frames_received 3588, wall t+291.8 s, rx_gain 71.0 -> 69.0\n291.783333 state/rx/gain 69\n# frames_received 3600, wall t+292.8 s, rx_gain 69.0 -> 71.0\n292.759333 state/rx/gain 71\n# frames_received 3724, wall t+303.0 s, rx_gain 71.0 -> 69.0\n302.844667 state/rx/gain 69\n# frames_received 3737, wall t+304.0 s, rx_gain 69.0 -> 71.0\n303.902000 state/rx/gain 71\n# frames_received 3861, wall t+314.1 s, rx_gain 71.0 -> 69.0\n313.987333 state/rx/gain 69\n# frames_received 3874, wall t+315.1 s, rx_gain 69.0 -> 71.0\n315.044667 state/rx/gain 71\n# frames_received 3911, wall t+318.1 s, rx_gain 71.0 -> 67.0\n318.054000 state/rx/gain 67\n# frames_received 3924, wall t+319.2 s, rx_gain 67.0 -> 71.0\n319.111333 state/rx/gain 71\n# frames_received 4036, wall t+328.3 s, rx_gain 71.0 -> 67.0\n328.220667 state/rx/gain 67\n# frames_received 4048, wall t+329.3 s, rx_gain 67.0 -> 71.0\n329.196667 state/rx/gain 71\n# frames_received 4198, wall t+341.4 s, rx_gain 71.0 -> 65.0\n341.396667 state/rx/gain 65\n# frames_received 4210, wall t+342.5 s, rx_gain 65.0 -> 71.0\n342.372667 state/rx/gain 71\n# frames_received 4285, wall t+348.5 s, rx_gain 71.0 -> 65.0\n348.472667 state/rx/gain 65\n# frames_received 4297, wall t+349.5 s, rx_gain 65.0 -> 71.0\n349.448667 state/rx/gain 71\n# frames_received 4596, wall t+373.9 s, rx_gain 71.0 -> 63.0\n373.767333 state/rx/gain 63\n# frames_received 4621, wall t+375.9 s, rx_gain 63.0 -> 71.0\n375.800667 state/rx/gain 71\n# frames_received 4721, wall t+384.0 s, rx_gain 71.0 -> 63.0\n383.934000 state/rx/gain 63\n# frames_received 4733, wall t+385.0 s, rx_gain 63.0 -> 71.0\n384.910000 state/rx/gain 71\n# frames_received 4920, wall t+400.2 s, rx_gain 71.0 -> 69.0\n400.119333 state/rx/gain 69\n# frames_received 4932, wall t+401.2 s, rx_gain 69.0 -> 71.0\n401.095333 state/rx/gain 71\n# frames_received 5057, wall t+411.3 s, rx_gain 71.0 -> 65.0\n411.262000 state/rx/gain 65\n# frames_received 5069, wall t+412.3 s, rx_gain 65.0 -> 71.0\n412.238000 state/rx/gain 71\n# frames_received 5244, wall t+426.5 s, rx_gain 71.0 -> 69.0\n426.471333 state/rx/gain 69\n# frames_received 5256, wall t+427.6 s, rx_gain 69.0 -> 71.0\n427.447333 state/rx/gain 71\n# frames_received 5281, wall t+429.6 s, rx_gain 71.0 -> 69.0\n429.480667 state/rx/gain 69\n# frames_received 5294, wall t+430.6 s, rx_gain 69.0 -> 71.0\n430.538000 state/rx/gain 71\n# frames_received 5319, wall t+432.6 s, rx_gain 71.0 -> 67.0\n432.571333 state/rx/gain 67\n# frames_received 5331, wall t+433.6 s, rx_gain 67.0 -> 71.0\n433.547333 state/rx/gain 71\n# frames_received 5518, wall t+448.8 s, rx_gain 71.0 -> 53.0\n448.756667 state/rx/gain 53\n# frames_received 5531, wall t+449.9 s, rx_gain 53.0 -> 71.0\n449.814000 state/rx/gain 71\n# frames_received 6128, wall t+498.5 s, rx_gain 71.0 -> 57.0\n498.370000 state/rx/gain 57\n# frames_received 6141, wall t+499.5 s, rx_gain 57.0 -> 69.0\n499.427333 state/rx/gain 69\n# frames_received 6153, wall t+500.5 s, rx_gain 69.0 -> 71.0\n500.403333 state/rx/gain 71\n# frames_received 6178, wall t+502.5 s, rx_gain 71.0 -> 69.0\n502.436667 state/rx/gain 69\n# frames_received 6191, wall t+503.5 s, rx_gain 69.0 -> 71.0\n503.494000 state/rx/gain 71\n# frames_received 6253, wall t+508.6 s, rx_gain 71.0 -> 69.0\n508.536667 state/rx/gain 69\n# frames_received 6266, wall t+509.6 s, rx_gain 69.0 -> 71.0\n509.594000 state/rx/gain 71\n# frames_received 6378, wall t+518.7 s, rx_gain 71.0 -> 61.0\n518.703333 state/rx/gain 61\n# frames_received 6390, wall t+519.8 s, rx_gain 61.0 -> 71.0\n519.679333 state/rx/gain 71\n# frames_received 6415, wall t+521.8 s, rx_gain 71.0 -> 69.0\n521.712667 state/rx/gain 69\n# frames_received 6427, wall t+522.8 s, rx_gain 69.0 -> 71.0\n522.688667 state/rx/gain 71\n# frames_received 6689, wall t+544.0 s, rx_gain 71.0 -> 65.0\n543.998000 state/rx/gain 65\n# frames_received 6701, wall t+545.0 s, rx_gain 65.0 -> 71.0\n544.974000 state/rx/gain 71\n# frames_received 6801, wall t+553.1 s, rx_gain 71.0 -> 65.0\n553.107333 state/rx/gain 65\n# frames_received 6813, wall t+554.2 s, rx_gain 65.0 -> 71.0\n554.083333 state/rx/gain 71\n# frames_received 6900, wall t+561.2 s, rx_gain 71.0 -> 69.0\n561.159333 state/rx/gain 69\n# frames_received 6912, wall t+562.2 s, rx_gain 69.0 -> 71.0\n562.135333 state/rx/gain 71\n# frames_received 6975, wall t+567.3 s, rx_gain 71.0 -> 65.0\n567.259333 state/rx/gain 65\n# frames_received 6987, wall t+568.3 s, rx_gain 65.0 -> 71.0\n568.235333 state/rx/gain 71\n# frames_received 7249, wall t+589.6 s, rx_gain 71.0 -> 69.0\n589.544667 state/rx/gain 69\n# frames_received 7261, wall t+590.6 s, rx_gain 69.0 -> 71.0\n590.520667 state/rx/gain 71\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S4_2400_agc.raw.events"
+   },
+   "accept_dispositions": {
+    "DAB+": {
+     "disposition": "suspected_false",
+     "basis": "DAB+ is allocated 174-240 MHz; the replay windows (2.4007-2.4109 GHz) and the live one (2.4128-2.4153 GHz) lie in Wi-Fi channel 1 (2.401-2.423 GHz); allocation only, no IQ taken"
+    },
+    "FM Broadcast": {
+     "disposition": "suspected_false",
+     "basis": "FM broadcast is allocated 88-108 MHz; 2.4 GHz ISM band; no IQ taken"
+    }
+   }
+  },
+  {
+   "name": "S5_retune",
+   "file": "raw/S5_retune.raw",
+   "sha256": "716f2e6ef32bffb1f8f384827640e729168019f7678c10be13afeb49ffa1459a",
+   "frames": 720,
+   "duration_s": 719.5852799999999,
+   "fps": 1.0005763319672132,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 433000000,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794232332.3031173 (unix s): rx_lo 433000000 Hz, fs 2500000 Hz, gain 70.0 dB Manual, Average x610, 4096-point; capture sha256 716f2e6ef32bffb1f8f384827640e729168019f7678c10be13afeb49ffa1459a",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "port": 80,
+     "note": "S5 retune sequence: start LO 433 MHz, 2.5 MS/s, bw 2.5 MHz, manual 70 dB; LO only: 70 MHz at +180 s, 2.4 GHz at +360 s, 433 MHz at +540 s; evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+     "captured_unix_s": 1794232332.3031173,
+     "started_unix_s": 1794232332.3031175,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "fps_api_start": 1.0005763319672132,
+     "spectrometer_input": "AD9361",
+     "frame_span_hz": 2500000.0,
+     "poll_s": 1.0,
+     "timeout_s": 60.0,
+     "frames_requested": 720,
+     "frames": 720,
+     "frame_sizes": {
+      "16384": 720
+     },
+     "settings_log": [
+      {
+       "t_unix_s": 1794232512.9286156,
+       "t_rel_s": 180.6254985332489,
+       "frames_received": 181,
+       "t_replay_s": 180.89574399999998,
+       "t_event_s": 180.396032,
+       "changed": {
+        "rx_lo_frequency": [
+         433000000,
+         70000000
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 2500000,
+        "rx_rf_bandwidth": 2500000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 70000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 70.0,
+        "rx_gain_mode": "Manual",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 2500000.0,
+        "output_sampling_frequency": 1.0005763319672132,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232692.298512,
+       "t_rel_s": 359.9953947067261,
+       "frames_received": 361,
+       "t_replay_s": 360.792064,
+       "t_event_s": 360.292352,
+       "changed": {
+        "rx_lo_frequency": [
+         70000000,
+         2400000000
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 2500000,
+        "rx_rf_bandwidth": 2500000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 2400000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 70.0,
+        "rx_gain_mode": "Manual",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 2500000.0,
+        "output_sampling_frequency": 1.0005763319672132,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      },
+      {
+       "t_unix_s": 1794232872.8708491,
+       "t_rel_s": 540.5677316188812,
+       "frames_received": 541,
+       "t_replay_s": 540.6883839999999,
+       "t_event_s": 540.188672,
+       "changed": {
+        "rx_lo_frequency": [
+         2400000000,
+         433000000
+        ]
+       },
+       "ad9361": {
+        "sampling_frequency": 2500000,
+        "rx_rf_bandwidth": 2500000,
+        "tx_rf_bandwidth": 18000000,
+        "rx_lo_frequency": 433000000,
+        "tx_lo_frequency": 2450000000,
+        "rx_gain": 70.0,
+        "rx_gain_mode": "Manual",
+        "tx_gain": -10.0
+       },
+       "spectrometer": {
+        "input": "AD9361",
+        "input_sampling_frequency": 2500000.0,
+        "output_sampling_frequency": 1.0005763319672132,
+        "number_integrations": 610,
+        "fft_size": 4096,
+        "mode": "Average"
+       }
+      }
+     ],
+     "poll_errors": [],
+     "aborted": null,
+     "interrupted": false,
+     "first_frame_unix_s": 1794232332.401136,
+     "last_frame_unix_s": 1794233051.0102272,
+     "measured_fps": 1.000543979644638,
+     "frame_gap_s": {
+      "min": 0.8536262512207031,
+      "median": 0.9998013973236084,
+      "max": 1.1831037998199463
+     },
+     "finalised": true,
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 433000000,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 70.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -10.0
+     },
+     "api_after_full": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 1.0005763319672132,
+       "number_integrations": 610,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 42399.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      }
+     },
+     "settings_changed_during_capture": true,
+     "fps_changed_during_capture": false,
+     "ended_unix_s": 1794233051.0376554,
+     "raw_bytes": 11796480,
+     "sha256": "716f2e6ef32bffb1f8f384827640e729168019f7678c10be13afeb49ffa1459a",
+     "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S5_retune.raw.events"
+    },
+    "replay_fps": 1.0005763319672132
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 1.00058 frames/s: cold start, learning begins on the first frame; scripted replay events on the virtual clock: 0 state/rx/frequency 433000000, 0 state/rx/sampling 2500000, 0 state/rx/span 2500000, 0 state/rx/bandwidth 2500000, 0 state/rx/gain 70, 0 state/rx/gain_mode Manual, 180.396032 state/rx/frequency 70000000, 360.292352 state/rx/frequency 2400000000, 540.188672 state/rx/frequency 433000000",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded + scripted events",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "1.0005763319672132",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "events": {
+    "file": "raw/S5_retune.events",
+    "sha256": "cbd09a173005cca386129a54cd18192436af79fddf0599f7a7ff15d6f54a649c",
+    "contents": "# replay events for /home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S5_retune.raw: generated by capture_waterfall.py from the /api settings log\n# host 192.168.50.25, frame rate at start 1.0005763319672132 frames/s; event time = (frames received - 0.5) / that rate, i.e. just before the first frame after the change was seen\n# a change is seen up to 1.0 s after it happened (poll interval); a change undone within one poll interval is not seen\n# t = 0: initial value of every watched receiver setting (the daemon takes a topic's first value as its initial state; only a later different value is a change); span = the spectrometer's input rate, i.e. the span of the frames\n0 state/rx/frequency 433000000\n0 state/rx/sampling 2500000\n0 state/rx/span 2500000\n0 state/rx/bandwidth 2500000\n0 state/rx/gain 70\n0 state/rx/gain_mode Manual\n# frames_received 181, wall t+180.6 s, rx_lo_frequency 433000000 -> 70000000\n180.396032 state/rx/frequency 70000000\n# frames_received 361, wall t+360.0 s, rx_lo_frequency 70000000 -> 2400000000\n360.292352 state/rx/frequency 2400000000\n# frames_received 541, wall t+540.6 s, rx_lo_frequency 2400000000 -> 433000000\n540.188672 state/rx/frequency 433000000\n",
+    "format": "one event per line: <t_seconds> <topic> <payload>; '#' comments; sorted by t; passed to the daemon as -E",
+    "source": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S5_retune.raw.events"
+   },
+   "accept_dispositions": {
+    "FM Broadcast": {
+     "disposition": "suspected_false",
+     "basis": "FM broadcast is allocated 88-108 MHz; a 10 s IQ at 433 MHz 74 s after S5 puts the live window median within 2 dB of the span noise median, its only feature a narrow on-air carrier at 433.329 MHz (analysis/T433_two_lo.json)"
+    },
+    "DAB+": {
+     "disposition": "suspected_false",
+     "basis": "DAB+ is allocated 174-240 MHz (Band III); allocation only"
+    }
+   }
+  }
+ ]
+}

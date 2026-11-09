@@ -1,0 +1,148 @@
+{
+ "A": {
+  "iq": "S1_iq/2026-11-09-13-11-17_S1_kigl_iq/2026-11-09-13-11-17_S1_kigl_iq.sigmf-data",
+  "lo_hz": 92674998.0
+ },
+ "B": {
+  "iq": "S1b_iq/2026-11-09-13-19-03_S1b_kigl_iq/2026-11-09-13-19-03_S1b_kigl_iq.sigmf-data",
+  "lo_hz": 93300000.0
+ },
+ "lines_at_A": [
+  {
+   "abs_hz": 91512583,
+   "offset_from_lo_hz": -1162415,
+   "height_db": 19.3,
+   "same_abs_at_B": null,
+   "same_offset_at_B": false,
+   "kind": "one test only, negative"
+  },
+  {
+   "abs_hz": 91549815,
+   "offset_from_lo_hz": -1125183,
+   "height_db": 12.2,
+   "same_abs_at_B": null,
+   "same_offset_at_B": false,
+   "kind": "one test only, negative"
+  },
+  {
+   "abs_hz": 91674327,
+   "offset_from_lo_hz": -1000671,
+   "height_db": 15.3,
+   "same_abs_at_B": null,
+   "same_offset_at_B": false,
+   "kind": "one test only, negative"
+  },
+  {
+   "abs_hz": 91724681,
+   "offset_from_lo_hz": -950317,
+   "height_db": 16.8,
+   "same_abs_at_B": null,
+   "same_offset_at_B": false,
+   "kind": "one test only, negative"
+  },
+  {
+   "abs_hz": 91929148,
+   "offset_from_lo_hz": -745850,
+   "height_db": 11.1,
+   "same_abs_at_B": null,
+   "same_offset_at_B": false,
+   "kind": "one test only, negative"
+  },
+  {
+   "abs_hz": 92100047,
+   "offset_from_lo_hz": -574951,
+   "height_db": 9.1,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 92538279,
+   "offset_from_lo_hz": -136719,
+   "height_db": 20.8,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 92787303,
+   "offset_from_lo_hz": 112305,
+   "height_db": 11.6,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 92842540,
+   "offset_from_lo_hz": 167542,
+   "height_db": 20.5,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 92963389,
+   "offset_from_lo_hz": 288391,
+   "height_db": 25.2,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93088206,
+   "offset_from_lo_hz": 413208,
+   "height_db": 15.7,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93523997,
+   "offset_from_lo_hz": 848999,
+   "height_db": 16.1,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93537730,
+   "offset_from_lo_hz": 862732,
+   "height_db": 8.4,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93586558,
+   "offset_from_lo_hz": 911560,
+   "height_db": 35.9,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93638133,
+   "offset_from_lo_hz": 963135,
+   "height_db": 42.4,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93662852,
+   "offset_from_lo_hz": 987854,
+   "height_db": 11.9,
+   "same_abs_at_B": false,
+   "same_offset_at_B": false,
+   "kind": "neither (both tests possible)"
+  },
+  {
+   "abs_hz": 93918589,
+   "offset_from_lo_hz": 1243591,
+   "height_db": 29.0,
+   "same_abs_at_B": false,
+   "same_offset_at_B": null,
+   "kind": "one test only, negative"
+  }
+ ]
+}

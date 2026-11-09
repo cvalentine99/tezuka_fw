@@ -1,0 +1,64 @@
+{
+ "S3_70": {
+  "capture": {
+   "frames": 600,
+   "measured_fps": 1.0005922694762308,
+   "first_frame_unix_s": 1794231117.0548954,
+   "last_frame_unix_s": 1794231715.700336,
+   "sha256": "521bd743adaa15ada57ba3d7d170dcaf9d343f5a0f16bd3953c51ee94a2f6927",
+   "aborted": null,
+   "interrupted": false,
+   "settings_changed_during_capture": false
+  },
+  "settings_at_start": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 70000000,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 41.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "settings_log": [],
+  "live": {
+   "observations": 367,
+   "seq": [
+    3845,
+    4211
+   ],
+   "labels": {
+    "unknown": 367
+   },
+   "accepted_windows_khz": [],
+   "distinct_accepted_windows": 0,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ],
+   "template_status": [
+    "ok"
+   ],
+   "config_generations": [
+    148
+   ],
+   "learn_count": [
+    12,
+    13
+   ],
+   "unlearned_cycles": 3,
+   "masked_bins": {
+    "first": 0,
+    "last": 1271,
+    "min": 0,
+    "max": 1271
+   },
+   "spur_bins": {
+    "first": 1271,
+    "last": 1271
+   },
+   "valid_bins_last": 2824,
+   "publish_errors_last": 0
+  },
+  "rx_topic_changes_during": []
+ }
+}

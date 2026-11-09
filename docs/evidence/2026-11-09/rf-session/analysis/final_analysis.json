@@ -1,0 +1,283 @@
+{
+ "P0_positive_check": {
+  "live": {
+   "decisions": 88,
+   "labels": {
+    "FM Broadcast": 84,
+    "unknown": 2,
+    "CW / Beacon": 2
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ KIGL 93.3 (RDS verified)": 84,
+    "CW / Beacon @ elsewhere": 2
+   }
+  },
+  "replay_cold": {
+   "decisions": 76,
+   "labels": {
+    "unknown": 7,
+    "FM Broadcast": 45,
+    "CW / Beacon": 24
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ KIGL 93.3 (RDS verified)": 45,
+    "CW / Beacon @ elsewhere": 24
+   }
+  },
+  "live_mask": {
+   "masked_last": 286,
+   "spur_last": 286,
+   "unlearned_cycles": 0,
+   "learns": 0,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S1_kigl_offset": {
+  "live": {
+   "decisions": 367,
+   "labels": {
+    "FM Broadcast": 289,
+    "CW / Beacon": 72,
+    "unknown": 6
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ KIGL 93.3 (RDS verified)": 279,
+    "CW / Beacon @ elsewhere": 57,
+    "CW / Beacon @ KIGL 93.3 (RDS verified)": 15,
+    "FM Broadcast @ elsewhere": 10
+   }
+  },
+  "replay_cold": {
+   "decisions": 301,
+   "labels": {
+    "unknown": 10,
+    "CW / Beacon": 135,
+    "FM Broadcast": 156
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ KIGL 93.3 (RDS verified)": 155,
+    "CW / Beacon @ elsewhere": 123,
+    "CW / Beacon @ KIGL 93.3 (RDS verified)": 12,
+    "FM Broadcast @ elsewhere": 1
+   }
+  },
+  "live_mask": {
+   "masked_last": 286,
+   "spur_last": 286,
+   "unlearned_cycles": 0,
+   "learns": 0,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S1b_kigl_on_lo": {
+  "live": {
+   "decisions": 186,
+   "labels": {
+    "unknown": 8,
+    "CW / Beacon": 176,
+    "FM Broadcast": 2
+   },
+   "accepted_by_label_and_place": {
+    "CW / Beacon @ KIGL 93.3 (RDS verified)": 143,
+    "CW / Beacon @ KAMO 94.3 (RDS verified)": 30,
+    "CW / Beacon @ elsewhere": 3,
+    "FM Broadcast @ KAMO 94.3 (RDS verified)": 2
+   }
+  },
+  "replay_cold": {
+   "decisions": 151,
+   "labels": {
+    "unknown": 6,
+    "FM Broadcast": 144,
+    "CW / Beacon": 1
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ KAMO 94.3 (RDS verified)": 74,
+    "FM Broadcast @ KIGL 93.3 (RDS verified)": 70,
+    "CW / Beacon @ KAMO 94.3 (RDS verified)": 1
+   }
+  },
+  "live_mask": {
+   "masked_last": 608,
+   "spur_last": 608,
+   "unlearned_cycles": 3,
+   "learns": 1,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S1c_kigl_lowgain": {
+  "live": {
+   "decisions": 365,
+   "labels": {
+    "CW / Beacon": 362,
+    "unknown": 3
+   },
+   "accepted_by_label_and_place": {
+    "CW / Beacon @ elsewhere": 362
+   }
+  },
+  "replay_cold": {
+   "decisions": 301,
+   "labels": {
+    "unknown": 9,
+    "FM Broadcast": 131,
+    "CW / Beacon": 161
+   },
+   "accepted_by_label_and_place": {
+    "CW / Beacon @ elsewhere": 159,
+    "FM Broadcast @ KIGL 93.3 (RDS verified)": 131,
+    "CW / Beacon @ KIGL 93.3 (RDS verified)": 2
+   }
+  },
+  "live_mask": {
+   "masked_last": 1589,
+   "spur_last": 1589,
+   "unlearned_cycles": 0,
+   "learns": 0,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S2_433": {
+  "live": {
+   "decisions": 367,
+   "labels": {
+    "unknown": 111,
+    "FM Broadcast": 251,
+    "CW / Beacon": 5
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ elsewhere": 251,
+    "CW / Beacon @ elsewhere": 5
+   }
+  },
+  "replay_cold": {
+   "decisions": 301,
+   "labels": {
+    "unknown": 277,
+    "DAB+": 23,
+    "CW / Beacon": 1
+   },
+   "accepted_by_label_and_place": {
+    "DAB+ @ elsewhere": 23,
+    "CW / Beacon @ elsewhere": 1
+   }
+  },
+  "live_mask": {
+   "masked_last": 1271,
+   "spur_last": 1271,
+   "unlearned_cycles": 3,
+   "learns": 1,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S3_70": {
+  "live": {
+   "decisions": 367,
+   "labels": {
+    "unknown": 367
+   },
+   "accepted_by_label_and_place": {}
+  },
+  "replay_cold": {
+   "decisions": 301,
+   "labels": {
+    "unknown": 301
+   },
+   "accepted_by_label_and_place": {}
+  },
+  "live_mask": {
+   "masked_last": 1271,
+   "spur_last": 1271,
+   "unlearned_cycles": 3,
+   "learns": 1,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S4_2400_agc": {
+  "live": {
+   "decisions": 568,
+   "labels": {
+    "unknown": 440,
+    "CW / Beacon": 30,
+    "FM Broadcast": 41,
+    "DAB+": 57
+   },
+   "accepted_by_label_and_place": {
+    "DAB+ @ elsewhere": 57,
+    "FM Broadcast @ elsewhere": 41,
+    "CW / Beacon @ elsewhere": 30
+   }
+  },
+  "replay_cold": {
+   "decisions": 569,
+   "labels": {
+    "unknown": 545,
+    "CW / Beacon": 8,
+    "DAB+": 10,
+    "FM Broadcast": 6
+   },
+   "accepted_by_label_and_place": {
+    "DAB+ @ elsewhere": 10,
+    "CW / Beacon @ elsewhere": 8,
+    "FM Broadcast @ elsewhere": 6
+   }
+  },
+  "live_mask": {
+   "masked_last": 0,
+   "spur_last": 1536,
+   "unlearned_cycles": 202,
+   "learns": 11,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "S5_retune": {
+  "live": {
+   "decisions": 440,
+   "labels": {
+    "unknown": 302,
+    "CW / Beacon": 7,
+    "FM Broadcast": 131
+   },
+   "accepted_by_label_and_place": {
+    "FM Broadcast @ elsewhere": 131,
+    "CW / Beacon @ elsewhere": 7
+   }
+  },
+  "replay_cold": {
+   "decisions": 361,
+   "labels": {
+    "unknown": 288,
+    "DAB+": 26,
+    "CW / Beacon": 47
+   },
+   "accepted_by_label_and_place": {
+    "CW / Beacon @ elsewhere": 47,
+    "DAB+ @ elsewhere": 26
+   }
+  },
+  "live_mask": {
+   "masked_last": 1564,
+   "spur_last": 1564,
+   "unlearned_cycles": 24,
+   "learns": 4,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ]
+  }
+ },
+ "_chain_note": "chain replay (P0..S3 as one daemon run) per segment, see chain_split.json"
+}

@@ -1,0 +1,255 @@
+{
+ "S5_retune": {
+  "capture": {
+   "frames": 720,
+   "measured_fps": 1.000543979644638,
+   "first_frame_unix_s": 1794232332.401136,
+   "last_frame_unix_s": 1794233051.0102272,
+   "sha256": "716f2e6ef32bffb1f8f384827640e729168019f7678c10be13afeb49ffa1459a",
+   "aborted": null,
+   "interrupted": false,
+   "settings_changed_during_capture": true
+  },
+  "settings_at_start": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 433000000,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 70.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "settings_log": [
+   {
+    "t_unix_s": 1794232512.9286156,
+    "t_rel_s": 180.6254985332489,
+    "frames_received": 181,
+    "t_replay_s": 180.89574399999998,
+    "t_event_s": 180.396032,
+    "changed": {
+     "rx_lo_frequency": [
+      433000000,
+      70000000
+     ]
+    },
+    "ad9361": {
+     "sampling_frequency": 2500000,
+     "rx_rf_bandwidth": 2500000,
+     "tx_rf_bandwidth": 18000000,
+     "rx_lo_frequency": 70000000,
+     "tx_lo_frequency": 2450000000,
+     "rx_gain": 70.0,
+     "rx_gain_mode": "Manual",
+     "tx_gain": -10.0
+    },
+    "spectrometer": {
+     "input": "AD9361",
+     "input_sampling_frequency": 2500000.0,
+     "output_sampling_frequency": 1.0005763319672132,
+     "number_integrations": 610,
+     "fft_size": 4096,
+     "mode": "Average"
+    }
+   },
+   {
+    "t_unix_s": 1794232692.298512,
+    "t_rel_s": 359.9953947067261,
+    "frames_received": 361,
+    "t_replay_s": 360.792064,
+    "t_event_s": 360.292352,
+    "changed": {
+     "rx_lo_frequency": [
+      70000000,
+      2400000000
+     ]
+    },
+    "ad9361": {
+     "sampling_frequency": 2500000,
+     "rx_rf_bandwidth": 2500000,
+     "tx_rf_bandwidth": 18000000,
+     "rx_lo_frequency": 2400000000,
+     "tx_lo_frequency": 2450000000,
+     "rx_gain": 70.0,
+     "rx_gain_mode": "Manual",
+     "tx_gain": -10.0
+    },
+    "spectrometer": {
+     "input": "AD9361",
+     "input_sampling_frequency": 2500000.0,
+     "output_sampling_frequency": 1.0005763319672132,
+     "number_integrations": 610,
+     "fft_size": 4096,
+     "mode": "Average"
+    }
+   },
+   {
+    "t_unix_s": 1794232872.8708491,
+    "t_rel_s": 540.5677316188812,
+    "frames_received": 541,
+    "t_replay_s": 540.6883839999999,
+    "t_event_s": 540.188672,
+    "changed": {
+     "rx_lo_frequency": [
+      2400000000,
+      433000000
+     ]
+    },
+    "ad9361": {
+     "sampling_frequency": 2500000,
+     "rx_rf_bandwidth": 2500000,
+     "tx_rf_bandwidth": 18000000,
+     "rx_lo_frequency": 433000000,
+     "tx_lo_frequency": 2450000000,
+     "rx_gain": 70.0,
+     "rx_gain_mode": "Manual",
+     "tx_gain": -10.0
+    },
+    "spectrometer": {
+     "input": "AD9361",
+     "input_sampling_frequency": 2500000.0,
+     "output_sampling_frequency": 1.0005763319672132,
+     "number_integrations": 610,
+     "fft_size": 4096,
+     "mode": "Average"
+    }
+   }
+  ],
+  "live": {
+   "observations": 440,
+   "seq": [
+    4792,
+    5231
+   ],
+   "labels": {
+    "unknown": 302,
+    "CW / Beacon": 7,
+    "FM Broadcast": 131
+   },
+   "accepted_windows_khz": [
+    [
+     "FM Broadcast",
+     433045,
+     433445,
+     67
+    ],
+    [
+     "FM Broadcast",
+     433044,
+     433444,
+     45
+    ],
+    [
+     "CW / Beacon",
+     433465,
+     433495,
+     7
+    ],
+    [
+     "FM Broadcast",
+     433053,
+     433453,
+     5
+    ],
+    [
+     "FM Broadcast",
+     433052,
+     433452,
+     2
+    ],
+    [
+     "FM Broadcast",
+     433055,
+     433454,
+     2
+    ],
+    [
+     "FM Broadcast",
+     433032,
+     433432,
+     2
+    ],
+    [
+     "FM Broadcast",
+     433058,
+     433457,
+     1
+    ],
+    [
+     "FM Broadcast",
+     433056,
+     433456,
+     1
+    ],
+    [
+     "FM Broadcast",
+     433044,
+     433443,
+     1
+    ],
+    [
+     "FM Broadcast",
+     433031,
+     433431,
+     1
+    ],
+    [
+     "FM Broadcast",
+     433063,
+     433463,
+     1
+    ]
+   ],
+   "distinct_accepted_windows": 15,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ],
+   "template_status": [
+    "ok"
+   ],
+   "config_generations": [
+    198,
+    199,
+    200,
+    201
+   ],
+   "learn_count": [
+    24,
+    25,
+    26,
+    27,
+    28
+   ],
+   "unlearned_cycles": 24,
+   "masked_bins": {
+    "first": 0,
+    "last": 1564,
+    "min": 0,
+    "max": 1564
+   },
+   "spur_bins": {
+    "first": 1536,
+    "last": 1564
+   },
+   "valid_bins_last": 2531,
+   "publish_errors_last": 0
+  },
+  "rx_topic_changes_during": [
+   [
+    181.2,
+    "state/rx/frequency",
+    "70000000"
+   ],
+   [
+    362.7,
+    "state/rx/frequency",
+    "2400000000"
+   ],
+   [
+    541.5,
+    "state/rx/frequency",
+    "433000000"
+   ]
+  ]
+ }
+}

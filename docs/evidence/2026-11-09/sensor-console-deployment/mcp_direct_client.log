@@ -1,0 +1,17 @@
+2026-11-09 05:31:50,952 tezuka_mcp INFO tezuka-mcp 0.1.0: mqtt 192.168.50.25:1883, http 192.168.50.25:80, stdio transport
+2026-11-09 05:31:50,963 tezuka_mcp.state INFO connected to 192.168.50.25:1883, subscribed state/# (classifier prefix state/classifier/)
+2026-11-09 05:31:54,468 tezuka_mcp.state WARNING MQTT disconnected: Normal disconnection
+server: tezuka-sensor 0.1.0
+tools: ['get_sensor_snapshot', 'snapshot_fpga_waterfall']
+get_sensor_snapshot in 0.0s, is_error=None
+ classifier status: fresh best_effort: False age_s: 0.746 seq: None
+ label: null templates: null
+  rx/frequency 96450000 fresh age 0.429
+  rx/sampling 30720000 fresh age 0.435
+  rx/span 30720000 fresh age 2.565
+  rx/gain 71.000000 dB fresh age 0.415
+  rx/gain_mode manual fresh age 0.411
+ provenance: {"source": "mqtt://192.168.50.25:1883 state/#", "classifier_prefix": "state/classifier/", "subscriber_connected": true, "connection_epoch": 1, "subscriber_uptime_s": 3.0, "connected_for_s": 3.0, "last_error": null, "freshness_rule": "fresh = a non-retained message within max_age; retained = only the broker's replayed copy is held for this value; stale = live but older; unavailable = never seen. Fr
+snapshot_fpga_waterfall in 0.5s ok=True
+ keys: ['context', 'ok', 'provenance', 'schema', 'summary', 'support']
+  summary : {"frames_averaged": 8, "fft_size": 4096, "bins_used": 4095, "bin0_offset": 1, "dc_index": 2047, "step_word": 3.0, "level_unit": "dB relative to the producer's linear power scale (10*log10 of integrated |X|^2 * 4e6/(nint*fs)); NOT dBm, no calibration applied", "averaging": "power-domain mean across frames per bin, then 10*log10; no averaging across bins or sweep steps", "noise_floor": {"db": 55.85, "estimator": "median of frame-averaged bin levels in dB, excluding the DC bin and its two neighbours"}, "peak": {"bin": 1627, "db": 96.11, "over_floor_db": 40.27, "hz": 93300000.0}, "psd_summary": {"

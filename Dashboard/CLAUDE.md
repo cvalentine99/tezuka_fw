@@ -105,6 +105,9 @@ The on-device backend is `api_controller.sh` (polling script, 2 s interval, `boa
 | `state/classifier/template_shape` | JSON `{id, label, bins, hz_per_bin, data[]}`: the matched template resampled onto the live grid, zero-mean / unit-norm; republished when the match or the grid changes |
 | `state/classifier/window` | JSON `{id, bins, data[]}`: the normalized live window the daemon scored against that template, every match cycle |
 | `state/classifier/label`, `confidence`, `freq_offset`, `bandwidth_bins`, `frame_bins`, `template_id`, `feature_*` | Older per-field classifier topics, still published; `freq_offset` is the matched window's first bin |
+| `state/classifier/observation` | One bounded JSON observation per classify cycle, matched or not, schema `tezuka.classifier.observation/1`: `{schema, seq, time{unix_s, mono_s, source, disciplined, replay}, sensor{hostname, serial, boot_id, session_id, pid}, input{source, units, fft_size, bins_used, bin0_offset, first_float, dc_index, hz_per_bin}, config{bound:false, bound_reason, generation, frequency_hz, span_hz, sampling_hz, rfinput, sweep{activate, engaged}}, templates{path, status, sha256, version, count, canonical_n, feature_semantics}, decision{state, classified, label, accepted, template_id, score, snr_db, prom_db, bin_offset, bandwidth_bins, gate_factor, threshold, hold_margin, margin, best{...}, hysteresis{locked, locked_template_id, held, took_over}, gates{...}}, features{valid, bandwidth_frac, bandwidth_hz, spectral_papr_db, flatness, peak_count, peak_bin, units}, temporal{history_samples, drift_bins_per_s, occupancy_pct}, background{learned, age_s, frames}, health{publish_errors, publish_ok, waterfall_connected}}`. Unknown values are explicit `null` with a `*_reason`. Full contract: `docs/classifier_telemetry.md` |
+| `state/classifier/templates_status` | Verdict of the last `cmd/classifier/templates` upload: `{accepted:true, installed, report}` or `{accepted:false, report}` / `{accepted:false, status, error}`, where `report` is the loader's own `{valid, status, error?, version?, count?, sha256?, labels?}` line. The upload is validated on a staged copy before it replaces the working file |
+| `state/classifier/enabled` | `on`/`off`, mirrors `cmd/classifier/enabled` |
 
 **Command topics** (`cmd/…`):
 
@@ -121,6 +124,8 @@ The on-device backend is `api_controller.sh` (polling script, 2 s interval, `boa
 | `cmd/operator/callsign` | Set operator callsign (device reboot required) |
 | `cmd/operator/locator` | Set operator Maidenhead locator |
 | `cmd/classifier/background` | `learn` relearns the classifier's receiver background (do it on a quiet moment) |
+| `cmd/classifier/templates` | base64 of an SCFT template file (at most 4 MiB decoded). Decoded to a staging file on the same JFFS2 filesystem, validated with `classifier -V`, then atomically renamed over `/mnt/jffs2/classifier/templates.bin`; a rejected file never touches the working one. Result on `state/classifier/templates_status` |
+| `cmd/classifier/enabled` | `on`/`off` starts/stops the daemon and persists the choice in the U-Boot env |
 | `cmd/system/clkref/source` | Select reference clock mode (`10mhz`/`pps`/`gps`/`none`) — writes `vctcxo_lock` reg `0x0C` `dac_ref_sel`; no-op on boards without that IP (no auto-detect, must be selected explicitly) |
 | `cmd/system/clkref/mode` | `auto`/`external`/`internal` on ADF4001 boards: runs `S22refclk set`, which stores `refclk_auto`/`refclk_source` in the u-boot environment and forces the PLL loop open or closed through EMIO |
 

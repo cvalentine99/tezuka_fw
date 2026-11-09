@@ -1,0 +1,53 @@
+=== boot_id after: fac5273b-adf5-464a-917e-7ee0ede16f89
+49.89 69.30
+Mon Nov  9 11:48:49 UTC 2026
+=== installed hashes
+f87a3c467ea2795d187f7ff9c38a16f120de31c3b001dca68abf8183c88859e8  /usr/bin/classifier
+4ddc8927fecdf1ad128625a0b5a17a8803c758fde838db59793f23a0cba8cad5  /root/api_controller.sh
+771fa1733e848f876fc6e7bff46e7a24536a121c776906c53c0742718fe8591b  /root/index.html
+8842804d3c52f3408537058b823aee09064886ace13b17a695c926dcf09aa745  /mnt/jffs2/autorun.sh
+cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263  /mnt/jffs2/classifier/templates.bin
+=== processes
+ 1498     1 S    /usr/bin/classifier -f /mnt/jffs2/classifier/templates.bin
+ 1505     1 S    {api_controller.} /bin/bash /root/api_controller.sh
+ 1570  1505 S    /usr/bin/mqtt_pubd -i tezuka_pub
+ 1572  1505 S    {api_controller.} /bin/bash /root/api_controller.sh
+ 1573  1572 S    /usr/bin/mosquitto_sub -v -i tezuka_sub -t cmd/#
+ 1574  1572 S    {api_controller.} /bin/bash /root/api_controller.sh
+=== counts
+controller bash: 3, cmd subscribers: 1, publishers: 1, classifier: 1
+classifier pid 1498 exe f87a3c467ea2795d pidfile 1498
+=== autorun output in the boot log
+=== env
+1
+=== api
+{"ad9361":{"sampling_frequency":30720000,"rx_rf_bandwidth":18000000,"tx_rf_bandwidth":18000000,"rx_lo_frequency":2400000000,"tx_lo_frequency":2450000000,"rx_gain":71.0,"rx_gain_mode":"SlowAttack","tx_gain":-10.0},"ddc":{"enabled":false,"frequency":0.0,"decimation":20,"input_sampling_frequency":30720000.0,"output_sampling_frequency":1536000.0,"max_input_sampling_frequency":69444444.44444445},"geolocation":{"point":null},"recorder":{"state":"Stopped","mode":"IQ16bit","prepend_timestamp":false,"maximum_duration":0.0},"recording_metadata":{"filename":"recording","description":"","author":"","geolocation":{"point":null}},"spectrometer":{"input":"AD9361","input_sampling_frequency":30720000.0,"output_sampling_frequency":7.331378299120234,"number_integrations":1023,"fft_size":4096,"mode":"Average"},"time":{"time":1794224929345.3875},"versions":{"firmware_version":"tezuka-v0.3.24-34-g6e3a","maia_httpd_git":"v0.3.24-21-g49403b9","maia_httpd_version":"0.6.0","maia_hdl_version":"0.6.1"}}
+=== observation
+"seq":12
+"boot_id":"fac5273b-adf5-464a-917e-7ee0ede16f89"
+"sha256":"cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+"label":"unknown"
+"publish_errors":0
+"waterfall_connected":true
+=== rx state
+state/rx/bandwidth 18000000
+state/rx/frequency 2400000000
+state/rx/gain 53.000000 dB
+state/rx/gain 71.000000 dB
+state/rx/gain_mode slow_attack
+state/rx/rfinput 1
+state/rx/sampling 30720000
+state/rx/span 30720000
+state/rx/sweep/activate 0
+state/rx/sweep/engaged 0
+state/rx/sweep/frequency 280000000
+state/rx/sweep/span 30720000
+=== enabled topic
+on
+=== df
+Filesystem           1K-blocks      Used Available Use% Mounted on
+mtd2                       896       700       196  78% /mnt/jffs2
+=== jffs2 store intact
+classifier: OK
+api_controller.sh: OK
+index.html.xz: OK

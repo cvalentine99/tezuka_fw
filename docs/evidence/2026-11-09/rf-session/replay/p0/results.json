@@ -1,0 +1,449 @@
+{
+ "revisions": {
+  "deployed": {
+   "path": "/home/cvalentine/tezuka-live-audit/deploy-0b423eb/artifacts/classifier",
+   "sha256": "f87a3c467ea2795d187f7ff9c38a16f120de31c3b001dca68abf8183c88859e8"
+  }
+ },
+ "qemu": "/usr/bin/qemu-arm-static",
+ "sysroot": "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+ "results": {
+  "P0_kigl": {
+   "deployed": {
+    "command": [
+     "/usr/bin/qemu-arm-static",
+     "-L",
+     "/home/cvalentine/tezuka-live-audit/tezuka_fw/output/signalsdrpro/host/arm-buildroot-linux-gnueabihf/sysroot",
+     "/home/cvalentine/tezuka-live-audit/deploy-0b423eb/artifacts/classifier",
+     "-r",
+     "/home/cvalentine/tezuka-live-audit/rf-session-20261109/replay/p0/raw/P0_kigl.raw",
+     "-f",
+     "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "-n",
+     "4096",
+     "-F",
+     "1.0005763319672132",
+     "-S",
+     "2500000",
+     "-B",
+     "none",
+     "-c",
+     "0.6",
+     "-m",
+     "0.15",
+     "-i",
+     "1.0",
+     "-s",
+     "6",
+     "-g",
+     "4",
+     "-l",
+     "10",
+     "-a",
+     "300",
+     "-w",
+     "4e6",
+     "-x",
+     "8",
+     "-E",
+     "/home/cvalentine/tezuka-live-audit/rf-session-20261109/replay/p0/raw/P0_kigl.events"
+    ],
+    "returncode": 0,
+    "stderr_tail": [
+     "templates: loaded 3 templates (512 bins each, v3, sha256 cb6f4580360c...) from board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+     "replay: 150 frames processed",
+     "replay: 6 of 6 events delivered"
+    ],
+    "result_lines": 76,
+    "on": null,
+    "off": {
+     "decisions": 69,
+     "labels": {
+      "FM Broadcast": 44,
+      "unknown": 1,
+      "CW / Beacon": 24
+     },
+     "unexpected_accepts": 24,
+     "unexpected_accepts_by_label": {
+      "CW / Beacon": {
+       "decisions": 24,
+       "disposition": "suspected_false",
+       "basis": "window on 92.100 MHz, the published KQSM 92.1 FM channel; IQ shows only a weak line there and no CW beacon is known; not independently confirmed",
+       "score_min": 0.845,
+       "score_max": 0.989,
+       "first_t": 55.0
+      }
+     },
+     "confirmed_false_accepts": 0,
+     "suspected_false_accepts": 24,
+     "unverified_accepts": 0,
+     "worst_score_by_disposition": {
+      "confirmed_false": null,
+      "suspected_false": 0.989,
+      "unverified": null
+     },
+     "false_accepts": 0,
+     "false_accept_labels": {},
+     "worst_false_accept_score": null,
+     "recognized": 44,
+     "misses": 25,
+     "min_correct_score": 0.873,
+     "first_false_accept": null,
+     "first_unexpected_accept": {
+      "t": 55.0,
+      "label": "CW / Beacon",
+      "confidence": 0.971,
+      "freq_offset": 2040,
+      "bandwidth_bins": 49,
+      "frame_bins": 4095,
+      "template_id": 3,
+      "snr_db": 9.2,
+      "prom_db": 4.7,
+      "margin": 0.609,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 55,
+      "online": true
+     }
+    },
+    "explain_first_accept": {
+     "t": 13.0,
+     "result": {
+      "label": "FM Broadcast",
+      "confidence": 0.983,
+      "freq_offset": 2747,
+      "bandwidth_bins": 655,
+      "frame_bins": 4095,
+      "template_id": 1,
+      "snr_db": 51.5,
+      "prom_db": 33.3,
+      "margin": 0.053,
+      "hz_per_bin": 610.4,
+      "state": "ok",
+      "bg_age_s": 13,
+      "online": true
+     },
+     "observation": {
+      "decision": {
+       "state": "ok",
+       "classified": true,
+       "label": "FM Broadcast",
+       "accepted": true,
+       "template_id": 1,
+       "score": 0.983,
+       "snr_db": 51.5,
+       "prom_db": 33.3,
+       "bin_offset": 2747,
+       "bandwidth_bins": 655,
+       "gate_factor": 1.0,
+       "threshold": 0.6,
+       "hold_margin": 0.15,
+       "margin": 0.053,
+       "best": {
+        "template_id": 1,
+        "score": 0.983,
+        "snr_db": 51.5,
+        "prom_db": 33.3
+       },
+       "hysteresis": {
+        "locked": true,
+        "locked_template_id": 1,
+        "held": true,
+        "took_over": false
+       },
+       "gates": {
+        "snr_min_db": 6.0,
+        "prom_min_db": 4.0,
+        "scope": "gates describe the matched window of this frame, not the emitter"
+       }
+      },
+      "features": {
+       "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+       "valid": true,
+       "bandwidth_frac": 0.043712,
+       "bandwidth_hz": 109252.9,
+       "spectral_papr_db": 15.84,
+       "flatness": 0.003,
+       "peak_count": 6,
+       "peak_bin": 3066,
+       "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+      },
+      "background": {
+       "learned": true,
+       "age_s": 13.0,
+       "frames": 14,
+       "masked_bins": 5,
+       "valid_bins": 4090,
+       "spur_bins": 0,
+       "hot_last_learn": 717,
+       "learn_count": 1
+      },
+      "input": {
+       "source": "maia-httpd /waterfall",
+       "units": "linear_power_integrated",
+       "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+       "fft_size": 4096,
+       "bins_used": 4095,
+       "bin0_offset": 1,
+       "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+       "first_float": 1,
+       "dc_index": 2047,
+       "hz_per_bin": 610.352
+      }
+     },
+     "background_learned": {
+      "frequency": "92674998",
+      "bins": 4095,
+      "fft_size": 4096,
+      "hz_per_bin": 610.4,
+      "hot": 717,
+      "masked": 5
+     }
+    },
+    "coverage": {
+     "columns": [
+      "t",
+      "masked_bins",
+      "valid_bins",
+      "spur_bins",
+      "learn_count",
+      "label"
+     ],
+     "sample_interval_s": 5.0,
+     "series": [
+      [
+       0.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       5.0,
+       0,
+       4095,
+       0,
+       0,
+       "unknown"
+      ],
+      [
+       11.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       17.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       23.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       29.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       35.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       41.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       47.0,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       53.0,
+       5,
+       4090,
+       0,
+       1,
+       "unknown"
+      ],
+      [
+       59.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       65.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       71.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       77.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       83.0,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       88.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       94.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       100.9,
+       5,
+       4090,
+       0,
+       1,
+       "CW / Beacon"
+      ],
+      [
+       106.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       112.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       118.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       124.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       130.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       136.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       142.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ],
+      [
+       148.9,
+       5,
+       4090,
+       0,
+       1,
+       "FM Broadcast"
+      ]
+     ],
+     "final": [
+      148.9,
+      5,
+      4090,
+      0,
+      1,
+      "FM Broadcast"
+     ],
+     "final_mask_coverage": 0.001221001221001221,
+     "max_masked_bins": 5,
+     "bins_used": 4095,
+     "backgrounds": [
+      {
+       "t": 11.0,
+       "frequency": "92674998",
+       "bins": 4095,
+       "fft_size": 4096,
+       "hz_per_bin": 610.4,
+       "hot": 717,
+       "masked": 5
+      }
+     ]
+    }
+   }
+  }
+ }
+}

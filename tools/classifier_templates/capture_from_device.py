@@ -124,7 +124,7 @@ def main():
 
     new_template = Template(label=args.label, template_id=args.template_id,
                              data=normalize(avg), feature_ranges=feature_ranges,
-                             hz_per_bin=args.span_hz / len(avg) if args.span_hz > 0 else 0.0)
+                             hz_per_bin=args.span_hz / (len(avg) + 1) if args.span_hz > 0 else 0.0)
 
     # Append to an existing file if present (and its canonical_n matches),
     # otherwise start a fresh one — makes it natural to build a template

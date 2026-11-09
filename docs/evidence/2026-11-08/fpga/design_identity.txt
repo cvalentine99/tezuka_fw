@@ -1,0 +1,3 @@
+part xc7z020clg400-2
+top system_top
+bitstream_usr_access 

@@ -1,0 +1,22 @@
+{
+ "cleared": [
+  "test/classifier/background",
+  "test/classifier/bandwidth_bins",
+  "test/classifier/confidence",
+  "test/classifier/feature_bandwidth_bins",
+  "test/classifier/feature_drift_bins_s",
+  "test/classifier/feature_duty_cycle_pct",
+  "test/classifier/feature_flatness",
+  "test/classifier/feature_papr_db",
+  "test/classifier/feature_peak_count",
+  "test/classifier/frame_bins",
+  "test/classifier/freq_offset",
+  "test/classifier/label",
+  "test/classifier/observation",
+  "test/classifier/result",
+  "test/classifier/template_id",
+  "test/classifier/template_shape",
+  "test/classifier/window"
+ ],
+ "remaining_retained": []
+}

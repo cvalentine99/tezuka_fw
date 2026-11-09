@@ -1,0 +1,29 @@
+{
+ "host": "192.168.50.25",
+ "window_s": 4.0,
+ "topics": [
+  "test/classifier/#",
+  "state/classifier/observation",
+  "state/classifier/result"
+ ],
+ "messages": [
+  {
+   "t": 0.058,
+   "topic": "state/classifier/result",
+   "retain": true,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":952,\"online\":true}"
+  },
+  {
+   "t": 1.479,
+   "topic": "state/classifier/result",
+   "retain": false,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":954,\"online\":true}"
+  },
+  {
+   "t": 3.086,
+   "topic": "state/classifier/result",
+   "retain": false,
+   "payload": "{\"label\":\"unknown\",\"confidence\":0,\"best\":0.000,\"best_snr_db\":0.0,\"best_prom_db\":0.0,\"margin\":0.000,\"state\":\"ok\",\"bg_age_s\":955,\"online\":true}"
+  }
+ ]
+}

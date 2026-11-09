@@ -1,0 +1,18 @@
+{
+  "annotations": [],
+  "captures": [
+    {
+      "core:datetime": "2026-11-09T13:19:03.377Z",
+      "core:frequency": 93299998.0,
+      "core:sample_start": 0
+    }
+  ],
+  "global": {
+    "core:author": "rf session 2026-11-09",
+    "core:datatype": "ci16_le",
+    "core:description": "S1b mid-segment, KIGL 93.3 MHz at the LO",
+    "core:recorder": "Maia SDR v0.6.0",
+    "core:sample_rate": 2500000.0,
+    "core:version": "1.2.3"
+  }
+}

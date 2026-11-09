@@ -1,0 +1,270 @@
+{
+ "recorded_frames": [
+  {
+   "file": "wf_avg4096_frame0.bin",
+   "sha256": "1b26b04cab3406beb5f2f50f87bc3804a4d05cb46230f9c3c088f680a1c4ec4d"
+  },
+  {
+   "file": "wf_avg4096_frame1.bin",
+   "sha256": "5acadf69568e60cd611e09b1a2bb2c59c44a2d87c58307350feff3435d2b8835"
+  },
+  {
+   "file": "wf_avg4096_frame2.bin",
+   "sha256": "602c0489845d5b4d698337197c3e2c4c155af318c79cb0b0cb4dfad09419021c"
+  }
+ ],
+ "templates": {
+  "file": "/home/cvalentine/tezuka_fw/.claude/worktrees/classifier-mcp-foundation/board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+  "sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+  "labels": [
+   "FM Broadcast",
+   "DAB+",
+   "CW / Beacon"
+  ],
+  "canonical_n": 512
+ },
+ "daemon_args": [
+  "-n",
+  "4096",
+  "-F",
+  "7.5",
+  "-S",
+  "2500000",
+  "-B",
+  "none",
+  "-c",
+  "0.6",
+  "-m",
+  "0.15",
+  "-i",
+  "1.0",
+  "-s",
+  "6",
+  "-g",
+  "4",
+  "-l",
+  "10",
+  "-a",
+  "300",
+  "-w",
+  "4e6",
+  "-x",
+  "8"
+ ],
+ "fixtures": [
+  {
+   "name": "spur433_live_realrate",
+   "file": "raw/spur433_live_realrate.raw",
+   "sha256": "db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4",
+   "frames": 60,
+   "duration_s": 100.56989607777405,
+   "fps": 0.5966,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 433000000,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794170740.697491 (unix s): rx_lo 433000000 Hz, fs 2500000 Hz, gain 70.0 dB Manual, Average x1023, 4096-point; capture sha256 db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "captured_unix_s": 1794170740.697491,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 1500000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 5800000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -12.5
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 0.5966290933528837,
+       "number_integrations": 1023,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 0.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "frames": 60,
+     "frame_sizes": {
+      "16384": 60
+     },
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 1500000,
+      "rx_lo_frequency": 433000000,
+      "tx_lo_frequency": 5800000000,
+      "rx_gain": 70.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -12.5
+     },
+     "sha256": "db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4"
+    },
+    "replay_fps": 0.5966
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 0.5966 frames/s: cold start, learning begins on the first frame",
+   "expected_basis": "nothing was on air in the band at capture time except the receiver's own DC spur (see meta): no emitter class is correct",
+   "kind": "recorded",
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "0.5966",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ]
+  },
+  {
+   "name": "spur433_live_7p5fps",
+   "file": "raw/spur433_live_7p5fps.raw",
+   "sha256": "db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4",
+   "frames": 60,
+   "duration_s": 8.0,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 433000000,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794170740.697491 (unix s): rx_lo 433000000 Hz, fs 2500000 Hz, gain 70.0 dB Manual, Average x1023, 4096-point; capture sha256 db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "captured_unix_s": 1794170740.697491,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 1500000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 5800000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -12.5
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 0.5966290933528837,
+       "number_integrations": 1023,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 0.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "frames": 60,
+     "frame_sizes": {
+      "16384": 60
+     },
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 1500000,
+      "rx_lo_frequency": 433000000,
+      "tx_lo_frequency": 5800000000,
+      "rx_gain": 70.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -12.5
+     },
+     "sha256": "db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4"
+    },
+    "replay_fps": 7.5
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 7.5 frames/s: cold start, learning begins on the first frame",
+   "expected_basis": "nothing was on air in the band at capture time except the receiver's own DC spur (see meta): no emitter class is correct",
+   "kind": "recorded",
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "7.5",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ]
+  }
+ ]
+}

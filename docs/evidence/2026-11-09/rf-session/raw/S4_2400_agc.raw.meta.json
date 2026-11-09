@@ -1,0 +1,2992 @@
+{
+ "host": "192.168.50.25",
+ "port": 80,
+ "note": "S4: LO 2.4 GHz, 30.72 MS/s, bw 18 MHz, SlowAttack AGC (boot defaults); on air: unknown 2.4 GHz ISM, no ground truth; doubles as AGC segment S6; evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+ "captured_unix_s": 1794231723.967896,
+ "started_unix_s": 1794231723.9678962,
+ "api": {
+  "ad9361": {
+   "sampling_frequency": 30720000,
+   "rx_rf_bandwidth": 18000000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 2400000000,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 71.0,
+   "rx_gain_mode": "SlowAttack",
+   "tx_gain": -10.0
+  },
+  "spectrometer": {
+   "input": "AD9361",
+   "input_sampling_frequency": 30720000.0,
+   "output_sampling_frequency": 12.295081967213115,
+   "number_integrations": 610,
+   "fft_size": 4096,
+   "mode": "Average"
+  },
+  "ddc": {
+   "enabled": false,
+   "frequency": 42399.0,
+   "decimation": 20,
+   "input_sampling_frequency": 30720000.0,
+   "output_sampling_frequency": 1536000.0,
+   "max_input_sampling_frequency": 69444444.44444445
+  },
+  "versions": {
+   "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+   "maia_httpd_git": "v0.3.24-21-g49403b9",
+   "maia_httpd_version": "0.6.0",
+   "maia_hdl_version": "0.6.1"
+  }
+ },
+ "fps_api_start": 12.295081967213115,
+ "spectrometer_input": "AD9361",
+ "frame_span_hz": 30720000.0,
+ "poll_s": 1.0,
+ "timeout_s": 60.0,
+ "frames_requested": 7377,
+ "frames": 7377,
+ "frame_sizes": {
+  "16384": 7377
+ },
+ "settings_log": [
+  {
+   "t_unix_s": 1794231743.2021072,
+   "t_rel_s": 19.234210968017578,
+   "frames_received": 236,
+   "t_replay_s": 19.194666666666667,
+   "t_event_s": 19.154,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231744.2122326,
+   "t_rel_s": 20.2443368434906,
+   "frames_received": 248,
+   "t_replay_s": 20.170666666666666,
+   "t_event_s": 20.13,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231751.2983823,
+   "t_rel_s": 27.330486059188843,
+   "frames_received": 336,
+   "t_replay_s": 27.328,
+   "t_event_s": 27.287333333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231752.3081713,
+   "t_rel_s": 28.340275049209595,
+   "frames_received": 348,
+   "t_replay_s": 28.304,
+   "t_event_s": 28.263333333333332,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231759.382297,
+   "t_rel_s": 35.414401054382324,
+   "frames_received": 435,
+   "t_replay_s": 35.38,
+   "t_event_s": 35.339333333333336,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231760.3963647,
+   "t_rel_s": 36.428468465805054,
+   "frames_received": 447,
+   "t_replay_s": 36.356,
+   "t_event_s": 36.315333333333335,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231780.6725252,
+   "t_rel_s": 56.70462894439697,
+   "frames_received": 697,
+   "t_replay_s": 56.68933333333334,
+   "t_event_s": 56.64866666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231781.6886215,
+   "t_rel_s": 57.720725536346436,
+   "frames_received": 709,
+   "t_replay_s": 57.665333333333336,
+   "t_event_s": 57.62466666666667,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231793.860984,
+   "t_rel_s": 69.8930881023407,
+   "frames_received": 859,
+   "t_replay_s": 69.86533333333334,
+   "t_event_s": 69.82466666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231794.8734837,
+   "t_rel_s": 70.90558791160583,
+   "frames_received": 871,
+   "t_replay_s": 70.84133333333334,
+   "t_event_s": 70.80066666666667,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231806.0135329,
+   "t_rel_s": 82.04563689231873,
+   "frames_received": 1008,
+   "t_replay_s": 81.984,
+   "t_event_s": 81.94333333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231807.022898,
+   "t_rel_s": 83.05500197410583,
+   "frames_received": 1021,
+   "t_replay_s": 83.04133333333334,
+   "t_event_s": 83.00066666666666,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231844.5101361,
+   "t_rel_s": 120.54224038124084,
+   "frames_received": 1482,
+   "t_replay_s": 120.536,
+   "t_event_s": 120.49533333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231845.5239096,
+   "t_rel_s": 121.55601358413696,
+   "frames_received": 1494,
+   "t_replay_s": 121.512,
+   "t_event_s": 121.47133333333333,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231846.537865,
+   "t_rel_s": 122.56996893882751,
+   "frames_received": 1507,
+   "t_replay_s": 122.56933333333333,
+   "t_event_s": 122.52866666666667,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231847.5473568,
+   "t_rel_s": 123.57946062088013,
+   "frames_received": 1519,
+   "t_replay_s": 123.54533333333333,
+   "t_event_s": 123.50466666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231848.5599844,
+   "t_rel_s": 124.59208846092224,
+   "frames_received": 1531,
+   "t_replay_s": 124.52133333333333,
+   "t_event_s": 124.48066666666666,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231855.638148,
+   "t_rel_s": 131.6702527999878,
+   "frames_received": 1618,
+   "t_replay_s": 131.59733333333332,
+   "t_event_s": 131.55666666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231856.6474588,
+   "t_rel_s": 132.67956256866455,
+   "frames_received": 1631,
+   "t_replay_s": 132.65466666666666,
+   "t_event_s": 132.614,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231874.8901691,
+   "t_rel_s": 150.92227339744568,
+   "frames_received": 1855,
+   "t_replay_s": 150.87333333333333,
+   "t_event_s": 150.83266666666665,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231875.9062521,
+   "t_rel_s": 151.93835616111755,
+   "frames_received": 1868,
+   "t_replay_s": 151.93066666666667,
+   "t_event_s": 151.89000000000001,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231876.9158342,
+   "t_rel_s": 152.94793820381165,
+   "frames_received": 1880,
+   "t_replay_s": 152.90666666666667,
+   "t_event_s": 152.866,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231877.9304225,
+   "t_rel_s": 153.9625267982483,
+   "frames_received": 1893,
+   "t_replay_s": 153.964,
+   "t_event_s": 153.92333333333335,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231884.0042372,
+   "t_rel_s": 160.0363414287567,
+   "frames_received": 1967,
+   "t_replay_s": 159.98266666666666,
+   "t_event_s": 159.942,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231885.0237997,
+   "t_rel_s": 161.055903673172,
+   "frames_received": 1980,
+   "t_replay_s": 161.04,
+   "t_event_s": 160.99933333333334,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231894.1419597,
+   "t_rel_s": 170.17406344413757,
+   "frames_received": 2092,
+   "t_replay_s": 170.14933333333335,
+   "t_event_s": 170.10866666666666,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231895.152432,
+   "t_rel_s": 171.1845359802246,
+   "frames_received": 2104,
+   "t_replay_s": 171.12533333333334,
+   "t_event_s": 171.08466666666666,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231922.506808,
+   "t_rel_s": 198.5389120578766,
+   "frames_received": 2441,
+   "t_replay_s": 198.53466666666668,
+   "t_event_s": 198.494,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231923.51651,
+   "t_rel_s": 199.54861402511597,
+   "frames_received": 2453,
+   "t_replay_s": 199.51066666666668,
+   "t_event_s": 199.47,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231931.6143885,
+   "t_rel_s": 207.6464924812317,
+   "frames_received": 2553,
+   "t_replay_s": 207.644,
+   "t_event_s": 207.60333333333332,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231932.624682,
+   "t_rel_s": 208.65678596496582,
+   "frames_received": 2565,
+   "t_replay_s": 208.62,
+   "t_event_s": 208.57933333333332,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231974.2469244,
+   "t_rel_s": 250.27902841567993,
+   "frames_received": 3077,
+   "t_replay_s": 250.26266666666666,
+   "t_event_s": 250.222,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231975.259484,
+   "t_rel_s": 251.29158854484558,
+   "frames_received": 3089,
+   "t_replay_s": 251.23866666666666,
+   "t_event_s": 251.198,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231982.3454225,
+   "t_rel_s": 258.37752652168274,
+   "frames_received": 3176,
+   "t_replay_s": 258.31466666666665,
+   "t_event_s": 258.274,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     61.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 61.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231983.3609781,
+   "t_rel_s": 259.3930821418762,
+   "frames_received": 3189,
+   "t_replay_s": 259.372,
+   "t_event_s": 259.33133333333336,
+   "changed": {
+    "rx_gain": [
+     61.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231996.5156128,
+   "t_rel_s": 272.54771733283997,
+   "frames_received": 3351,
+   "t_replay_s": 272.548,
+   "t_event_s": 272.50733333333335,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794231997.5312996,
+   "t_rel_s": 273.5634033679962,
+   "frames_received": 3363,
+   "t_replay_s": 273.524,
+   "t_event_s": 273.48333333333335,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232007.7037039,
+   "t_rel_s": 283.7358078956604,
+   "frames_received": 3488,
+   "t_replay_s": 283.6906666666667,
+   "t_event_s": 283.65,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232008.715764,
+   "t_rel_s": 284.74786829948425,
+   "frames_received": 3501,
+   "t_replay_s": 284.748,
+   "t_event_s": 284.70733333333334,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232009.7252717,
+   "t_rel_s": 285.75737595558167,
+   "frames_received": 3513,
+   "t_replay_s": 285.724,
+   "t_event_s": 285.68333333333334,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232012.757983,
+   "t_rel_s": 288.790087223053,
+   "frames_received": 3550,
+   "t_replay_s": 288.73333333333335,
+   "t_event_s": 288.6926666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232013.7694244,
+   "t_rel_s": 289.8015284538269,
+   "frames_received": 3563,
+   "t_replay_s": 289.79066666666665,
+   "t_event_s": 289.75,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232015.7917655,
+   "t_rel_s": 291.8238694667816,
+   "frames_received": 3588,
+   "t_replay_s": 291.824,
+   "t_event_s": 291.78333333333336,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232016.803486,
+   "t_rel_s": 292.83558988571167,
+   "frames_received": 3600,
+   "t_replay_s": 292.8,
+   "t_event_s": 292.75933333333336,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232026.9237397,
+   "t_rel_s": 302.9558436870575,
+   "frames_received": 3724,
+   "t_replay_s": 302.88533333333334,
+   "t_event_s": 302.8446666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232027.9335237,
+   "t_rel_s": 303.9656276702881,
+   "frames_received": 3737,
+   "t_replay_s": 303.9426666666667,
+   "t_event_s": 303.902,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232038.0680025,
+   "t_rel_s": 314.1001064777374,
+   "frames_received": 3861,
+   "t_replay_s": 314.028,
+   "t_event_s": 313.9873333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232039.0776744,
+   "t_rel_s": 315.10977816581726,
+   "frames_received": 3874,
+   "t_replay_s": 315.0853333333333,
+   "t_event_s": 315.04466666666667,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232042.1121066,
+   "t_rel_s": 318.1442105770111,
+   "frames_received": 3911,
+   "t_replay_s": 318.0946666666667,
+   "t_event_s": 318.05400000000003,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232043.1242433,
+   "t_rel_s": 319.15634775161743,
+   "frames_received": 3924,
+   "t_replay_s": 319.152,
+   "t_event_s": 319.11133333333333,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232052.2478154,
+   "t_rel_s": 328.2799198627472,
+   "frames_received": 4036,
+   "t_replay_s": 328.2613333333333,
+   "t_event_s": 328.22066666666666,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232053.2599158,
+   "t_rel_s": 329.2920196056366,
+   "frames_received": 4048,
+   "t_replay_s": 329.2373333333333,
+   "t_event_s": 329.19666666666666,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232065.4140613,
+   "t_rel_s": 341.44616532325745,
+   "frames_received": 4198,
+   "t_replay_s": 341.43733333333336,
+   "t_event_s": 341.39666666666665,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232066.4284484,
+   "t_rel_s": 342.46055245399475,
+   "frames_received": 4210,
+   "t_replay_s": 342.41333333333336,
+   "t_event_s": 342.37266666666665,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232072.504186,
+   "t_rel_s": 348.53628969192505,
+   "frames_received": 4285,
+   "t_replay_s": 348.5133333333333,
+   "t_event_s": 348.47266666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232073.5142827,
+   "t_rel_s": 349.54638671875,
+   "frames_received": 4297,
+   "t_replay_s": 349.4893333333333,
+   "t_event_s": 349.44866666666667,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232097.825141,
+   "t_rel_s": 373.8572449684143,
+   "frames_received": 4596,
+   "t_replay_s": 373.808,
+   "t_event_s": 373.76733333333334,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     63.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 63.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232099.852878,
+   "t_rel_s": 375.8849823474884,
+   "frames_received": 4621,
+   "t_replay_s": 375.84133333333335,
+   "t_event_s": 375.80066666666664,
+   "changed": {
+    "rx_gain": [
+     63.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232107.952816,
+   "t_rel_s": 383.9849202632904,
+   "frames_received": 4721,
+   "t_replay_s": 383.9746666666667,
+   "t_event_s": 383.934,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     63.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 63.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232108.965078,
+   "t_rel_s": 384.9971823692322,
+   "frames_received": 4733,
+   "t_replay_s": 384.9506666666667,
+   "t_event_s": 384.91,
+   "changed": {
+    "rx_gain": [
+     63.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232124.1506598,
+   "t_rel_s": 400.18276357650757,
+   "frames_received": 4920,
+   "t_replay_s": 400.16,
+   "t_event_s": 400.1193333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232125.1606472,
+   "t_rel_s": 401.19275093078613,
+   "frames_received": 4932,
+   "t_replay_s": 401.136,
+   "t_event_s": 401.0953333333333,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232135.2886238,
+   "t_rel_s": 411.3207278251648,
+   "frames_received": 5057,
+   "t_replay_s": 411.30266666666665,
+   "t_event_s": 411.262,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232136.3031402,
+   "t_rel_s": 412.33524441719055,
+   "frames_received": 5069,
+   "t_replay_s": 412.27866666666665,
+   "t_event_s": 412.238,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232150.5090258,
+   "t_rel_s": 426.5411295890808,
+   "frames_received": 5244,
+   "t_replay_s": 426.512,
+   "t_event_s": 426.47133333333335,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232151.531933,
+   "t_rel_s": 427.5640375614166,
+   "frames_received": 5256,
+   "t_replay_s": 427.488,
+   "t_event_s": 427.44733333333335,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232153.5592756,
+   "t_rel_s": 429.5913796424866,
+   "frames_received": 5281,
+   "t_replay_s": 429.52133333333336,
+   "t_event_s": 429.48066666666665,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232154.569036,
+   "t_rel_s": 430.60114002227783,
+   "frames_received": 5294,
+   "t_replay_s": 430.57866666666666,
+   "t_event_s": 430.538,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232156.5911775,
+   "t_rel_s": 432.62328147888184,
+   "frames_received": 5319,
+   "t_replay_s": 432.612,
+   "t_event_s": 432.5713333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     67.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 67.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232157.6033437,
+   "t_rel_s": 433.6354477405548,
+   "frames_received": 5331,
+   "t_replay_s": 433.588,
+   "t_event_s": 433.5473333333333,
+   "changed": {
+    "rx_gain": [
+     67.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232172.7975702,
+   "t_rel_s": 448.829674243927,
+   "frames_received": 5518,
+   "t_replay_s": 448.7973333333333,
+   "t_event_s": 448.75666666666666,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     53.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 53.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232173.819276,
+   "t_rel_s": 449.851380109787,
+   "frames_received": 5531,
+   "t_replay_s": 449.8546666666667,
+   "t_event_s": 449.814,
+   "changed": {
+    "rx_gain": [
+     53.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232222.4445035,
+   "t_rel_s": 498.47660732269287,
+   "frames_received": 6128,
+   "t_replay_s": 498.41066666666666,
+   "t_event_s": 498.37,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     57.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 57.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232223.4543908,
+   "t_rel_s": 499.48649501800537,
+   "frames_received": 6141,
+   "t_replay_s": 499.468,
+   "t_event_s": 499.42733333333337,
+   "changed": {
+    "rx_gain": [
+     57.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232224.4704325,
+   "t_rel_s": 500.50253653526306,
+   "frames_received": 6153,
+   "t_replay_s": 500.444,
+   "t_event_s": 500.40333333333336,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232226.495812,
+   "t_rel_s": 502.52791571617126,
+   "frames_received": 6178,
+   "t_replay_s": 502.4773333333333,
+   "t_event_s": 502.43666666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232227.5062375,
+   "t_rel_s": 503.5383415222168,
+   "frames_received": 6191,
+   "t_replay_s": 503.5346666666667,
+   "t_event_s": 503.494,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232232.5840878,
+   "t_rel_s": 508.6161918640137,
+   "frames_received": 6253,
+   "t_replay_s": 508.57733333333334,
+   "t_event_s": 508.5366666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232233.5983675,
+   "t_rel_s": 509.6304717063904,
+   "frames_received": 6266,
+   "t_replay_s": 509.63466666666665,
+   "t_event_s": 509.594,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232242.7097983,
+   "t_rel_s": 518.741902589798,
+   "frames_received": 6378,
+   "t_replay_s": 518.744,
+   "t_event_s": 518.7033333333334,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     61.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 61.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232243.720106,
+   "t_rel_s": 519.7522099018097,
+   "frames_received": 6390,
+   "t_replay_s": 519.72,
+   "t_event_s": 519.6793333333334,
+   "changed": {
+    "rx_gain": [
+     61.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232245.7461026,
+   "t_rel_s": 521.7782063484192,
+   "frames_received": 6415,
+   "t_replay_s": 521.7533333333333,
+   "t_event_s": 521.7126666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232246.756119,
+   "t_rel_s": 522.7882227897644,
+   "frames_received": 6427,
+   "t_replay_s": 522.7293333333333,
+   "t_event_s": 522.6886666666667,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232268.0014012,
+   "t_rel_s": 544.0335054397583,
+   "frames_received": 6689,
+   "t_replay_s": 544.0386666666667,
+   "t_event_s": 543.998,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232269.0146675,
+   "t_rel_s": 545.0467715263367,
+   "frames_received": 6701,
+   "t_replay_s": 545.0146666666667,
+   "t_event_s": 544.974,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232277.1124165,
+   "t_rel_s": 553.1445202827454,
+   "frames_received": 6801,
+   "t_replay_s": 553.148,
+   "t_event_s": 553.1073333333334,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232278.126948,
+   "t_rel_s": 554.1590521335602,
+   "frames_received": 6813,
+   "t_replay_s": 554.124,
+   "t_event_s": 554.0833333333334,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232285.2008972,
+   "t_rel_s": 561.2330014705658,
+   "frames_received": 6900,
+   "t_replay_s": 561.2,
+   "t_event_s": 561.1593333333334,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232286.2111495,
+   "t_rel_s": 562.2432537078857,
+   "frames_received": 6912,
+   "t_replay_s": 562.176,
+   "t_event_s": 562.1353333333334,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232291.2728057,
+   "t_rel_s": 567.3049097061157,
+   "frames_received": 6975,
+   "t_replay_s": 567.3,
+   "t_event_s": 567.2593333333333,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     65.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 65.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232292.2828221,
+   "t_rel_s": 568.3149263858795,
+   "frames_received": 6987,
+   "t_replay_s": 568.276,
+   "t_event_s": 568.2353333333333,
+   "changed": {
+    "rx_gain": [
+     65.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232313.564942,
+   "t_rel_s": 589.5970458984375,
+   "frames_received": 7249,
+   "t_replay_s": 589.5853333333333,
+   "t_event_s": 589.5446666666667,
+   "changed": {
+    "rx_gain": [
+     71.0,
+     69.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 69.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  },
+  {
+   "t_unix_s": 1794232314.5751443,
+   "t_rel_s": 590.6072480678558,
+   "frames_received": 7261,
+   "t_replay_s": 590.5613333333333,
+   "t_event_s": 590.5206666666667,
+   "changed": {
+    "rx_gain": [
+     69.0,
+     71.0
+    ]
+   },
+   "ad9361": {
+    "sampling_frequency": 30720000,
+    "rx_rf_bandwidth": 18000000,
+    "tx_rf_bandwidth": 18000000,
+    "rx_lo_frequency": 2400000000,
+    "tx_lo_frequency": 2450000000,
+    "rx_gain": 71.0,
+    "rx_gain_mode": "SlowAttack",
+    "tx_gain": -10.0
+   },
+   "spectrometer": {
+    "input": "AD9361",
+    "input_sampling_frequency": 30720000.0,
+    "output_sampling_frequency": 12.295081967213115,
+    "number_integrations": 610,
+    "fft_size": 4096,
+    "mode": "Average"
+   }
+  }
+ ],
+ "poll_errors": [],
+ "aborted": null,
+ "interrupted": false,
+ "first_frame_unix_s": 1794231724.047838,
+ "last_frame_unix_s": 1794232323.957113,
+ "measured_fps": 12.29519246776874,
+ "frame_gap_s": {
+  "min": 0.00038695335388183594,
+  "median": 0.08169186115264893,
+  "max": 0.19971990585327148
+ },
+ "finalised": true,
+ "api_after": {
+  "sampling_frequency": 30720000,
+  "rx_rf_bandwidth": 18000000,
+  "tx_rf_bandwidth": 18000000,
+  "rx_lo_frequency": 2400000000,
+  "tx_lo_frequency": 2450000000,
+  "rx_gain": 71.0,
+  "rx_gain_mode": "SlowAttack",
+  "tx_gain": -10.0
+ },
+ "api_after_full": {
+  "ad9361": {
+   "sampling_frequency": 30720000,
+   "rx_rf_bandwidth": 18000000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 2400000000,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 71.0,
+   "rx_gain_mode": "SlowAttack",
+   "tx_gain": -10.0
+  },
+  "spectrometer": {
+   "input": "AD9361",
+   "input_sampling_frequency": 30720000.0,
+   "output_sampling_frequency": 12.295081967213115,
+   "number_integrations": 610,
+   "fft_size": 4096,
+   "mode": "Average"
+  },
+  "ddc": {
+   "enabled": false,
+   "frequency": 42399.0,
+   "decimation": 20,
+   "input_sampling_frequency": 30720000.0,
+   "output_sampling_frequency": 1536000.0,
+   "max_input_sampling_frequency": 69444444.44444445
+  }
+ },
+ "settings_changed_during_capture": true,
+ "fps_changed_during_capture": false,
+ "ended_unix_s": 1794232323.9770706,
+ "raw_bytes": 120864768,
+ "sha256": "04dacf8abf95a87d62d8c1a20671d9eac9c1661df21472aa1b0b352b10f18743",
+ "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S4_2400_agc.raw.events"
+}

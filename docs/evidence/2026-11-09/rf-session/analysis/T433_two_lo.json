@@ -1,0 +1,32 @@
+{
+ "span_median_db": {
+  "lo_433.0": -25.66,
+  "lo_433.3": -27.2
+ },
+ "full_scale_fraction": {
+  "lo_433.0": 0.0,
+  "lo_433.3": 0.0
+ },
+ "windows": {
+  "S2 live 433.638-434.068": {
+   "lo_433.0_same_band": {
+    "median_db": -25.75,
+    "max_db": -12.34
+   },
+   "lo_433.3_same_band": {
+    "median_db": -27.45,
+    "max_db": -16.99
+   }
+  },
+  "S5 live 433.031-433.463": {
+   "lo_433.0_same_band": {
+    "median_db": -23.68,
+    "max_db": -12.52
+   },
+   "lo_433.3_same_band": {
+    "median_db": -28.2,
+    "max_db": -11.79
+   }
+  }
+ }
+}

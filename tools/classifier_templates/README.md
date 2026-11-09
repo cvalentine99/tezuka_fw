@@ -145,8 +145,30 @@ real width for a version-3 template) during a chosen time window, and
 `replay/tally_results.py` summarizes the daemon's result topic. The daemon
 replays a recording with `-r FILE -F FPS -S SPAN_HZ -B none`; run the
 cross-compiled binary under `qemu-arm-static` with the board sysroot as
-`-L`. See the main README's classifier section for the numbers this gave
-on real outdoor captures.
+`-L`.
+
+`replay/capture_waterfall.py` is the capture tool for evidence: it records
+the same raw frames and, next to them, a meta file with the receiver and
+spectrometer settings before and after, the capture boundaries and measured
+frame rate, the SHA-256 of the file and a log of every setting change seen
+while capturing (it polls `/api`), plus a replay events file
+(`<out>.raw.events`, the daemon's `-E`) that seeds the initial frequency,
+AD9361 sampling rate, frame span (the spectrometer's input rate, which is
+the DDC output rate below 2.4 MHz), bandwidth, gain and gain mode at t = 0
+(the daemon takes a topic's first value as its initial state) and places
+every later change on the replay clock. Ctrl+C keeps the partial raw file
+and both sidecar files (`aborted: interrupted`, exit status 130), within a
+few seconds even when the sensor has stopped answering. `replay/rf_compare.py` runs several daemon revisions on a
+frozen fixture set (generated fixtures plus `--recorded` captures with
+optional `--events`), tallies decisions, and reports unexpected accepts
+split into confirmed false, suspected false and unverified
+(`--accept NAME=DISPOSITION=LABEL::basis`); `--expect NAME=LABEL` declares
+a recorded trusted positive. `replay/tests/` exercises the capture tool
+against a fake sensor, the tally, and capture-generated events through the
+native daemon (`make -C app/classifier host-tools` first, otherwise those
+cases skip): `python -m pytest -q tools/classifier_templates/replay/tests`.
+See the main README's classifier section for the numbers this gave on real
+outdoor captures.
 
 ## File format
 
@@ -155,3 +177,28 @@ with `classifier.c`'s `templates_load()`. Both sides were cross-validated
 directly: a file written by `templates_format.py` was fed to the actual
 on-device C parser (cross-compiled, run under `qemu-arm-static`) and
 correctly classified a matching signal.
+
+## Validation and the frame grid (2026-11)
+
+`templates_format.py` now validates everything it writes and reads (label
+contract, bounds, exact size, finite normalized vectors, finite ranges) and
+reports the same status names as the on-device parser `app/classifier/scft.c`
+(`ok`, `bad_magic`, `unsupported_version`, `bad_header`, `bad_size`,
+`bad_label`, `duplicate_id`, `non_finite_data`, `not_normalized`, `bad_range`,
+`bad_resolution`). Check a bundle from the host or on the sensor:
+
+```bash
+python3 tools/classifier_templates/templates_format.py validate templates.bin
+classifier -V templates.bin      # on the sensor; exit 0 valid, 2 invalid
+```
+
+`app/classifier/tests/test_scft.py` round-trips files between this writer and
+the real C loader, including 28 malformed mutations that must fail with the
+same status on both sides.
+
+The waterfall grid used by `template_from_capture.py`, `capture_from_device.py`
+and `replay/inject_emitter.py` is `span / fft_size` with float 0 replaced by
+the step word (see `waterfall_frame.py` and `docs/classifier_telemetry.md`);
+earlier revisions used `span / (fft_size - 1)`, half a bin off at the edges.
+Labels may contain spaces, `+`, `/` and any printable UTF-8; control
+characters are refused.

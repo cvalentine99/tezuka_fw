@@ -1,0 +1,139 @@
+{
+ "S2_433": {
+  "capture": {
+   "frames": 600,
+   "measured_fps": 1.0006071994751577,
+   "first_frame_unix_s": 1794230509.4203105,
+   "last_frame_unix_s": 1794231108.0568187,
+   "sha256": "d93224ea006f6569b5b3433820057ac229ce122100d222a93443f67b27e99e08",
+   "aborted": null,
+   "interrupted": false,
+   "settings_changed_during_capture": false
+  },
+  "settings_at_start": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 433000000,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 70.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "settings_log": [],
+  "live": {
+   "observations": 367,
+   "seq": [
+    3473,
+    3839
+   ],
+   "labels": {
+    "unknown": 111,
+    "FM Broadcast": 251,
+    "CW / Beacon": 5
+   },
+   "accepted_windows_khz": [
+    [
+     "FM Broadcast",
+     433656,
+     434056,
+     129
+    ],
+    [
+     "FM Broadcast",
+     433657,
+     434057,
+     61
+    ],
+    [
+     "FM Broadcast",
+     433658,
+     434057,
+     22
+    ],
+    [
+     "FM Broadcast",
+     433658,
+     434058,
+     14
+    ],
+    [
+     "FM Broadcast",
+     433659,
+     434059,
+     8
+    ],
+    [
+     "FM Broadcast",
+     433655,
+     434055,
+     4
+    ],
+    [
+     "CW / Beacon",
+     433751,
+     433781,
+     4
+    ],
+    [
+     "FM Broadcast",
+     433661,
+     434060,
+     3
+    ],
+    [
+     "FM Broadcast",
+     433638,
+     434038,
+     2
+    ],
+    [
+     "FM Broadcast",
+     433661,
+     434061,
+     2
+    ],
+    [
+     "FM Broadcast",
+     433638,
+     434037,
+     2
+    ],
+    [
+     "FM Broadcast",
+     433660,
+     434060,
+     1
+    ]
+   ],
+   "distinct_accepted_windows": 16,
+   "template_sha256": [
+    "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263"
+   ],
+   "template_status": [
+    "ok"
+   ],
+   "config_generations": [
+    146
+   ],
+   "learn_count": [
+    11,
+    12
+   ],
+   "unlearned_cycles": 3,
+   "masked_bins": {
+    "first": 0,
+    "last": 1271,
+    "min": 0,
+    "max": 1271
+   },
+   "spur_bins": {
+    "first": 608,
+    "last": 1271
+   },
+   "valid_bins_last": 2824,
+   "publish_errors_last": 0
+  },
+  "rx_topic_changes_during": []
+ }
+}

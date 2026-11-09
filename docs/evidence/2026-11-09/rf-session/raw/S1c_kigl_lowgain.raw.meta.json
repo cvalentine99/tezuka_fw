@@ -1,0 +1,108 @@
+{
+ "host": "192.168.50.25",
+ "port": 80,
+ "note": "S1c: LO 92674998 (KIGL at +625 kHz), 2.5 MS/s, bw 2.5 MHz, manual 65.0 dB (highest of 65/60/55/50/45 with no full-scale IQ sample); on air: KIGL 93.3 MHz FM (verified: RDS PI 0x25C7 = KIGL, PS 93.3 The Eagle, FCC facility 35014); evaluation; operator Claude Code for the owner Chase Valentine (owner instructed, not present)",
+ "captured_unix_s": 1794233211.2211077,
+ "started_unix_s": 1794233211.221108,
+ "api": {
+  "ad9361": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 92674996,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 65.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "spectrometer": {
+   "input": "AD9361",
+   "input_sampling_frequency": 2500000.0,
+   "output_sampling_frequency": 1.0005763319672132,
+   "number_integrations": 610,
+   "fft_size": 4096,
+   "mode": "Average"
+  },
+  "ddc": {
+   "enabled": false,
+   "frequency": 42399.0,
+   "decimation": 20,
+   "input_sampling_frequency": 2500000.0,
+   "output_sampling_frequency": 125000.0,
+   "max_input_sampling_frequency": 69444444.44444445
+  },
+  "versions": {
+   "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+   "maia_httpd_git": "v0.3.24-21-g49403b9",
+   "maia_httpd_version": "0.6.0",
+   "maia_hdl_version": "0.6.1"
+  }
+ },
+ "fps_api_start": 1.0005763319672132,
+ "spectrometer_input": "AD9361",
+ "frame_span_hz": 2500000.0,
+ "poll_s": 1.0,
+ "timeout_s": 60.0,
+ "frames_requested": 600,
+ "frames": 600,
+ "frame_sizes": {
+  "16384": 600
+ },
+ "settings_log": [],
+ "poll_errors": [],
+ "aborted": null,
+ "interrupted": false,
+ "first_frame_unix_s": 1794233211.9211085,
+ "last_frame_unix_s": 1794233810.5817897,
+ "measured_fps": 1.0005667964556844,
+ "frame_gap_s": {
+  "min": 0.8368029594421387,
+  "median": 0.9997961521148682,
+  "max": 1.1953234672546387
+ },
+ "finalised": true,
+ "api_after": {
+  "sampling_frequency": 2500000,
+  "rx_rf_bandwidth": 2500000,
+  "tx_rf_bandwidth": 18000000,
+  "rx_lo_frequency": 92674996,
+  "tx_lo_frequency": 2450000000,
+  "rx_gain": 65.0,
+  "rx_gain_mode": "Manual",
+  "tx_gain": -10.0
+ },
+ "api_after_full": {
+  "ad9361": {
+   "sampling_frequency": 2500000,
+   "rx_rf_bandwidth": 2500000,
+   "tx_rf_bandwidth": 18000000,
+   "rx_lo_frequency": 92674996,
+   "tx_lo_frequency": 2450000000,
+   "rx_gain": 65.0,
+   "rx_gain_mode": "Manual",
+   "tx_gain": -10.0
+  },
+  "spectrometer": {
+   "input": "AD9361",
+   "input_sampling_frequency": 2500000.0,
+   "output_sampling_frequency": 1.0005763319672132,
+   "number_integrations": 610,
+   "fft_size": 4096,
+   "mode": "Average"
+  },
+  "ddc": {
+   "enabled": false,
+   "frequency": 42399.0,
+   "decimation": 20,
+   "input_sampling_frequency": 2500000.0,
+   "output_sampling_frequency": 125000.0,
+   "max_input_sampling_frequency": 69444444.44444445
+  }
+ },
+ "settings_changed_during_capture": false,
+ "fps_changed_during_capture": false,
+ "ended_unix_s": 1794233810.5997548,
+ "raw_bytes": 9830400,
+ "sha256": "7a566fde7d2d5625e079fe347222cf3587e97c6a231bc97fe2e361fa8da51137",
+ "events_file": "/home/cvalentine/tezuka-live-audit/rf-session-20261109/raw/S1c_kigl_lowgain.raw.events"
+}

@@ -1,0 +1,609 @@
+{
+ "recorded_frames": [
+  {
+   "file": "wf_avg4096_frame0.bin",
+   "sha256": "1b26b04cab3406beb5f2f50f87bc3804a4d05cb46230f9c3c088f680a1c4ec4d"
+  },
+  {
+   "file": "wf_avg4096_frame1.bin",
+   "sha256": "5acadf69568e60cd611e09b1a2bb2c59c44a2d87c58307350feff3435d2b8835"
+  },
+  {
+   "file": "wf_avg4096_frame2.bin",
+   "sha256": "602c0489845d5b4d698337197c3e2c4c155af318c79cb0b0cb4dfad09419021c"
+  }
+ ],
+ "templates": {
+  "file": "board/tezuka/common/overlay_tezuka/etc/classifier-default-templates.bin",
+  "sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+  "labels": [
+   "FM Broadcast",
+   "DAB+",
+   "CW / Beacon"
+  ],
+  "canonical_n": 512
+ },
+ "daemon_args": [
+  "-n",
+  "4096",
+  "-F",
+  "7.5",
+  "-S",
+  "2500000",
+  "-B",
+  "none",
+  "-c",
+  "0.6",
+  "-m",
+  "0.15",
+  "-i",
+  "1.0",
+  "-s",
+  "6",
+  "-g",
+  "4",
+  "-l",
+  "10",
+  "-a",
+  "300",
+  "-w",
+  "4e6",
+  "-x",
+  "8"
+ ],
+ "accept_dispositions": {
+  "confirmed_false": "known to be wrong (software fixtures by construction; recorded captures only on independent evidence)",
+  "suspected_false": "shape and allocation point to a wrong label, protocol ground truth pending",
+  "unverified": "nothing is known about what was on air; neither a false accept nor a positive"
+ },
+ "fixtures": [
+  {
+   "name": "spur_only_cold",
+   "file": "raw/spur_only_cold.raw",
+   "sha256": "d536e7d7819657814ed6d4bbd885786df3b5aa1e50c6b54a1eee5aaa8d3bc297",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled",
+   "detail": {},
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "cold start: learning begins on the first frame",
+   "expected_basis": "the recorded band holds only the receiver's DC spur (waterfall summary: one segment, contains_dc); no emitter class is correct",
+   "kind": "recorded",
+   "software_emitter": false
+  },
+  {
+   "name": "spur_only_settled",
+   "file": "raw/spur_only_settled.raw",
+   "sha256": "cf7ce04807ae7d744e102c2f6b976e2d89a04b141f088426a861c350e05de348",
+   "frames": 1800,
+   "duration_s": 240,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled",
+   "detail": {},
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "settled: 240 s of the same frames, background adaptation tau 300 s",
+   "expected_basis": "as spur_only_cold",
+   "kind": "recorded",
+   "software_emitter": false
+  },
+  {
+   "name": "quiet_no_spur",
+   "file": "raw/quiet_no_spur.raw",
+   "sha256": "69871ac61bec615a80d00f3acfd280e48c835b1267f31dea73f0ba3fbe16347c",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "replaced_bins": [
+     2007,
+     2087
+    ]
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "cold start",
+   "expected_basis": "the spur region is replaced by neighbouring-bin samples: nothing is on air",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "fm_offcenter",
+   "file": "raw/fm_offcenter.raw",
+   "sha256": "d773d4b61e2bd438c5e1a96b76d9d9163a629eede09228596fe9c3a8da3b1611",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "start_bin": 900,
+    "end_bin": 1554,
+    "width_bins": 655,
+    "center_hz": 1089499511.71875,
+    "width_hz": 399780.2734375,
+    "snr_db_over_local_median": 20.0,
+    "t_on_s": 20.0,
+    "t_off_s": 60.0
+   },
+   "on_window_s": [
+    20.0,
+    60.0
+   ],
+   "expected_on": [
+    "FM Broadcast"
+   ],
+   "expected_off": [],
+   "condition": "cold start; emitter on from 20 s",
+   "expected_basis": "an emitter with the FM template's own 400 kHz shape at -500 kHz from the LO (positive control derived from the template, not independent RF)",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "fm_near_lo",
+   "file": "raw/fm_near_lo.raw",
+   "sha256": "0597fe3674c7933f60d4d6bf084a0d3d381905360266d29e6645636dfc7eff5a",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "start_bin": 1720,
+    "end_bin": 2374,
+    "width_bins": 655,
+    "center_hz": 1090000000.0,
+    "width_hz": 399780.2734375,
+    "snr_db_over_local_median": 20.0,
+    "t_on_s": 20.0,
+    "t_off_s": 60.0
+   },
+   "on_window_s": [
+    20.0,
+    60.0
+   ],
+   "expected_on": [
+    "FM Broadcast"
+   ],
+   "expected_off": [],
+   "condition": "cold start; emitter on from 20 s, centred on the LO over the spur",
+   "expected_basis": "a legitimate signal AT the LO must stay recognisable: a blanket DC exclusion would remove it (positive control derived from the template)",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "dab_fullspan",
+   "file": "raw/dab_fullspan.raw",
+   "sha256": "3078e79c8a9c19df445f921a52e4aeb0586b465a03db862024f203dd17453ef0",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "start_bin": 0,
+    "end_bin": 4094,
+    "width_bins": 4095,
+    "center_hz": 1090000000.0,
+    "width_hz": 2499389.6484375,
+    "snr_db_over_local_median": 15.0,
+    "t_on_s": 20.0,
+    "t_off_s": 60.0
+   },
+   "on_window_s": [
+    20.0,
+    60.0
+   ],
+   "expected_on": [
+    "DAB+"
+   ],
+   "expected_off": [],
+   "condition": "cold start; emitter on from 20 s, fills the whole span",
+   "expected_basis": "the DAB+ template is 2.5 MHz wide, the whole span at this grid (positive control derived from the template)",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "cw_offcenter",
+   "file": "raw/cw_offcenter.raw",
+   "sha256": "8035544101d66d11ed379c2e3ee70ed741587e36d43e6da4951e0fbf90a8cc60",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "start_bin": 3000,
+    "end_bin": 3048,
+    "width_bins": 49,
+    "center_hz": 1090596313.4765625,
+    "width_hz": 29907.2265625,
+    "snr_db_over_local_median": 25.0,
+    "t_on_s": 20.0,
+    "t_off_s": 60.0
+   },
+   "on_window_s": [
+    20.0,
+    60.0
+   ],
+   "expected_on": [
+    "CW / Beacon"
+   ],
+   "expected_off": [],
+   "condition": "cold start; emitter on from 20 s",
+   "expected_basis": "a 30 kHz carrier-like shape at +580 kHz (positive control derived from the template)",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "unknown_block_1mhz",
+   "file": "raw/unknown_block_1mhz.raw",
+   "sha256": "8819920dad27fb0286e80c044e1a1550a69d43dff414d392ff6d6c091987796f",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "start_bin": 300,
+    "end_bin": 1937,
+    "width_bins": 1638,
+    "center_hz": 1089433288.5742188,
+    "width_hz": 999755.859375,
+    "snr_db_over_local_median": 15.0,
+    "t_on_s": 20.0,
+    "t_off_s": 60.0
+   },
+   "on_window_s": [
+    20.0,
+    60.0
+   ],
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "cold start; emitter on from 20 s",
+   "expected_basis": "a 1 MHz flat-top block is in no template: any accepted label is a false accept; 'unknown' is correct",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "overlap_fm_cw",
+   "file": "raw/overlap_fm_cw.raw",
+   "sha256": "0fcdb99775bfbd00231370d701c0d31b455b9f64de448b1857185fe2c76b8414",
+   "frames": 450,
+   "duration_s": 60,
+   "fps": 7.5,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 1090000000.0,
+    "span_hz": 2500000.0,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "three recorded SignalSDR Pro frames (tools/tezuka_mcp/tests/fixtures, 2026-11-08T18:01Z, 1.09 GHz, 2.5 MHz, Average x1023, gain 30 dB Manual), cycled, then modified as `detail` says",
+   "detail": {
+    "start_bin": 1000,
+    "end_bin": 1654,
+    "width_bins": 655,
+    "center_hz": 1089560546.875,
+    "width_hz": 399780.2734375,
+    "snr_db_over_local_median": 20.0,
+    "t_on_s": 20.0,
+    "t_off_s": 60.0,
+    "second": "CW at 1300"
+   },
+   "on_window_s": [
+    20.0,
+    60.0
+   ],
+   "expected_on": [
+    "CW / Beacon",
+    "FM Broadcast"
+   ],
+   "expected_off": [],
+   "condition": "cold start; two emitters on from 20 s, the carrier inside the FM window",
+   "expected_basis": "both emitters are present, so either label is defensible; DAB+ would be false",
+   "kind": "software fixture",
+   "software_emitter": true
+  },
+  {
+   "name": "spur433_live_realrate",
+   "file": "raw/spur433_live_realrate.raw",
+   "sha256": "db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4",
+   "frames": 60,
+   "duration_s": 100.56989607777405,
+   "fps": 0.5966,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 433000000,
+    "span_hz": 2500000,
+    "fft_size": 4096,
+    "hz_per_bin": 610.3515625,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794170740.697491 (unix s): rx_lo 433000000 Hz, fs 2500000 Hz, gain 70.0 dB Manual, Average x1023, 4096-point; capture sha256 db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "captured_unix_s": 1794170740.697491,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 2500000,
+       "rx_rf_bandwidth": 2500000,
+       "tx_rf_bandwidth": 1500000,
+       "rx_lo_frequency": 433000000,
+       "tx_lo_frequency": 5800000000,
+       "rx_gain": 70.0,
+       "rx_gain_mode": "Manual",
+       "tx_gain": -12.5
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 0.5966290933528837,
+       "number_integrations": 1023,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 0.0,
+       "decimation": 20,
+       "input_sampling_frequency": 2500000.0,
+       "output_sampling_frequency": 125000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "frames": 60,
+     "frame_sizes": {
+      "16384": 60
+     },
+     "api_after": {
+      "sampling_frequency": 2500000,
+      "rx_rf_bandwidth": 2500000,
+      "tx_rf_bandwidth": 1500000,
+      "rx_lo_frequency": 433000000,
+      "tx_lo_frequency": 5800000000,
+      "rx_gain": 70.0,
+      "rx_gain_mode": "Manual",
+      "tx_gain": -12.5
+     },
+     "sha256": "db51a261a62de5b5ec821ff92a57d9eba109ed1916400105eb0171628c5f59f4"
+    },
+    "replay_fps": 0.5966
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 0.5966 frames/s: cold start, learning begins on the first frame",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "0.5966",
+    "-S",
+    "2500000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "accept_dispositions": {
+    "FM Broadcast": {
+     "disposition": "confirmed_false",
+     "basis": "the matched residual sits on the LO (peak at DC+3, 17 kHz wide) with the receiver DC-spur shape seen identically at 433 MHz and 1.09 GHz, so it follows the LO and is the receiver's own spur, not an emission; nothing else was in the 2.5 MHz band and 433 MHz has no FM broadcast allocation"
+    }
+   }
+  },
+  {
+   "name": "ism2400_live_realrate",
+   "file": "raw/ism2400_live_realrate.raw",
+   "sha256": "85acf590914f0d1e06d33b10e813958f992147e03505537c532c586152929376",
+   "frames": 360,
+   "duration_s": 49.10385465259023,
+   "fps": 7.3314,
+   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
+   "grid": {
+    "center_hz": 2400000000,
+    "span_hz": 30720000,
+    "fft_size": 4096,
+    "hz_per_bin": 7500.0,
+    "dc_usable_index": 2047
+   },
+   "source": "recorded as captured from 192.168.50.25 at 1794172478.0675159 (unix s): rx_lo 2400000000 Hz, fs 30720000 Hz, gain 69.0 dB SlowAttack, Average x1023, 4096-point; capture sha256 85acf590914f0d1e06d33b10e813958f992147e03505537c532c586152929376",
+   "detail": {
+    "meta": {
+     "host": "192.168.50.25",
+     "captured_unix_s": 1794172478.0675159,
+     "api": {
+      "ad9361": {
+       "sampling_frequency": 30720000,
+       "rx_rf_bandwidth": 18000000,
+       "tx_rf_bandwidth": 18000000,
+       "rx_lo_frequency": 2400000000,
+       "tx_lo_frequency": 2450000000,
+       "rx_gain": 69.0,
+       "rx_gain_mode": "SlowAttack",
+       "tx_gain": -10.0
+      },
+      "spectrometer": {
+       "input": "AD9361",
+       "input_sampling_frequency": 30720000.0,
+       "output_sampling_frequency": 7.331378299120234,
+       "number_integrations": 1023,
+       "fft_size": 4096,
+       "mode": "Average"
+      },
+      "ddc": {
+       "enabled": false,
+       "frequency": 0.0,
+       "decimation": 20,
+       "input_sampling_frequency": 30720000.0,
+       "output_sampling_frequency": 1536000.0,
+       "max_input_sampling_frequency": 69444444.44444445
+      },
+      "versions": {
+       "firmware_version": "tezuka-v0.3.24-34-g6e3a",
+       "maia_httpd_git": "v0.3.24-21-g49403b9",
+       "maia_httpd_version": "0.6.0",
+       "maia_hdl_version": "0.6.1"
+      }
+     },
+     "frames": 360,
+     "frame_sizes": {
+      "16384": 360
+     },
+     "api_after": {
+      "sampling_frequency": 30720000,
+      "rx_rf_bandwidth": 18000000,
+      "tx_rf_bandwidth": 18000000,
+      "rx_lo_frequency": 2400000000,
+      "tx_lo_frequency": 2450000000,
+      "rx_gain": 71.0,
+      "rx_gain_mode": "SlowAttack",
+      "tx_gain": -10.0
+     },
+     "sha256": "85acf590914f0d1e06d33b10e813958f992147e03505537c532c586152929376"
+    },
+    "replay_fps": 7.3314
+   },
+   "on_window_s": null,
+   "expected_on": [],
+   "expected_off": [],
+   "condition": "recorded sequence as captured, replayed at 7.3314 frames/s: cold start, learning begins on the first frame",
+   "expected_basis": "no emitter class of the template set is expected in this band; every accepted label is tallied as an unexpected accept, unverified unless --accept gives it a disposition with its basis; the report next to the capture says which of them could be correct (the meta file records the receiver settings, not what was on air)",
+   "kind": "recorded",
+   "recorded_capture": true,
+   "software_emitter": false,
+   "daemon_args": [
+    "-n",
+    "4096",
+    "-F",
+    "7.3314",
+    "-S",
+    "30720000",
+    "-B",
+    "none",
+    "-c",
+    "0.6",
+    "-m",
+    "0.15",
+    "-i",
+    "1.0",
+    "-s",
+    "6",
+    "-g",
+    "4",
+    "-l",
+    "10",
+    "-a",
+    "300",
+    "-w",
+    "4e6",
+    "-x",
+    "8"
+   ],
+   "accept_dispositions": {
+    "DAB+": {
+     "disposition": "suspected_false",
+     "basis": "Wi-Fi-like spectrum (wide intermittent bursts, 5 MHz flat residual) and no DAB+ allocation near 2.4 GHz point to a wrong label; protocol ground truth pending, the waveform was not identified independently"
+    },
+    "CW / Beacon": {
+     "disposition": "unverified",
+     "basis": "persistent 30 kHz spike at about 2391.99 MHz in every frame; receiver artefact or emission not established"
+    }
+   }
+  }
+ ]
+}
