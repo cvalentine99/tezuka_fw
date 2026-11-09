@@ -1,0 +1,38 @@
+Mon Nov  9 11:25:32 UTC 2026
+classifier: OK
+api_controller.sh: OK
+index.html.xz: OK
+== old processes
+1270 /usr/bin/classifier
+1284 /bin/bash
+1410 /bin/bash
+1412 /bin/bash
+3820 /bin/bash
+1411 /usr/bin/mosquitto_sub
+1408 /usr/bin/mqtt_pubd
+== installing files
+classifier installed
+api_controller.sh installed
+index.html installed
+f87a3c467ea2795d187f7ff9c38a16f120de31c3b001dca68abf8183c88859e8  /usr/bin/classifier
+4ddc8927fecdf1ad128625a0b5a17a8803c758fde838db59793f23a0cba8cad5  /root/api_controller.sh
+771fa1733e848f876fc6e7bff46e7a24536a121c776906c53c0742718fe8591b  /root/index.html
+== restarting classifier
+Stopping classifier: OK
+Starting classifier: OK
+== restarting api controller
+killing: 1284
+1410
+1412 1411 1408
+remaining controller pids after 0s: 
+== new processes
+classifier pid 3877 start 4555668 exe f87a3c467ea2795d cmdline: /usr/bin/classifier -f /mnt/jffs2/classifier/templates.bin 
+pidfile: 3877
+3899 /bin/bash
+3962 /bin/bash
+3964 /bin/bash
+3963 /usr/bin/mosquitto_sub
+3960 /usr/bin/mqtt_pubd
+controller main pids: 3 bash, 1 cmd subscriber(s), 1 publisher(s)
+== exit 0
+Mon Nov  9 11:25:37 UTC 2026

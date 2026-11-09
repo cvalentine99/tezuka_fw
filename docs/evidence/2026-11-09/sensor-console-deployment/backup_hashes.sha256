@@ -1,0 +1,14 @@
+bedf3d270ef75fa00c7b078a2847b644110dec3ea05439a2faa1db0b2632fcaa  ./etc/init.d/S61classifier
+b5f534499f7e1557857fc6d9fbed41a4e79128ab8659be51953deba0e14f55fc  ./etc/init.d/S95bgcript
+23657d7d4a50e9b047dcd19bf36a6f8cf55f43c14225086daf64cf627d2b136c  ./etc/init.d/S98autostart
+3aca0abfae632d7ead3f4502a8d3c72b392dc92e0f59e04e3e73fee17a7a3d62  ./etc/libiio.ini
+dfefa3fc506a39fe6e0d9d4a4931003e4af27ae82f206cadfd64383ac17549b8  ./mnt/jffs2/autorun.sh.disabled
+0f35cd63f1cb2af6dc42af940e9f6cb2b16adfdb1158ed2437a4e4a18d259d1d  ./mnt/jffs2/bandplan.json
+cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263  ./mnt/jffs2/classifier/templates.bin
+ef63312acc8be936f14cf80e0cdfd690d0856eb0d3112b23ce227769911fa56f  ./mnt/jffs2/classifier/templates.v1.bin
+b04d11132740bf510d44231a346275b791c5fe5a0184c31a293ff962f109b950  ./mnt/jffs2/valentine-rf-index.html
+29f588bbd52a5d9462920462bedcb5974fab67c447593c82758bd16b7c5bfc4a  ./opt/VERSIONS
+318fbca1b8fc865d672405f643d3b098ea3118e8146924eff2b5bf655f168a17  ./root/api_controller.sh
+21c5923ceac818cb7947acbf7a8a46076e004a33b74ea9d7234a0a85e4255173  ./root/index.html
+89ef2c882df8ce52bf5030eff5cf2c7853558fc8ec68a15afb82a1910be5a209  ./state-before/snapshot.txt
+b2ead05ea506aa340001f92e6bdb136db53759eb3efe94143b3feb339cf765ed  ./usr/bin/classifier

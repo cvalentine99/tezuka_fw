@@ -1,0 +1,249 @@
+{
+ "t0_utc": "2026-11-09T11:40:18Z",
+ "initial": {
+  "title": "Valentine RF Dashboard",
+  "hash": "#classifier",
+  "fields": {
+   "Observation": "#862 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Grid": "4096 pt, 7.5 kHz/bin",
+   "Config binding": "unbound (gen 0)",
+   "Publish errors": "0",
+   "Features": "power-v1",
+   "Best score": "96%",
+   "Window SNR": "11.9 dB",
+   "Prominence": "5.6 dB",
+   "Margin to runner-up": "96 pts",
+   "Resolution": "7.5 kHz / bin",
+   "Background age": "885 s",
+   "Persistent lines / masked spurs": "575 / 5"
+  },
+  "toggle_count": 1,
+  "toggle": {
+   "cls": "toggle on",
+   "text": "ON"
+  },
+  "has": {
+   "Experimental spectral-template matching; RF acceptance pending.": true,
+   "not calibrated dBm": true,
+   "spectral similarity, not calibrated identification confidence": true,
+   "Config binding unbound:": true,
+   "Last template upload:": true
+  },
+  "unbound_line": "Config binding unbound: RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings",
+  "templates_status_line": "Last template upload: rejected (bad_encoding: payload is not base64)",
+  "pills": [
+   "connected",
+   "match",
+   "experimental",
+   "17 entries"
+  ],
+  "cards": [
+   "Signal Classifier",
+   "Decision",
+   "Reference match",
+   "Classifications",
+   "Signal Features",
+   "Band Plan"
+  ],
+  "classifications_rows": 1
+ },
+ "before_off_radio": "3877\n1",
+ "after_off_page": {
+  "title": "Valentine RF Dashboard",
+  "hash": "#classifier",
+  "fields": {
+   "Observation": "#863 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Grid": "4096 pt, 7.5 kHz/bin",
+   "Config binding": "unbound (gen 0)",
+   "Publish errors": "0",
+   "Features": "power-v1",
+   "Best score": "0%",
+   "Window SNR": "\u2014",
+   "Prominence": "\u2014",
+   "Margin to runner-up": "\u2014",
+   "Resolution": "7.5 kHz / bin",
+   "Background age": "\u2014",
+   "Persistent lines / masked spurs": "575 / 5"
+  },
+  "toggle_count": 1,
+  "toggle": {
+   "cls": "toggle ",
+   "text": "OFF"
+  },
+  "has": {
+   "Experimental spectral-template matching; RF acceptance pending.": true,
+   "not calibrated dBm": true,
+   "spectral similarity, not calibrated identification confidence": true,
+   "Config binding unbound:": true,
+   "Last template upload:": true
+  },
+  "unbound_line": "Config binding unbound: RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings",
+  "templates_status_line": "Last template upload: rejected (bad_encoding: payload is not base64)",
+  "pills": [
+   "connected",
+   "offline",
+   "experimental",
+   "17 entries"
+  ],
+  "cards": [
+   "Signal Classifier",
+   "Decision",
+   "Reference match",
+   "Classifications",
+   "Signal Features",
+   "Band Plan"
+  ],
+  "classifications_rows": 1
+ },
+ "after_off_radio": "pids:\nenv: 0\nenabled_topic: off\nresult_online: \"online\":false\npidfile: none",
+ "after_on_page": {
+  "title": "Valentine RF Dashboard",
+  "hash": "#classifier",
+  "fields": {
+   "Observation": "#12 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Grid": "4096 pt, 7.5 kHz/bin",
+   "Config binding": "unbound (gen 0)",
+   "Publish errors": "0",
+   "Features": "power-v1",
+   "Best score": "98%",
+   "Window SNR": "11.2 dB",
+   "Prominence": "4.5 dB",
+   "Margin to runner-up": "98 pts",
+   "Resolution": "7.5 kHz / bin",
+   "Background age": "11 s",
+   "Persistent lines / masked spurs": "509 / 5"
+  },
+  "toggle_count": 1,
+  "toggle": {
+   "cls": "toggle on",
+   "text": "ON"
+  },
+  "has": {
+   "Experimental spectral-template matching; RF acceptance pending.": true,
+   "not calibrated dBm": true,
+   "spectral similarity, not calibrated identification confidence": true,
+   "Config binding unbound:": true,
+   "Last template upload:": true
+  },
+  "unbound_line": "Config binding unbound: RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings",
+  "templates_status_line": "Last template upload: rejected (bad_encoding: payload is not base64)",
+  "pills": [
+   "connected",
+   "match",
+   "experimental",
+   "17 entries"
+  ],
+  "cards": [
+   "Signal Classifier",
+   "Decision",
+   "Reference match",
+   "Classifications",
+   "Signal Features",
+   "Band Plan"
+  ],
+  "classifications_rows": 2
+ },
+ "after_on_radio": "pids: 21843\nenv: 1\nenabled_topic: on\npidfile: 21843\nexe: f87a3c467ea2795d\n\"seq\":12\n\"background\":{\"learned\":true,\"age_s\":11.2,\"frames\":226,\"masked_bins\":5,\"valid_bins\":4090,\"spur_bins\":0,\"hot_last_learn\":509,\"learn_count\":1}\n\"waterfall_connected\":true",
+ "before_relearn_radio": "\"seq\":20\n\"background\":{\"learned\":true,\"age_s\":19.5,\"frames\":391,\"masked_bins\":5,\"valid_bins\":4090,\"spur_bins\":0,\"hot_last_learn\":509,\"learn_count\":1}",
+ "after_relearn_radio": "\"seq\":24\n\"state\":\"learning\"\n\"background\":{\"learned\":false,\"age_s\":3.1,\"frames\":63,\"masked_bins\":0,\"valid_bins\":4095,\"spur_bins\":0,\"hot_last_learn\":509,\"learn_count\":1}",
+ "after_relearn_page": {
+  "title": "Valentine RF Dashboard",
+  "hash": "#classifier",
+  "fields": {
+   "Observation": "#24 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Grid": "4096 pt, 7.5 kHz/bin",
+   "Config binding": "unbound (gen 0)",
+   "Publish errors": "0",
+   "Features": "power-v1",
+   "Best score": "0%",
+   "Window SNR": "0.0 dB",
+   "Prominence": "0.0 dB",
+   "Margin to runner-up": "0 pts",
+   "Resolution": "7.5 kHz / bin",
+   "Background age": "3 s",
+   "Persistent lines / masked spurs": "509 / 5"
+  },
+  "toggle_count": 1,
+  "toggle": {
+   "cls": "toggle on",
+   "text": "ON"
+  },
+  "has": {
+   "Experimental spectral-template matching; RF acceptance pending.": true,
+   "not calibrated dBm": true,
+   "spectral similarity, not calibrated identification confidence": true,
+   "Config binding unbound:": true,
+   "Last template upload:": true
+  },
+  "unbound_line": "Config binding unbound: RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings",
+  "templates_status_line": "Last template upload: rejected (bad_encoding: payload is not base64)",
+  "pills": [
+   "connected",
+   "learning background (3 s)",
+   "experimental",
+   "17 entries"
+  ],
+  "cards": [
+   "Signal Classifier",
+   "Decision",
+   "Reference match",
+   "Classifications",
+   "Signal Features",
+   "Band Plan"
+  ],
+  "classifications_rows": 2
+ },
+ "final_page": {
+  "title": "Valentine RF Dashboard",
+  "hash": "#classifier",
+  "fields": {
+   "Observation": "#35 v1",
+   "Templates": "cb6f4580360c\u2026 (3 tpl, ok)",
+   "Grid": "4096 pt, 7.5 kHz/bin",
+   "Config binding": "unbound (gen 0)",
+   "Publish errors": "0",
+   "Features": "power-v1",
+   "Best score": "99%",
+   "Window SNR": "29.7 dB",
+   "Prominence": "23.8 dB",
+   "Margin to runner-up": "99 pts",
+   "Resolution": "7.5 kHz / bin",
+   "Background age": "14 s",
+   "Persistent lines / masked spurs": "523 / 5"
+  },
+  "toggle_count": 1,
+  "toggle": {
+   "cls": "toggle on",
+   "text": "ON"
+  },
+  "has": {
+   "Experimental spectral-template matching; RF acceptance pending.": true,
+   "not calibrated dBm": true,
+   "spectral similarity, not calibrated identification confidence": true,
+   "Config binding unbound:": true,
+   "Last template upload:": true
+  },
+  "unbound_line": "Config binding unbound: RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings",
+  "templates_status_line": "Last template upload: rejected (bad_encoding: payload is not base64)",
+  "pills": [
+   "connected",
+   "match",
+   "experimental",
+   "17 entries"
+  ],
+  "cards": [
+   "Signal Classifier",
+   "Decision",
+   "Reference match",
+   "Classifications",
+   "Signal Features",
+   "Band Plan"
+  ],
+  "classifications_rows": 4
+ },
+ "t1_utc": "2026-11-09T11:41:03Z"
+}

@@ -1,0 +1,292 @@
+{
+ "schema": "tezuka.mcp.sensor_snapshot/1",
+ "generated_at_unix_s": 1794223913.971,
+ "provenance": {
+  "source": "mqtt://192.168.50.25:1883 state/#",
+  "classifier_prefix": "state/classifier/",
+  "subscriber_connected": true,
+  "connection_epoch": 1,
+  "subscriber_uptime_s": 3.0,
+  "connected_for_s": 3.0,
+  "last_error": null,
+  "freshness_rule": "fresh = a non-retained message within max_age; retained = only the broker's replayed copy is held for this value; stale = live but older; unavailable = never seen. Freshness belongs to the payload it arrived with: a retained copy with a different payload replaces the value as retained.",
+  "observation_max_age_s": 5.0,
+  "state_max_age_s": 10.0
+ },
+ "receiver": {
+  "rx/frequency": {
+   "value": "96450000",
+   "status": "fresh",
+   "age_s": 0.429,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/sampling": {
+   "value": "30720000",
+   "status": "fresh",
+   "age_s": 0.435,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/span": {
+   "value": "30720000",
+   "status": "fresh",
+   "age_s": 2.565,
+   "retained_replay_seen": true,
+   "live_messages": 1
+  },
+  "rx/bandwidth": {
+   "value": "20000000",
+   "status": "fresh",
+   "age_s": 0.387,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/gain": {
+   "value": "71.000000 dB",
+   "status": "fresh",
+   "age_s": 0.415,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/gain_mode": {
+   "value": "manual",
+   "status": "fresh",
+   "age_s": 0.411,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/rfinput": {
+   "value": "2",
+   "status": "fresh",
+   "age_s": 0.405,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/ant": {
+   "value": "A_BALANCED",
+   "status": "fresh",
+   "age_s": 0.433,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "rx/sweep/activate": {
+   "value": "0",
+   "status": "fresh",
+   "age_s": 2.565,
+   "retained_replay_seen": true,
+   "live_messages": 1
+  },
+  "rx/sweep/engaged": {
+   "value": "0",
+   "status": "fresh",
+   "age_s": 2.567,
+   "retained_replay_seen": true,
+   "live_messages": 1
+  },
+  "rx/sweep/frequency": {
+   "value": "96450000",
+   "status": "fresh",
+   "age_s": 2.565,
+   "retained_replay_seen": true,
+   "live_messages": 1
+  },
+  "rx/sweep/span": {
+   "value": "30720000",
+   "status": "fresh",
+   "age_s": 2.565,
+   "retained_replay_seen": true,
+   "live_messages": 1
+  }
+ },
+ "sensor": {
+  "main/serial": {
+   "value": "spi-norspi1.0SPI-NOR-UniqueID1040007c641100050d003000c38cbf0133",
+   "status": "fresh",
+   "age_s": 0.223,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "main/hw_model": {
+   "value": "SignaSDRPro (Z7020-AD9361)",
+   "status": "fresh",
+   "age_s": 0.221,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "main/fw_version": {
+   "value": "tezuka-v0.3.24-34-g6e3a",
+   "status": "fresh",
+   "age_s": 0.221,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "main/uptime": {
+   "value": "45935",
+   "status": "fresh",
+   "age_s": 2.537,
+   "retained_replay_seen": true,
+   "live_messages": 1
+  }
+ },
+ "classifier_side": {
+  "enabled": {
+   "value": "on",
+   "status": "fresh",
+   "age_s": 0.213,
+   "retained_replay_seen": true,
+   "live_messages": 2
+  },
+  "background": {
+   "value": "{\"frequency\":\"96450000\",\"bins\":4095,\"fft_size\":4096,\"hz_per_bin\":7500.0,\"hot\":575,\"masked\":5}",
+   "status": "retained",
+   "age_s": null,
+   "retained_replay_seen": true,
+   "live_messages": 0
+  },
+  "templates_status": {
+   "value": null,
+   "status": "unavailable",
+   "age_s": null
+  }
+ },
+ "classifier": {
+  "source": "state/classifier/observation",
+  "best_effort": false,
+  "status": "fresh",
+  "age_s": 0.746,
+  "retained_replay_seen": true,
+  "live_messages": 3,
+  "live_from_current_connection": true,
+  "seq_repeats_ignored": 0,
+  "seq_repeats_with_changed_content": 0,
+  "out_of_order_ignored": 0,
+  "producer_sessions_seen": 1,
+  "validation": {
+   "rejected_messages": 0,
+   "last_rejection": null
+  },
+  "schema": "tezuka.classifier.observation/1",
+  "seq": 371,
+  "producer_identity": "a8837c6b-3877-45557",
+  "producer_time": {
+   "unix_s": 1794223913.233,
+   "mono_s": 45937.121,
+   "source": "CLOCK_REALTIME",
+   "disciplined": null,
+   "disciplined_reason": "not observed by the daemon; check chronyc on the sensor",
+   "replay": false
+  },
+  "sensor": {
+   "hostname": "signalsdrpro",
+   "serial": "spi-norspi1.0SPI-NOR-UniqueID1040007c641100050d003000c38cbf0133",
+   "boot_id": "a8837c6b-0f7f-4da9-8e7d-b3d520d76460",
+   "session_id": "a8837c6b-3877-45557",
+   "pid": 3877
+  },
+  "boot_id": "a8837c6b-0f7f-4da9-8e7d-b3d520d76460",
+  "session_id": "a8837c6b-3877-45557",
+  "input": {
+   "source": "maia-httpd /waterfall",
+   "units": "linear_power_integrated",
+   "units_note": "unitless receiver level, not dBm; dB values are 10*log10 of power ratios",
+   "fft_size": 4096,
+   "bins_used": 4095,
+   "bin0_offset": 1,
+   "bin0_note": "float 0 is the fastlock/sweep step word replacing the -fs/2 edge bin",
+   "first_float": 1,
+   "dc_index": 2047,
+   "hz_per_bin": 7500.0
+  },
+  "config": {
+   "bound": false,
+   "bound_reason": "RX settings come from retained state/rx/* topics polled by api_controller.sh; the /waterfall frame carries no configuration tag, so a frame near a retune may describe the previous settings",
+   "generation": 0,
+   "frequency_hz": 96450000,
+   "span_hz": 30720000,
+   "sampling_hz": 30720000,
+   "rfinput": "2",
+   "sweep": {
+    "activate": false,
+    "engaged": false,
+    "note": "sweep/DDC frames are not interpreted by this daemon; when engaged, span and hz_per_bin describe one step, not the sweep"
+   }
+  },
+  "templates": {
+   "path": "/mnt/jffs2/classifier/templates.bin",
+   "status": "ok",
+   "sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+   "version": 3,
+   "count": 3,
+   "canonical_n": 512,
+   "feature_semantics": "power-v1"
+  },
+  "template_sha256": "cb6f4580360c75b485140af34670e1d625942cb03a5dd279c509c7063c36f263",
+  "feature_semantics": "power-v1",
+  "decision": {
+   "state": "ok",
+   "classified": true,
+   "label": "FM Broadcast",
+   "accepted": true,
+   "template_id": 1,
+   "score": 0.989,
+   "snr_db": 30.0,
+   "prom_db": 24.1,
+   "bin_offset": 1601,
+   "bandwidth_bins": 53,
+   "gate_factor": 1.0,
+   "threshold": 0.6,
+   "hold_margin": 0.15,
+   "margin": 0.566,
+   "best": {
+    "template_id": 1,
+    "score": 0.989,
+    "snr_db": 30.0,
+    "prom_db": 24.1
+   },
+   "hysteresis": {
+    "locked": true,
+    "locked_template_id": 1,
+    "held": true,
+    "took_over": false
+   },
+   "gates": {
+    "snr_min_db": 6.0,
+    "prom_min_db": 4.0,
+    "scope": "gates describe the matched window of this frame, not the emitter"
+   }
+  },
+  "features": {
+   "scope": "residual = live power minus learned receiver baseline, spur bins masked",
+   "valid": true,
+   "bandwidth_frac": 0.00464,
+   "bandwidth_hz": 142500.0,
+   "spectral_papr_db": 24.62,
+   "flatness": 0.0094,
+   "peak_count": 3,
+   "peak_bin": 1630,
+   "units": "bandwidth_frac: fraction of bins_used at -10 dB; spectral_papr_db: peak bin power over mean bin power in dB (a spectral ratio, NOT time-domain IQ PAPR); flatness: geometric/arithmetic mean of power (0..1); peak_count: local maxima within -15 dB of the peak"
+  },
+  "temporal": {
+   "history_samples": 16,
+   "drift_bins_per_s": 0.021,
+   "occupancy_pct": 100.0,
+   "occupancy_note": "sampled heuristic: share of the last cycles (about 1/s) whose residual PAPR exceeded 14 dB; not a measured duty cycle"
+  },
+  "background": {
+   "learned": true,
+   "age_s": 380.3,
+   "frames": 7608,
+   "masked_bins": 5,
+   "valid_bins": 4090,
+   "spur_bins": 0,
+   "hot_last_learn": 575,
+   "learn_count": 1
+  },
+  "health": {
+   "publish_errors": 0,
+   "publish_ok": 5448,
+   "waterfall_connected": true
+  }
+ }
+}
