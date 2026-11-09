@@ -43,7 +43,9 @@ Record in the session log (section 7):
 * the trusted positive candidates (section 4) and how each will be
   verified;
 * the host that runs the capture tool, with Python 3 and the `websockets`
-  package, and enough disk: a frame is 16384 bytes; at 0.5966 frames/s ten
+  package (13 or newer; older releases work but take about 3 s instead of
+  1 s to close the websocket after a Ctrl+C against a hung sensor), and
+  enough disk: a frame is 16384 bytes; at 0.5966 frames/s ten
   minutes is 358 frames (5.9 MB), at 7.33 frames/s ten minutes is 4400
   frames (72 MB). Budget the raw size: `xz -9` only brought the two captures
   so far to 73 % and 79 % of their raw size (averaged linear-power floats do
@@ -92,7 +94,19 @@ second would make the capture differ from what a daemon on the sensor heard.
 If that happens, note it and redo the segment. If the websocket drops or
 the feed stops (`--timeout`, default 60 s), the tool still writes the meta
 and events files with an `aborted` marker; the segment is then redone, and
-the aborted files are kept with the log.
+the aborted files are kept with the log. The same holds when the owner
+stops a segment early with Ctrl+C (a mistuned or otherwise invalid
+stationary segment need not run its ten minutes): the frames received so
+far stay in the raw file, the meta file carries `aborted: interrupted
+(SIGINT) after N frames`, the hash of the partial file and the settings
+seen, the events file is written, and the exit status is 130; the files
+appear within a few seconds even if the sensor has stopped answering. Note
+the reason for the stop in the session log. A span below 2.4 MHz puts the
+sensor into DDC mode (the AD9361 samples at least 4 times faster than the
+frames cover: decimation floor(2.4 MHz / span), minimum 4, no upper clamp,
+so 24x at 100 kHz); the tool then takes the span event from the spectrometer's
+input rate, records `spectrometer_input: DDC` in the meta file and says so
+on stderr, so such a segment is recognisable and replays on the right grid.
 
 ## 4. Establishing the trusted positive
 
@@ -126,17 +140,26 @@ report says so.
 
 | Item | Recorded by |
 |---|---|
-| receiver settings before and after each segment (LO, sampling rate, RF bandwidth, gain, gain mode), spectrometer settings (FFT size, integrations, mode, output rate), DDC, versions | `capture_waterfall.py` meta: `api`, `api_after_full` |
+| receiver settings before and after each segment (LO, sampling rate, RF bandwidth, gain, gain mode), spectrometer settings (input, input rate, FFT size, integrations, mode, output rate), DDC, versions | `capture_waterfall.py` meta: `api`, `api_after_full`, `spectrometer_input`, `frame_span_hz` |
 | every change of those settings during the segment, with wall time, seconds since start, frames received and replay time | meta: `settings_log` |
 | capture boundaries: tool start, first frame, last frame, tool end (unix seconds); measured frame rate and inter-arrival min/median/max | meta: `started_unix_s`, `first_frame_unix_s`, `last_frame_unix_s`, `ended_unix_s`, `measured_fps`, `frame_gap_s` |
-| frame count, frame sizes, SHA-256 of the raw file | meta: `frames`, `frame_sizes`, `sha256` |
-| retunes as replay events | `<segment>.raw.events` |
+| frame count, frame sizes, size and SHA-256 of the raw file | meta: `frames`, `frame_sizes`, `raw_bytes`, `sha256` |
+| the initial frequency, AD9361 sampling rate, frame span, RF bandwidth, gain and gain mode at t = 0 (a change seen before the first frame is folded in), then every logged change of them as replay events | `<segment>.raw.events` |
 | what was on air, the positive's identification and method, the owner's noted retune times, anything unusual (AGC movement, a reboot, a dropped connection) | session log, by hand (section 7) |
 
 Gain behaviour: with manual gain the log stays empty for a stationary
 segment; with AGC (S6) `rx_gain` changes are logged as they are seen, which
-gives the gain trajectory at the poll resolution. The classifier does not
-act on gain events in replay; they are kept for interpretation.
+gives the gain trajectory at the poll resolution. The daemon treats gain,
+gain mode and RF bandwidth like frequency, sampling rate and span: every
+change of one of them (`RX_WATCH` in `classifier.c`) resets the learned
+background and bumps the configuration generation, on the sensor through
+MQTT and in replay through the events file. Each AGC gain step seen by a poll is therefore a
+relearn in replay, as it is on the sensor, and the first gain value is
+seeded at t = 0 so that the first step counts as a change; S6 measures how
+the current daemon behaves under that movement (how often it relearns, how
+long it stays unlearned), which is the observation the AGC question needs.
+A gain change logged inside a manual-gain stationary segment is a violated
+segment (section 1).
 
 ## 6. After the session: freezing
 

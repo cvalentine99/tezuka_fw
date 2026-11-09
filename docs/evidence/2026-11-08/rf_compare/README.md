@@ -365,7 +365,12 @@ show.
 The next captures are to be taken with `capture_waterfall.py` as described
 in `CAPTURE_SESSION_PLAN.md` (same directory): it now logs every receiver
 setting change during the capture and writes the matching replay events
-file, and `rf_compare.py --expect NAME=LABEL` declares a trusted positive.
+file (the initial frequency, sampling rate, frame span, bandwidth, gain
+and gain mode at t = 0, then the changes), keeps the meta and events files
+when the capture is interrupted with Ctrl+C, and `rf_compare.py --expect
+NAME=LABEL` declares a trusted positive. The grid span of a recorded
+capture is the spectrometer's input rate; for the two captures here it
+equals the AD9361 rate, so nothing in these tables changes.
 
 The generated `.raw` sequences are deterministic (seeded by fixture name) and
 are not committed; their SHA-256 values in `fixtures.json` must match after

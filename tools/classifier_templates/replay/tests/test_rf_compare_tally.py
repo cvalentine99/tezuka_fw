@@ -120,6 +120,19 @@ def test_expect_rejects_software_fixtures_and_unknown_labels():
         rc.attach_expect([recorded_spec()], "rec=FM", LABELS)
 
 
+def test_frame_span_is_the_spectrometer_input_rate():
+    """Single-band mode: the spectrometer input rate equals the AD9361 rate
+    (as in both committed captures, so their manifests are unchanged); DDC
+    mode: the frames span the DDC output rate, at least 4 times below the
+    AD9361 rate; no spectrometer block: the AD9361 rate."""
+    single = {"ad9361": {"sampling_frequency": 30720000}, "spectrometer": {"input": "AD9361", "input_sampling_frequency": 30720000.0}}
+    ddc = {"ad9361": {"sampling_frequency": 2000000}, "spectrometer": {"input": "DDC", "input_sampling_frequency": 500000.0}}
+    assert rc.frame_span_hz(single) == 30720000 and isinstance(rc.frame_span_hz(single), int)
+    assert rc.frame_span_hz(ddc) == 500000
+    assert rc.frame_span_hz({"ad9361": {"sampling_frequency": 2500000}}) == 2500000
+    assert rc.daemon_args_for(7.5, rc.frame_span_hz(ddc))[rc.daemon_args_for(7.5).index("-S") + 1] == "500000"
+
+
 def test_recorded_fixture_basis_text_matches_the_tally():
     """Recorded frames carry no proof of what was on air, so their manifest
     text must not promise that every accept is tallied as false (software

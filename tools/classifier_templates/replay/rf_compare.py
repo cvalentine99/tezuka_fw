@@ -319,6 +319,22 @@ def disposition_of(spec, label):
     return "unverified", "recorded frames: what was on air is not established by the spectrum alone"
 
 
+def frame_span_hz(api):
+    """Span covered by a capture's frames: the spectrometer's input rate (the
+    DDC output rate when the spectrometer input is the DDC, else the AD9361
+    rate), falling back to the AD9361 rate when the spectrometer does not
+    report it. An integral float is returned as int, as the manifests have
+    always written it."""
+    sp = (api or {}).get("spectrometer") or {}
+    rx = (api or {}).get("ad9361") or {}
+    v = sp.get("input_sampling_frequency")
+    if v is None:
+        v = rx.get("sampling_frequency")
+    if isinstance(v, float) and v.is_integer():
+        v = int(v)
+    return v
+
+
 def daemon_args_for(fps, span_hz=None):
     """DAEMON_ARGS with the frame rate (and, for a capture at another sample
     rate, the span) replaced: a recorded sequence is replayed at the rate and
@@ -351,11 +367,12 @@ def add_recorded(specs, spec_arg, out_raw):
     api = meta.get("api", {})
     rx = api.get("ad9361", {})
     sp = api.get("spectrometer", {})
+    span_hz = frame_span_hz(api)
     specs.append({"name": name, "file": os.path.relpath(dst, os.path.dirname(out_raw)), "sha256": sha256(dst),
                   "frames": int(frames), "duration_s": frames / fps, "fps": fps,
                   "layout": "float32 LE x 4096 per frame; float 0 = step word; usable bin j = float j+1; linear power (not dBm)",
-                  "grid": {"center_hz": rx.get("rx_lo_frequency"), "span_hz": rx.get("sampling_frequency"), "fft_size": sp.get("fft_size", N),
-                           "hz_per_bin": (rx.get("sampling_frequency") or SPAN_HZ) / sp.get("fft_size", N), "dc_usable_index": DC},
+                  "grid": {"center_hz": rx.get("rx_lo_frequency"), "span_hz": span_hz, "fft_size": sp.get("fft_size", N),
+                           "hz_per_bin": (span_hz or SPAN_HZ) / sp.get("fft_size", N), "dc_usable_index": DC},
                   "source": f"recorded as captured from {meta.get('host', '?')} at {meta.get('captured_unix_s')} (unix s): "
                             f"rx_lo {rx.get('rx_lo_frequency')} Hz, fs {rx.get('sampling_frequency')} Hz, gain {rx.get('rx_gain')} dB {rx.get('rx_gain_mode')}, "
                             f"{sp.get('mode')} x{sp.get('number_integrations')}, {sp.get('fft_size')}-point; capture sha256 {meta.get('sha256')}",
@@ -368,7 +385,7 @@ def add_recorded(specs, spec_arg, out_raw):
                       "next to the capture says which of them could be correct (the meta file records the receiver "
                       "settings, not what was on air)"),
                   "kind": "recorded", "recorded_capture": True, "software_emitter": False,
-                  "daemon_args": daemon_args_for(fps, rx.get("sampling_frequency"))})
+                  "daemon_args": daemon_args_for(fps, span_hz)})
 
 
 def run_daemon(qemu, sysroot, binary, raw, templates, out_path, daemon_args=DAEMON_ARGS, events=None):

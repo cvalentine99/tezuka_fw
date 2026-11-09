@@ -152,15 +152,23 @@ the same raw frames and, next to them, a meta file with the receiver and
 spectrometer settings before and after, the capture boundaries and measured
 frame rate, the SHA-256 of the file and a log of every setting change seen
 while capturing (it polls `/api`), plus a replay events file
-(`<out>.raw.events`, the daemon's `-E`) that places the retunes on the
-replay clock. `replay/rf_compare.py` runs several daemon revisions on a
+(`<out>.raw.events`, the daemon's `-E`) that seeds the initial frequency,
+AD9361 sampling rate, frame span (the spectrometer's input rate, which is
+the DDC output rate below 2.4 MHz), bandwidth, gain and gain mode at t = 0
+(the daemon takes a topic's first value as its initial state) and places
+every later change on the replay clock. Ctrl+C keeps the partial raw file
+and both sidecar files (`aborted: interrupted`, exit status 130), within a
+few seconds even when the sensor has stopped answering. `replay/rf_compare.py` runs several daemon revisions on a
 frozen fixture set (generated fixtures plus `--recorded` captures with
 optional `--events`), tallies decisions, and reports unexpected accepts
 split into confirmed false, suspected false and unverified
 (`--accept NAME=DISPOSITION=LABEL::basis`); `--expect NAME=LABEL` declares
 a recorded trusted positive. `replay/tests/` exercises the capture tool
-against a fake sensor (`python -m pytest -q tools/classifier_templates/replay/tests`). See the main README's classifier section for the numbers this gave
-on real outdoor captures.
+against a fake sensor, the tally, and capture-generated events through the
+native daemon (`make -C app/classifier host-tools` first, otherwise those
+cases skip): `python -m pytest -q tools/classifier_templates/replay/tests`.
+See the main README's classifier section for the numbers this gave on real
+outdoor captures.
 
 ## File format
 
