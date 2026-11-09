@@ -201,7 +201,9 @@ function ClassifierPage({ d }) {
       for (let i = Math.max(0, Math.floor(offset)); i < Math.min(n, Math.ceil(offset + width)); i++) if (bins[i] > peakDb) peakDb = bins[i];
       if (!isFinite(peakDb)) peakDb = bins[Math.max(0, Math.min(n - 1, Math.round(offset)))];
       const top = refDb, bot = refDb - range;
-      const y = h - Math.max(0, Math.min(h, ((peakDb - bot) / (top - bot)) * h));
+      // Keep the marker, bracket and chip on the canvas even when the
+      // emission's peak is above the plot's reference level (clipped trace).
+      const y = Math.max(48, h - Math.max(0, Math.min(h, ((peakDb - bot) / (top - bot)) * h)));
 
       ctx.save();
       ctx.strokeStyle = 'rgba(120,220,255,0.85)';
@@ -241,25 +243,24 @@ function ClassifierPage({ d }) {
       const scale = n / (fv.peak.binsUsed || n);
       const px = fv.peak.bin * scale;
       const xp = Math.max(0, Math.min(w, (px / (n - 1)) * w));
-      const top = refDb, bot = refDb - range;
-      const pv = bins[Math.max(0, Math.min(n - 1, Math.round(px)))];
-      const yp = h - Math.max(0, Math.min(h, ((pv - bot) / (top - bot)) * h));
+      // Full-height dashed amber line with its label at the bottom (above
+      // the band-plan strip), so it never collides with the window chip at
+      // the top and stays visible when the trace is clipped.
+      const labelY = h - 14 - 22;
       ctx.save();
-      ctx.strokeStyle = 'rgba(255,205,70,0.9)';
-      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(255,205,70,0.85)';
+      ctx.setLineDash([4, 4]);
       ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.moveTo(xp, yp - 4); ctx.lineTo(xp, yp - 40); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xp, 0); ctx.lineTo(xp, labelY); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(255,205,70,0.9)';
-      ctx.beginPath(); ctx.moveTo(xp, yp - 2); ctx.lineTo(xp - 4, yp - 9); ctx.lineTo(xp + 4, yp - 9); ctx.closePath(); ctx.fill();
       ctx.font = '11px system-ui, sans-serif';
       const ptext = 'residual peak ' + fmtHz(fv.peak.hz);
       const ptw = ctx.measureText(ptext).width;
-      ctx.fillStyle = 'rgba(40,30,10,0.8)';
+      ctx.fillStyle = 'rgba(40,30,10,0.85)';
       const plx = Math.max(2, Math.min(w - ptw - 8, xp - ptw / 2 - 4));
-      ctx.fillRect(plx, yp - 56, ptw + 8, 15);
+      ctx.fillRect(plx, labelY, ptw + 8, 15);
       ctx.fillStyle = '#ffe9a8';
-      ctx.fillText(ptext, plx + 4, yp - 45);
+      ctx.fillText(ptext, plx + 4, labelY + 11);
       ctx.restore();
     }
 
