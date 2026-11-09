@@ -217,6 +217,31 @@ The section's `status` follows the same rule with
 explicit nulls when the sensor only publishes the legacy `result`.
 Nothing is defaulted: an unseen frequency is `null`.
 
+`classifier.frequency_view` keeps two frequencies apart that are easy to
+confuse. Both are derived on the host from the observation's own grid
+(`config.frequency_hz`, `config.span_hz`, `input.fft_size`; usable bin `j`
+is centred at `center + (j + 1 - fft_size/2) * span / fft_size`) and
+neither is a scoring input:
+
+* `matched_window` — the frequency range of the template window the daemon
+  scored and **accepted**: `start_hz`, `center_hz`, `end_hz`, `width_hz`
+  from `decision.bin_offset` / `bandwidth_bins` (the window covers usable
+  bins `[offset, offset + bw)`, edges half a bin outside the first and last
+  bin centres). `available: false` with a `reason` when there is no
+  accepted match this cycle (the daemon does not report a window for a
+  rejected candidate) or the grid is not derivable.
+* `whole_span_peak` — the centre frequency of the strongest residual bin
+  over the **entire span** (`features.peak_bin`), independent of any match;
+  `available: false` with the daemon's `invalid_reason` when the features
+  are invalid.
+* `peak_inside_matched_window` — `true`/`false` when both are available,
+  else `null`. `false` means the window matched an emission other than the
+  span's strongest one; it is not an error.
+
+The console's Decision panel shows the same two values under their own
+labels (blue bracket = matched window, amber dashed marker = whole-span
+peak on the spectrum).
+
 ### `snapshot_fpga_waterfall` → `tezuka.mcp.waterfall_snapshot/1`
 
 Collects ≤ `max_frames` (≤ `TEZUKA_WATERFALL_MAX_FRAMES`) frames within

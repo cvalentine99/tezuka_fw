@@ -44,6 +44,39 @@ function binMatchToHz(freqOffset, bandwidthBins, frameBins, centerHz, spanHz) {
   };
 }
 
+// Two different frequencies from one observation (state/classifier/observation),
+// kept apart on purpose:
+//  * the MATCHED WINDOW is the template window the daemon scored and accepted
+//    (decision.bin_offset / bandwidth_bins; only present on an accepted match);
+//  * the WHOLE-SPAN PEAK is the strongest residual bin over the entire span
+//    (features.peak_bin), whatever emission that is.
+// The window can match a weaker emission while the span's strongest bin
+// belongs to something else, so showing one as the other misleads. Both use
+// the observation's own grid (config.frequency_hz / span_hz, input.fft_size)
+// and the same bin rule as binMatchToHz; nothing here feeds the scoring.
+function obsFrequencyView(obs, fallbackCenterHz, fallbackSpanHz) {
+  if (!obs || typeof obs !== 'object') return null;
+  const inp = obs.input || {}, cfg = obs.config || {}, dec = obs.decision || {}, feat = obs.features || {};
+  const fftSize = Number(inp.fft_size);
+  const centerHz = Number(cfg.frequency_hz) > 0 ? Number(cfg.frequency_hz) : fallbackCenterHz;
+  const spanHz = Number(cfg.span_hz) > 0 ? Number(cfg.span_hz) : fallbackSpanHz;
+  if (!(fftSize > 0) || !(centerHz > 0) || !(spanHz > 0)) return { window: null, peak: null, gridFromObservation: false };
+  const hzPerBin = wfHzPerBin(fftSize, spanHz);
+  let win = null;
+  if (dec.accepted === true && Number.isInteger(dec.bin_offset) && Number.isInteger(dec.bandwidth_bins) && dec.bandwidth_bins > 0) {
+    const startHz = wfBinToHz(dec.bin_offset, fftSize, centerHz, spanHz) - hzPerBin / 2;
+    win = { binOffset: dec.bin_offset, bandwidthBins: dec.bandwidth_bins, startHz, endHz: startHz + dec.bandwidth_bins * hzPerBin,
+            centerHz: wfBinToHz(dec.bin_offset + dec.bandwidth_bins / 2 - 0.5, fftSize, centerHz, spanHz),
+            widthHz: dec.bandwidth_bins * hzPerBin, label: dec.label };
+  }
+  let peak = null;
+  if (feat.valid === true && Number.isInteger(feat.peak_bin) && feat.peak_bin >= 0) {
+    peak = { bin: feat.peak_bin, hz: wfBinToHz(feat.peak_bin, fftSize, centerHz, spanHz), binsUsed: Number(inp.bins_used) || (fftSize - 1) };
+  }
+  const inside = (win && peak) ? (peak.bin >= win.binOffset && peak.bin < win.binOffset + win.bandwidthBins) : null;
+  return { window: win, peak, peakInsideWindow: inside, gridFromObservation: Number(cfg.frequency_hz) > 0 && Number(cfg.span_hz) > 0 };
+}
+
 function fmtSha(s) { return (typeof s === 'string' && s.length >= 12) ? s.slice(0, 12) + '…' : '—'; }
 
 function fmtHz(hz) {
@@ -198,6 +231,38 @@ function ClassifierPage({ d }) {
       ctx.restore();
     }
 
+    // Whole-span residual peak (observation features.peak_bin): a separate,
+    // deliberately different-looking marker (amber, dashed, labelled) so it
+    // is never read as the matched window above. Index space is the
+    // daemon's usable bins (bins_used), mapped onto this canvas's own frame.
+    const fv = obsFrequencyView(d.classifierObservation, centerHz, spanHz);
+    if (bins && bins.length > 1 && fv && fv.peak) {
+      const n = bins.length;
+      const scale = n / (fv.peak.binsUsed || n);
+      const px = fv.peak.bin * scale;
+      const xp = Math.max(0, Math.min(w, (px / (n - 1)) * w));
+      const top = refDb, bot = refDb - range;
+      const pv = bins[Math.max(0, Math.min(n - 1, Math.round(px)))];
+      const yp = h - Math.max(0, Math.min(h, ((pv - bot) / (top - bot)) * h));
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,205,70,0.9)';
+      ctx.setLineDash([3, 3]);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(xp, yp - 4); ctx.lineTo(xp, yp - 40); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(255,205,70,0.9)';
+      ctx.beginPath(); ctx.moveTo(xp, yp - 2); ctx.lineTo(xp - 4, yp - 9); ctx.lineTo(xp + 4, yp - 9); ctx.closePath(); ctx.fill();
+      ctx.font = '11px system-ui, sans-serif';
+      const ptext = 'span peak ' + fmtHz(fv.peak.hz);
+      const ptw = ctx.measureText(ptext).width;
+      ctx.fillStyle = 'rgba(40,30,10,0.8)';
+      const plx = Math.max(2, Math.min(w - ptw - 8, xp - ptw / 2 - 4));
+      ctx.fillRect(plx, yp - 56, ptw + 8, 15);
+      ctx.fillStyle = '#ffe9a8';
+      ctx.fillText(ptext, plx + 4, yp - 45);
+      ctx.restore();
+    }
+
     // Band-plan strip along the bottom — independent of whatever the
     // classifier has (or hasn't) matched. Segment placement inverts
     // pages1.jsx's spDrawCursor freq math: freq = centerHz + (binFrac -
@@ -247,7 +312,7 @@ function ClassifierPage({ d }) {
   // Re-render whenever a new classification arrives, so the chip tracks
   // the latest label/offset even between spectrum frames. Also on band
   // plan / center / span changes, since those affect the strip's layout.
-  useECl(() => { redraw(); }, [d.classifierResult, d.classifierLabel, d.classifierConfidence, d.classifierFreqOffset, bandPlan, centerHz, spanHz]);
+  useECl(() => { redraw(); }, [d.classifierResult, d.classifierLabel, d.classifierConfidence, d.classifierFreqOffset, d.classifierObservation, bandPlan, centerHz, spanHz]);
 
   // Append to the scrolling log on genuine change only. The daemon publishes
   // the whole decision as one JSON message on state/classifier/result (so
@@ -410,6 +475,36 @@ function ClassifierPage({ d }) {
           <div><div className="dim" style={{ fontSize: 11 }}>Background age</div><div>{res && res.bg_age_s != null ? res.bg_age_s + ' s' : '\u2014'}</div></div>
           <div><div className="dim" style={{ fontSize: 11 }}>Persistent lines / masked spurs</div><div>{bg ? `${bg.hot} / ${bg.masked}` : '\u2014'}</div></div>
         </div>
+        {/* Matched window vs whole-span peak: two different frequencies, shown
+            side by side with their own labels so neither is mistaken for the
+            other (see obsFrequencyView). Presentation only; scoring unchanged. */}
+        {(() => {
+          const fv = obsFrequencyView(obs, centerHz, spanHz);
+          if (!fv) return null;
+          const win = fv.window, peak = fv.peak;
+          return (
+            <div style={{ marginTop: 8 }}>
+              <div className="mono" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 5ch', fontSize: 12 }}>
+                <div>
+                  <div className="dim" style={{ fontSize: 11 }} title="Frequency range of the template window the daemon scored and accepted (decision.bin_offset / bandwidth_bins)">Matched window</div>
+                  <div style={{ color: '#9fe3ff' }}>{win ? `${fmtHz(win.startHz)} \u2013 ${fmtHz(win.endHz)} (centre ${fmtHz(win.centerHz)}, ${fmtHz(win.widthHz)} wide)` : (obs && obs.decision && obs.decision.accepted === false ? 'none (no accepted match)' : '\u2014')}</div>
+                </div>
+                <div>
+                  <div className="dim" style={{ fontSize: 11 }} title="Strongest residual bin over the entire span (features.peak_bin); independent of any match">Whole-span peak</div>
+                  <div style={{ color: '#ffe9a8' }}>{peak ? `${fmtHz(peak.hz)} (bin ${peak.bin})` : '\u2014'}</div>
+                </div>
+                <div>
+                  <div className="dim" style={{ fontSize: 11 }}>Peak inside window</div>
+                  <div>{fv.peakInsideWindow == null ? '\u2014' : fv.peakInsideWindow ? 'yes' : 'no: the window matched something other than the span\u2019s strongest emission'}</div>
+                </div>
+              </div>
+              <div className="dim" style={{ fontSize: 11, marginTop: 4, maxWidth: '90ch' }}>
+                Matched window (blue bracket on the spectrum) = where the accepted template fit. Whole-span peak (amber dashed marker) = the strongest bin anywhere in the span. They are different measurements and need not agree.
+                {fv.gridFromObservation ? '' : ' Grid taken from the live RX settings because the observation carried none.'}
+              </div>
+            </div>
+          );
+        })()}
         {/* Provenance from the per-cycle observation (state/classifier/observation).
             config.bound is false by construction: RX settings are read from
             retained MQTT topics, not tagged on the frame \u2014 shown, not hidden. */}

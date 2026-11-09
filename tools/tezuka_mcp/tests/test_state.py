@@ -203,3 +203,82 @@ def test_receiver_entry_retained_different_value_drops_live_freshness():
     c.ingest("state/rx/frequency", "100000000", retained=True, now_mono=3.5)   # same payload replayed: evidence still holds
     e = c.snapshot(5, 10, now_mono=4.0)["receiver"]["rx/frequency"]
     assert e["status"] == "fresh" and e["age_s"] == 1.0
+
+
+# --- frequency view: matched window vs whole-span peak -----------------------
+
+def full_obs(seq, decision, features, center=96450000, span=30720000, fft=4096):
+    return obs(seq,
+               input={"fft_size": fft, "bins_used": fft - 1, "bin0_offset": 1, "dc_index": fft // 2 - 1},
+               config={"bound": False, "frequency_hz": center, "span_hz": span, "generation": 0},
+               decision=decision, features=features)
+
+
+def test_frequency_view_keeps_window_and_peak_apart():
+    c = StateCache("127.0.0.1", 1)
+    dec = {"state": "ok", "classified": True, "label": "fm_broadcast", "accepted": True, "template_id": 3,
+           "bin_offset": 1734, "bandwidth_bins": 53}
+    feat = {"valid": True, "peak_bin": 1628, "peak_count": 4}
+    c.ingest(OBSERVATION_TOPIC, full_obs(7, dec, feat), retained=False, now_mono=10.0)
+    fv = c.snapshot(5, 10, now_mono=10.5)["classifier"]["frequency_view"]
+    hz_per_bin = 30720000 / 4096
+    mw, wp = fv["matched_window"], fv["whole_span_peak"]
+    assert mw["available"] is True and wp["available"] is True
+    centre_1734 = 96450000 + (1734 + 1 - 2048) * hz_per_bin
+    assert mw["start_hz"] == pytest.approx(centre_1734 - hz_per_bin / 2, abs=0.1)
+    assert mw["end_hz"] == pytest.approx(centre_1734 - hz_per_bin / 2 + 53 * hz_per_bin, abs=0.1)
+    assert mw["center_hz"] == pytest.approx((mw["start_hz"] + mw["end_hz"]) / 2, abs=0.2)
+    assert mw["width_hz"] == pytest.approx(53 * hz_per_bin, abs=0.1)
+    assert wp["hz"] == pytest.approx(96450000 + (1628 + 1 - 2048) * hz_per_bin, abs=0.1)
+    # the peak lies ~800 kHz below the window: they are reported as distinct
+    assert wp["hz"] < mw["start_hz"]
+    assert fv["peak_inside_matched_window"] is False
+    assert "matched_window" in fv["note"] and "whole_span_peak" in fv["note"]
+    # the raw decision is passed through untouched
+    assert c.snapshot(5, 10, now_mono=10.5)["classifier"]["decision"] == dec
+
+
+def test_frequency_view_peak_inside_window():
+    c = StateCache("127.0.0.1", 1)
+    dec = {"label": "x", "accepted": True, "template_id": 1, "bin_offset": 100, "bandwidth_bins": 10}
+    c.ingest(OBSERVATION_TOPIC, full_obs(1, dec, {"valid": True, "peak_bin": 109}), retained=False, now_mono=1.0)
+    assert c.snapshot(5, 10, now_mono=1.5)["classifier"]["frequency_view"]["peak_inside_matched_window"] is True
+    c.ingest(OBSERVATION_TOPIC, full_obs(2, dec, {"valid": True, "peak_bin": 110}), retained=False, now_mono=2.0)
+    assert c.snapshot(5, 10, now_mono=2.5)["classifier"]["frequency_view"]["peak_inside_matched_window"] is False
+
+
+def test_frequency_view_no_match_reports_peak_only():
+    c = StateCache("127.0.0.1", 1)
+    dec = {"state": "ok", "classified": False, "label": "unknown", "accepted": False, "template_id": None}
+    c.ingest(OBSERVATION_TOPIC, full_obs(3, dec, {"valid": True, "peak_bin": 2047}), retained=False, now_mono=1.0)
+    fv = c.snapshot(5, 10, now_mono=1.5)["classifier"]["frequency_view"]
+    assert fv["matched_window"]["available"] is False and "no accepted match" in fv["matched_window"]["reason"]
+    assert fv["whole_span_peak"]["available"] is True and fv["whole_span_peak"]["hz"] == pytest.approx(96450000, abs=0.1)
+    assert fv["peak_inside_matched_window"] is None
+
+
+def test_frequency_view_without_span_is_unavailable_not_guessed():
+    c = StateCache("127.0.0.1", 1)
+    dec = {"label": "x", "accepted": True, "template_id": 1, "bin_offset": 100, "bandwidth_bins": 10}
+    c.ingest(OBSERVATION_TOPIC, full_obs(4, dec, {"valid": True, "peak_bin": 5}, span=None), retained=False, now_mono=1.0)
+    fv = c.snapshot(5, 10, now_mono=1.5)["classifier"]["frequency_view"]
+    assert fv["matched_window"]["available"] is False and "config.span_hz" in fv["matched_window"]["reason"]
+    assert fv["whole_span_peak"]["available"] is False
+    assert fv["peak_inside_matched_window"] is None
+
+
+def test_frequency_view_invalid_features_is_explicit():
+    c = StateCache("127.0.0.1", 1)
+    dec = {"label": "unknown", "accepted": False}
+    c.ingest(OBSERVATION_TOPIC, full_obs(5, dec, {"valid": False, "peak_bin": None, "invalid_reason": "empty residual"}),
+             retained=False, now_mono=1.0)
+    fv = c.snapshot(5, 10, now_mono=1.5)["classifier"]["frequency_view"]
+    assert fv["whole_span_peak"] == {"available": False, "reason": "empty residual"}
+
+
+def test_legacy_adapter_frequency_view_is_unavailable():
+    c = StateCache("127.0.0.1", 1)
+    c.ingest(RESULT_TOPIC, json.dumps({"label": "x", "freq_offset": 10, "bandwidth_bins": 3, "frame_bins": 4095, "online": True}),
+             retained=False, now_mono=1.0)
+    fv = c.snapshot(5, 10, now_mono=1.5)["classifier"]["frequency_view"]
+    assert fv["matched_window"]["available"] is False and fv["whole_span_peak"]["available"] is False

@@ -28,7 +28,11 @@ INSTRUCTIONS = (
     "Read-only view of one Tezuka SDR sensor. get_sensor_snapshot returns the cached receiver and "
     "classifier state with explicit freshness per field (fresh/stale/retained/unavailable); "
     "snapshot_fpga_waterfall collects a bounded number of FPGA spectrum frames and summarizes them. "
-    "Levels are relative to the producer's power scale, never dBm. Neither tool changes anything on the sensor."
+    "Levels are relative to the producer's power scale, never dBm. Neither tool changes anything on the sensor. "
+    "When explaining a classifier observation keep two frequencies apart: classifier.frequency_view.matched_window is "
+    "the range of the template window the daemon scored and accepted (decision.bin_offset/bandwidth_bins), while "
+    "classifier.frequency_view.whole_span_peak is the strongest residual bin over the entire span (features.peak_bin). "
+    "They are independent and often differ; never present one as the other."
 )
 
 
@@ -131,7 +135,10 @@ def build_server(service: Service) -> MCPServer:
             "last live message is older than the configured maximum age. The classifier section is taken from "
             "state/classifier/observation (atomic, with producer sequence, boot id, template hash and feature-semantics "
             "version); when a sensor only publishes the legacy result topic the section is marked best_effort with the "
-            "missing fields set to null. Missing values are never defaulted."
+            "missing fields set to null. Missing values are never defaulted. classifier.frequency_view derives, from the "
+            "observation's own grid (center, span, fft_size), the matched window as a frequency range (start/center/end/width, "
+            "accepted matches only) and, separately, the whole-span residual peak frequency; peak_inside_matched_window says "
+            "whether they coincide. These are presentation only, not scoring inputs."
         ),
         annotations=READ_ONLY,
     )

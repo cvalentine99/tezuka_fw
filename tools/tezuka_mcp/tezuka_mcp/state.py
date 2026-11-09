@@ -36,6 +36,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple
 
 from . import SCHEMA_SNAPSHOT
+from .frame import bins_index_to_hz
 
 log = logging.getLogger("tezuka_mcp.state")
 
@@ -357,6 +358,82 @@ class StateCache:
             out["classifier"] = self._classifier_section(now_mono, observation_max_age_s)
             return out
 
+    FREQUENCY_VIEW_NOTE = (
+        "Two different things, deliberately kept apart. matched_window is the frequency range of the template "
+        "window the daemon scored and accepted (decision.bin_offset / bandwidth_bins): the matched emission, in the "
+        "daemon's own words. whole_span_peak is where the strongest bin of the residual sits across the ENTIRE span "
+        "(features.peak_bin), whatever it is. They need not coincide: the window can match a weaker emission while the "
+        "span's strongest bin belongs to something else, and the window is only reported on an accepted match. "
+        "Neither value is a scoring input; both are presentation derived from the observation with the grid rule."
+    )
+
+    @staticmethod
+    def _frequency_view(o: Dict[str, Any]) -> Dict[str, Any]:
+        """Derive matched-window and whole-span-peak frequencies from one
+        observation. Presentation only: the daemon's decision is untouched.
+        usable bin j (bin0_offset=1 hides the step word) is centred at
+        center + (j + 1 - fft_size/2) * span / fft_size; a window covering
+        usable bins [offset, offset+bw) runs from the lower edge of its first
+        bin to the upper edge of its last."""
+        inp = o.get("input") or {}
+        cfg = o.get("config") or {}
+        dec = o.get("decision") or {}
+        feat = o.get("features") or {}
+        fft = inp.get("fft_size")
+        center = cfg.get("frequency_hz")
+        span = cfg.get("span_hz")
+        view: Dict[str, Any] = {
+            "note": StateCache.FREQUENCY_VIEW_NOTE,
+            "grid_rule": "usable bin j centred at center_hz + (j + 1 - fft_size/2) * span_hz / fft_size; bin0_offset hides the step word",
+            "derived_from": {"center_hz": center, "span_hz": span, "fft_size": fft,
+                             "bin0_offset": inp.get("bin0_offset"), "config_bound": cfg.get("bound")},
+        }
+        missing = [k for k, v in (("input.fft_size", fft), ("config.frequency_hz", center), ("config.span_hz", span))
+                   if not isinstance(v, (int, float)) or isinstance(v, bool) or v <= 0]
+        if missing:
+            reason = "grid not derivable: " + ", ".join(missing) + " missing or non-positive in the observation"
+            view["matched_window"] = {"available": False, "reason": reason}
+            view["whole_span_peak"] = {"available": False, "reason": reason}
+            view["peak_inside_matched_window"] = None
+            return view
+        hz_per_bin = span / fft
+
+        def centre(j: float) -> float:
+            return bins_index_to_hz(j, fft, center, span)
+
+        off, bw = dec.get("bin_offset"), dec.get("bandwidth_bins")
+        if dec.get("accepted") is True and isinstance(off, int) and isinstance(bw, int) and not isinstance(off, bool) and bw > 0:
+            lo = centre(off) - hz_per_bin / 2
+            view["matched_window"] = {
+                "available": True, "label": dec.get("label"), "template_id": dec.get("template_id"),
+                "bin_offset": off, "bandwidth_bins": bw,
+                "start_hz": round(lo, 1), "center_hz": round(centre(off + bw / 2 - 0.5), 1),
+                "end_hz": round(lo + bw * hz_per_bin, 1), "width_hz": round(bw * hz_per_bin, 1),
+                "meaning": "frequency range of the template window the daemon scored and accepted",
+            }
+        else:
+            view["matched_window"] = {
+                "available": False,
+                "reason": ("no accepted match this cycle: the daemon reports bin_offset/bandwidth_bins only for an accepted match"
+                           if dec.get("accepted") is not True else "decision.bin_offset/bandwidth_bins missing or invalid"),
+                "label": dec.get("label"),
+            }
+        pk = feat.get("peak_bin")
+        if feat.get("valid") is True and isinstance(pk, int) and not isinstance(pk, bool) and pk >= 0:
+            view["whole_span_peak"] = {
+                "available": True, "bin": pk, "hz": round(centre(pk), 1),
+                "meaning": "centre of the strongest residual bin over the whole span (features.peak_bin); independent of any match",
+            }
+        else:
+            view["whole_span_peak"] = {"available": False,
+                                       "reason": feat.get("invalid_reason") or "features.peak_bin missing or features invalid this cycle"}
+        mw, wp = view["matched_window"], view["whole_span_peak"]
+        if mw.get("available") and wp.get("available"):
+            view["peak_inside_matched_window"] = mw["bin_offset"] <= wp["bin"] < mw["bin_offset"] + mw["bandwidth_bins"]
+        else:
+            view["peak_inside_matched_window"] = None
+        return view
+
     def _classifier_section(self, now_mono: float, max_age_s: float) -> Dict[str, Any]:
         ob = self._observation
         st = self._obs_stats
@@ -397,6 +474,7 @@ class StateCache:
                 "feature_semantics": templates.get("feature_semantics"),
                 "decision": o.get("decision"),
                 "features": o.get("features"),
+                "frequency_view": self._frequency_view(o),
                 "temporal": o.get("temporal"),
                 "background": o.get("background"),
                 "health": o.get("health"),
@@ -425,5 +503,8 @@ class StateCache:
             "schema": None, "seq": None, "boot_id": None, "session_id": None, "template_sha256": None, "feature_semantics": None,
             "missing_reason": "sequence, boot id, template hash and feature semantics are only carried by the observation message",
             "decision": res,
+            "frequency_view": {"matched_window": {"available": False, "reason": "legacy result message carries no grid (fft_size, centre, span)"},
+                               "whole_span_peak": {"available": False, "reason": "legacy result message carries no features.peak_bin"},
+                               "peak_inside_matched_window": None, "note": self.FREQUENCY_VIEW_NOTE},
             "online": res.get("online") if isinstance(res, dict) else None,
         }
