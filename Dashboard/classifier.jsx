@@ -281,6 +281,13 @@ function ClassifierPage({ d }) {
     ctx.restore();
   }
 
+  // The spectrum WebSocket and the ResizeObserver are set up once, so they
+  // must call the redraw of the CURRENT render (current d, band plan,
+  // centre/span) rather than the one captured at mount; otherwise every
+  // spectrum frame repaints the chip and markers from stale state.
+  const redrawRef = useRCl(redraw);
+  redrawRef.current = redraw;
+
   // Hit-test the band-plan strip on click and tune to the matched entry —
   // same mechanism radioastro.jsx's pubCenter / rftest.jsx's presets use.
   const onCanvasClick = (evt) => {
@@ -304,7 +311,7 @@ function ClassifierPage({ d }) {
   useECl(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ro = new ResizeObserver(() => redraw());
+    const ro = new ResizeObserver(() => redrawRef.current());
     ro.observe(canvas);
     redraw();
     return () => ro.disconnect();
@@ -368,7 +375,7 @@ function ClassifierPage({ d }) {
         const db = new Float32Array(f.length - 1);
         for (let i = 0; i < db.length; i++) db[i] = toDB(f[i + 1]);
         binsRef.current = db;
-        redraw();
+        redrawRef.current();
       };
     }
     connect();
