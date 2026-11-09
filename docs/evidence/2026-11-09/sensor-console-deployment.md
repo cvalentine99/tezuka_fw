@@ -9,10 +9,13 @@ End states, in the brief's terms:
 
 | State | Result |
 |---|---|
-| Software deployed | Yes: classifier, API controller and dashboard from revision e38b340 are installed, running and hash-verified on the sensor; boot persistence configured but reboot-unverified |
+| Software deployed | Yes: classifier, API controller and dashboard from revision e38b340 are installed, running and hash-verified on the sensor; boot persistence verified by a reboot at 11:47 UTC (section 13) |
 | Dashboard demonstrated | Yes: live console at http://192.168.50.25/#classifier, all fields populated, controls exercised, evidence below (demonstrated in a headless Chrome on the host; see the browser note) |
 | MCP demonstrated | Yes: `tezuka-sensor` registered in Claude Code on host `radiomancer`, both tools discovered and invoked, three questions answered from real tool calls |
 | RF acceptance | Open: no RF acceptance session has been run; the DC-spur false matches and accumulated masking of the 2026-11-08 reviews are not fixed by this deployment |
+
+(Persistence was reboot-unverified when the record was first written; the
+owner then asked for the reboot, see section 13.)
 
 ## 1. Where it runs
 
@@ -114,7 +117,7 @@ Side effect of the off/on control check: the controller's `cmd/classifier/enable
 handler writes the U-Boot variable `classifier_enabled` (0 then 1). It ended
 at 1, its pre-deployment value.
 
-## 5. Persistence (configured, reboot-unverified)
+## 5. Persistence (configured; verified by reboot, section 13)
 
 `/root` and `/usr` are the ramdisk root, so the stock files return at every
 boot. `/etc/init.d/S98autostart` sources `/mnt/jffs2/autorun.sh` if present;
@@ -125,9 +128,10 @@ most once (`S61classifier restart`; controller tree killed with anchored
 `pgrep` patterns and relaunched detached). It is idempotent: run again
 against the installed files it replaces nothing and restarts nothing (checked
 live). The previous owner logic `autorun.sh.disabled` and
-`valentine-rf-index.html` were left untouched. No reboot was performed, so
-this is configured but reboot-unverified. JFFS2 after the deployment: 700 KB
-used, 196 KB available of 896 KB.
+`valentine-rf-index.html` were left untouched. The milestone itself did not
+reboot; the owner asked for a verification reboot afterwards, recorded in
+section 13. JFFS2 after the deployment: 700 KB used, 196 KB available of
+896 KB.
 
 Copy of the script: `sensor-console-deployment/autorun.sh`. The one-shot
 install script used live: `sensor-console-deployment/install_live.sh`, with
@@ -168,7 +172,7 @@ own files. The restore script was syntax-checked but not executed.
 | Freshness | Pass. Observation ages 0.5 to 0.7 s, receiver topics 0.4 to 2.5 s, sequence advancing across calls (371, 390, 420, 479, 862 later); the broker was not stopped. The snapshot also reports what is only retained (the `background` side topic) and what is unavailable until an upload happens (`templates_status`) | `mcp_answers.md` |
 | Mode limitations | Pass. `snapshot_fpga_waterfall` reports `support.supported` true with no reasons for this mode (AD9361 input, Average, sweep off, DDC off); the observation carries the daemon's own note that sweep/DDC frames are not interpreted. The answer to question 3 states the mode is summarizable and why; the unsupported path was not exercisable without changing the receiver | `mcp_answers.md`, `mcp_snapshot_fpga_waterfall.json` |
 | Deployment integrity | Pass. Served page hash = installed `/root/index.html` = artifact; running `/proc/<pid>/exe` = artifact; `/api` identical before and after; template hash identical; the one changed retained topic (sweep centre) explained and restored above | section 3 and 4, `install_live.log` |
-| Persistence and recovery | Configured, reboot-unverified (no reboot in this milestone). Rollback files and script present on the host and hash-verified; restore not executed | section 5 and 6 |
+| Persistence and recovery | Pass after the owner-requested reboot (section 13): new boot id, deployed hashes back in place, one classifier and one controller tree, telemetry resumed. Rollback files and script present on the host and hash-verified; restore not executed | section 5, 6 and 13 |
 
 Browser note: the in-app browser pane of the Claude desktop app shows the
 page but denies connections to the broker's websocket port 9001 (its console
@@ -299,3 +303,33 @@ counts (confirmed, suspected, unverified) separate. The investigation
 workflow roadmap of the 2026-11-08 reviews (trusted positive first, then
 measured corrections developed on development captures and evaluated once)
 is unchanged by this deployment.
+
+## 13. Reboot verification (owner-requested, 2026-11-09 11:47 UTC)
+
+After the record above was written, the owner asked for a reboot to verify
+the boot-time persistence. Before the reboot the store passed `sha256sum -c`
+and `autorun.sh` had hash 8842804d...; `reboot` was issued at 11:47:39 UTC,
+ssh answered again after about 20 s, and the checks were taken at 11:48:49
+UTC (uptime 50 s). Snapshot: `sensor-console-deployment/reboot_verification_snapshot.txt`.
+
+| Check | Result |
+|---|---|
+| New boot | boot_id a8837c6b-... before, fac5273b-adf5-464a-917e-7ee0ede16f89 after |
+| Files after boot | `/usr/bin/classifier` f87a3c46..., `/root/api_controller.sh` 4ddc8927..., `/root/index.html` 771fa173..., templates cb6f4580...: the deployed hashes, not the firmware's ramdisk copies |
+| Services | one classifier (pid 1498, `/proc/pid/exe` = deployed binary, pidfile 1498), one controller tree (1505; mqtt_pubd 1570; 1572; mosquitto_sub tezuka_sub 1573; 1574): no duplicates, both restarted once by autorun after their init-script start |
+| Telemetry | observation seq 12 under the new boot id, templates sha cb6f4580..., publish_errors 0, waterfall connected; `state/classifier/enabled` on; `classifier_enabled`=1 |
+| Served page | hash 771fa173... (the deployed dashboard) |
+| Store | `/mnt/jffs2/deploy-0b423eb` passes its hash check; JFFS2 700 KB used, 196 KB available |
+
+Effect of the reboot on the receiver: the firmware brought the radio up in
+its boot defaults, not in the settings used for the demonstration. After the
+reboot `/api` reports RX LO 2.4 GHz, RF bandwidth 18 MHz, gain mode
+SlowAttack (AGC, 53 to 71 dB seen), rfinput 1, DDC frequency 0, recorder
+IQ16bit; before the reboot it was 96.45 MHz, 20 MHz, manual 71 dB, rfinput 2.
+This is the firmware's own behaviour (runtime receiver settings are not
+persisted across boots), not something the deployment changed, and the
+classifier accordingly reports label unknown at 2.4 GHz. The settings were
+not restored, since that is a retune and outside this milestone; the owner
+sets the operating LO, gain and input before the next session as section 12
+already requires. The controller's sweep-centre default (280 MHz) is also
+back, as it is at every boot.
